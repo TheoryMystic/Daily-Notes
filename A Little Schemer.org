@@ -1,0 +1,1407 @@
+* TODO A Little Schemer at Work                                         :UE4:
+** Unreal Basis
+*** UE4 API Fundamentals
+**** .generated file
+     就是 *Unreal Build Tools* 在你创建引擎封装好的类的时候自动帮你生成的文件.
+     其实不用管.
+**** PROJECTNAME_API
+     其实也不用管,放在上面看到会是一个#define,但是却无法跳转到宏定义,是因为它是在 Unreal
+     Build Tool 的命令行里定义的.
+**** Naming Conventions
+      1. First letter of each word in a name is capitalized,and usually 
+         no underscore.(e.g Health, UPrimitiveComponent).
+      2. Type names are prefixed with an additional upper-case letter,For 
+         example, *FSkin* is a _type name_, *Skin* is an _instance_ of a
+         FSkin.
+
+      - T --> *Template* Classes
+      - U --> Classes inheriting from *UObject*
+      - A --> Classes inheriting from *AActor*
+      - S --> Classes inheriting from *SWidget*
+      - I --> Abstract *interface*
+      - E --> *Enums*
+      - b --> *Boolean*
+      - F --> other classes
+
+      3. *Type* and *variable* names are _nouns_.
+      4. *Method* names are _verbs_ that describe the mothod's _effect_,
+         or return value which has no effect.
+       
+**** Macros(UCLASS(),UPROPERTY(),GENERATED_BODY() ...)
+      宏的作用一直很明确,就是 _简化操作_.
+      宏括号里可以空白也可以指定关键词.
+      Using these macros helps to greatly _simplify the process of_
+      _declaring things_ such as *classes*, *structures*, *functions*,
+      and *properties* within gameplay classes.
+     
+      e.g
+      - *UCLASS(Blueprintable)*
+        exposes the corresponding class to be a _base class_ when creating
+        blueprints.
+      - *UFUNCTION(UnsafeDuringActorConstruction)*
+        the corresponding function is unsafe when this Actor is constructed.
+      - *UPROPERTY(EditAnywhere)*
+        the corresponding *property* can be _edited_ in a property window 
+        in the editor.
+
+      另外一组宏是:
+      - *GENERATED_BODY()*
+      - *GENERATED_UCLASS_BODY()*
+      - *GENERATED_USTRUCT_BODY()*
+      - *GENERATED_UINTERFACE_BODY()*
+      - *GENERATED_IINTERFACE_BODY()*
+      GENERATED_BODY()这一系列宏都是在UCLASS()被声明后生成的.
+      它的主要作用是 _重载构造函数[constructor]_.
+      下面的重载构造函数主要是为了保证每个类的实例的属性都能通过构造函数初始化.
+      #+BEGIN_SRC C++
+      AClass::Aclass(const FObjectInitializer& ObjectInitializer) 
+                     : Super(ObjectInitializer)
+      #+END_SRC
+       
+** Learning Snippets
+*** Animation Blueprint[动画蓝图]
+    An *Animation Blueprint* is a specialized Blueprint that _controls the_
+    _animation of a Skeletal Mesh_.
+**** EventGraph[事件图表]Graph
+     Every Animation Blueprint has a single EventGraph,which is a standrad
+     Graph that uses _a collection of special animation-related events to_
+     _initiate sequences of nodes_.
+     The most common use of the EventGraph is to update values used by
+     *BlendSpaces* and other blend nodes to drive animations in the AnimGraph.
+**** BlendSpaces[混合空间]
+      Blend Spaces are special assets which can be sampled in AnimGraphs that
+      allow for blending of animations based on the values of two inputs.
+**** AnimGraph[动画图表]
+*** State Machines[状态机]
+    简而言之,状态机就是用来管理角色动画的.
+    一个角色有多个动作,而每个动作被定义为 *State*[状态],状态机则管理多个状态之间的切换.
+    State Machines provide a graphical way to _break the animation of a_
+    _Skeletal Mesh into a series of States_.
+**** Transition Rules[转换条件]
+     当你定义了多个状态之后,就需要确定在某种条件下完成从一个状态到另一个状态的转换.
+
+* TODO [#A]Daily Exercise                                          :Exercise:
+   :PROPERTIES:
+   :LAST_REPEAT: [2017-09-19 周二 23:37]
+   :END:
+   - State "DONE"       from "TODO"       [2017-09-19 周二 23:37]
+       <2017-09-20 周三 11:30 +1d>
+       锻炼/饮食
+
+* TODO [#A] D3D Learning                                              :D3D:
+** TODO 0.MATHEMATICAL PREREQUISITES
+*** DONE 0.1 Vector Algebra
+    CLOSED: [2017-09-13 周三 17:26]
+    *Vector*[向量],是电子游戏里最基础的数学元素.我们可以用向量来表现很多东西:
+    *position*[位置], *displacements*[位移], *direction*[方向],
+    *velocity*[速度], *force*[力] 等等.
+    --> *computer graphics* / *collision detection* / *physical simulation*
+
+***** Vectors[向量]
+     向量,就是具有 *大小*[magnitude]和 *方向*[direction]的 *量*[quantity].
+     我们把向量箭头位置叫做 *head*[头],相反位置叫做 *tail*[尾].
+     (tail)---->(head)
+
+     - Quantities that possess _both magnitude and direction_ are called
+       *vector-valued quantities*.
+       e.g
+       forces,displacements,velocities.
+
+     - Or just _specify pure directions_.
+
+**** Vectors and Coordinate Systems
+     在定义了vector之后,我们必须要考虑在三维空间内怎么描述它.
+     因而,诞生了 *3d coordinate system*[三维坐标系],它可以将所有的vector的 *tail* 
+     都放到 *origin* [原点].
+     这样,我们就可以通过vector的 *head* 的位置信息来描述一个vector,v = (x,y,z).
+     所以,在不同的坐标系中,同一个vector会有不同的坐标.
+     *注意* 
+     在本书中,术语 _frame = frame of reference = space = coordinate system_.
+     在3D游戏中,我们会用到多个不同的参考坐标系,所以,我们需要学习怎么实现不同参考系的转换.
+
+**** Left-Handed Versus Right-Handed Coordinate Systems
+     在Direct3D里我们采用左手坐标系.左手和右手坐标系的区别在于z轴的方向.
+     左手坐标系z轴指向远离我们的地方,而右手坐标系z轴向我们靠近.
+**** Basic Vector Operations
+      我们定义vector的四个运算.
+     - *equality*[相等]
+       e.g
+       u(ux,uy,uz), v(vx,vy,vz)
+       if (ux == vx && uy == vz && uz == vz)
+       then u=v;
+     - *add*[加法] *sub*[减法]
+       e.g
+       u(ux,uy,uz), v(vx,vy,vz)
+       u+v == (ux+vx,uy+vy,uz+vz);
+       u-v == (ux-vx,uy-vy,uz-vz);
+     - scalar * vector [标量与vector的乘法]
+       scalar k, vector v(vx,vy,vz)
+       k*v = (kvx,kvy,kvz)
+
+**** Length and Unit Vectors[长度和单位向量]
+     向量的 *模* 就是 _有向线段的长度[length]_.
+     取向量的 *模*: ||u|| = Sqrt(x^2+y^2+z^2)
+
+     带有方向的vector: u
+     *Unit Vector*[单位向量]
+     单位向量就是 _模为1的向量_.
+     u^ = u/||u|| = (x/||u||, y/||u||, z/||u||)
+     ||u^|| = ||u||/||u|| = 1
+
+**** The Dot Product [点积]
+     The dot product is _a form of vector multiplication that results in a_
+     *scalar value*. ---> 也可以叫做 *scalar product*[标量积]
+     运算规则如下: u . v = uxvx + uyvy + uzvz
+     可以看出来,其实点积的结果就是 _每个对应坐标的积相加之和_.
+     但是从定义很难看出来它的几何意义,根据 *余弦定理*[law of cosines],可以得出:
+     u . v =  ||u|| ||v|| cosθ (0 <= θ <= 180°)
+     θ表示的是u和v之间的角度.
+     根据这个等式,我们可以得出一些有用的东西:
+     - if u . v == 0 , then u ⊥ v.
+     - if u . v > 0 , then θ < 90°
+     - if u . v < 0 , then θ > 90°
+     *注意* 正交[orthogonal] = [垂直]perpendicular , 一个意思.
+     点积的几何意义很重要,几乎应用到了图形学的各个方面.其中一个几何意义就是 *投影*[projection]
+     所谓 *投影* 到底是什么?
+     假设我们有一个 *unit vector*[单位矢量]n和另一个矢量p,n.p的结果就是,p的投影.
+     形象的解释就是,有一个光源x,它发出的光线是与单位矢量n垂直(正交)的,而另一个矢量p在这个光源下的
+     投射到单位矢量n所平行或者延伸处的影子,就是n.p的值,也就是p的投影.
+
+**** Orthogonalization[正交]]
+      如果一个集合中的vector _为单位向量且互相垂直[orthogonal]_,那么我们把它叫做
+      *orthonormal*[正交化].
+      *orthogonal*(一对一) --> *orthonormal*(一对多)
+      
+      p = projn(v).
+      p是v的正交投影,n是unit vector,v是一个vector.
+
+      *Gram-Schmidt Orghogonalization*[格拉姆-施密特正交化]
+      1. Set w0 = v0;
+      2. For 1<= i <= n-1 , Set wi = vi - sigma(j=0,i-1)projwj(vi)
+      3. normalization: Set wi = wi/||wi||
+
+**** The Cross Product[叉积]
+     相较于点积,叉积的运算结果是一个vector.
+     并且,叉积只在3d vector中定义.
+     w =  u x v = (uyvz-uzvy, uzvx-uxvz, uxvy-uyvx)
+     叉积的运算结果就是一个同时垂直于u和v的vector.
+     一个问题是我们需要注意它的方向.
+     同时,u x v != v x u , u x v = -(v) x u.
+
+**** Points
+**** position vector[位置向量]
+      在3D空间里,我们需要一个向量来标准化方向和位置,这个向量就被我们叫做 *position vector*.
+**** XNA Math Vectors
+     XNA是一个独立于DirectX3D的数学库.
+     在Windows上,XNA使用 *SSE2* (Streaming SIMD Extensions 2)指令集.
+     通过128-bit宽度的 *SIMD* (single instruction multiple data)寄存器,
+     SIMD指令集可以使用1个指令操作4个32-bit的float或int变量.
+     
+**** Vector Types
+      - Use XMVECTOR for _local or global variables_.
+      - Use XMFLOAT2,XMFLOAT3,XMFLOAT4 ffor _class data members_.
+      - Use loading functions to convert from XMFLOAT* To XMVECTOR before
+        doing calculations.
+      - Do calculations with XMVECTOR instance.
+      - Use storage functions to convert from XMVECTOR to XMFLOAT*.
+
+**** Loading and Storage Methods
+      - XMFLOAT* --> XMVECTOR
+        #+BEGIN_SRC C++
+        //Loads XMFLOAT to XMVECTOR
+        XMVECTOR XMLoadFloat2(CONST XMFLOAT2* pSource);
+        XMVECTOR XMLoadFloat3(CONST XMFLOAT3* pSource);
+        XMVECTOR XMLoadFloat4(CONST XMFLOAT4* pSource);
+        #+END_SRC
+
+      - XMCOLOR --> XMVECTOR
+        #+BEGIN_SRC C++
+        XMVECTOR XMLoadColor(CONST XMCOLOR* pSource);
+        #+END_SRC
+
+      - XMVECTOR --> XMFLOAT*
+        #+BEGIN_SRC C++
+        //store XMVECTOR into XMFLOAT*
+        VOID XMStoreFloat2(XMLFLOAT2* pDestination,FXMVECTOR V);
+        VOID XMStoreFloat3(XMLFLOAT3* pDestination,FXMVECTOR V);
+        VOID XMStoreFloat4(XMLFLOAT4* pDestination,FXMVECTOR V);
+        #+END_SRC
+
+      - XMVECTOR --> XMCOLOR
+        #+BEGIN_SRC C++
+        // Loads XMVECTOR into XMCOLOR
+        VOID XMStoreColor(XMCOLOR* pDestination, FXMVECTOR V);
+        #+END_SRC
+**** Summary
+     1. Vector
+        向量,就是具有 *大小*[magnitude]和 *方向*[direction]的 *量*[quantity].
+     2. Vector Operations
+        u(ux,uy,uz),v(vx,vy,vz).
+        +:
+        u+v == (ux+vx,uy+vy,uz+vz);
+        -:
+        u-v == (ux-vx,uy-vy,uz-vz);
+        scalar*:
+        ku == (kux,kuy,kuz);
+        length:
+        ||u|| == sqrt(x^2 + y^2 + z^2)
+        
+        normalization:
+        u^ == u/||u|| == (x/||u||,y/||u||,z/||u||);
+
+        dot product:
+        u.v == (ux+vx,uy+vy,uz+vz);
+
+        projn:
+        p == projn(W) == (w*n)/||n^2||)n
+
+        cross product:
+        uxv = (uyvz-uzvy,uzvx-uxvz,uxvy-uyvx);
+*** TODO 0.2 Matrix Algebra
+    在3D图形学里,我们使用 *矩阵*[matrix] 来描述 *几何变换*[geometric transformations].
+    几何变换包括:
+     - *缩放*[scaling]
+     - *旋转*[rotation]
+     - *translation*[平移]
+    本章学习目标:
+     - 了解矩阵及矩阵运算.
+     - 了解如何将向量-矩阵乘法视为一个 *线性组合*[linear combination]
+     - 学习 *单位矩阵*[identity matrix], *转置矩阵*[transpose], 
+       *行列式*[determinant], *逆矩阵*[inverse]. 
+**** Definition
+     An mxn matrix M is a _rectangle array of real numbers with m rows_
+     _and n colums_.
+     The numbers in a matrix are called *elements* or *entries*.
+
+     只有一行或者一列的矩阵是特殊矩阵,被称作 *行向量*[row vectors] 或者 
+     *列向量*[column vectors].
+
+     现在我们来定义矩阵上的 *equality*, *addtion*, *scalar multiplication* 和
+     *subtraction*.
+     
+     1. 当且仅当两个矩阵的对应元素相等时,矩阵才相等.同时,这两个矩阵必须具有相同的行数和
+        列数.
+     2. 矩阵加法实质是两个矩阵的每个对应元素相加.这两个矩阵必须具有相同的行数和
+        列数. 
+     3. 矩阵的标量乘法就是将标量与矩阵的每个元素相乘.
+     4. 矩阵减法通过矩阵加法和标量乘法实现. A - B = A + (-1*B) = A + (-B)
+**** Matrix Multiplication
+**** Definition
+      矩阵乘法实现点和向量的变换,并通过矩阵乘法将一系列的变换组合在一起.
+      *在此处表示任意,而不是乘法
+      if A: m x n , B: n x p ,then AB --> m x p
+      Cij = Ai* . B*j
+      e.g
+      矩阵的行:
+      A11 A12 A13     <-  A1* ->
+      A21 A22 A23  =  <-  A2* ->
+      A31 A32 A33     <-  A3* ->
+      A1* = [A11,A12,A13]
+      A2* = [A21,A22,A23]
+      A3* = [A31,A32,A33]
+
+      矩阵的列:
+      A11 A12 A13       |    |    |
+      A21 A22 A23  =  A*1   A*2  A*3
+      A31 A32 A33       |    |    |
+      A*1 = [A11,A21,A31]
+      A*2 = [A12,A22,A32]
+      A*3 = [A13,A23,A33]
+
+      矩阵A的列数必须要与矩阵B的行数相同才能计算乘积C.
+**** Vector-Matrix Multiplication
+      矩阵乘法表示矩阵和矩阵相乘,可以分解为多个向量与矩阵分别相乘,
+      而向量与矩阵相乘可以分解为向量分别与多个向量的点积之和.
+      Cij = Ai* . B*j
+      
+      vector-matrix multiplication
+                   [A11 A12 A13]           
+      uA = [x,y,z] [A21 A22 A23] = [x,y,z] [A*1 A*2 A*3]
+                   [A31 A32 A33]                 
+
+      uA = [u.A*1 u.A*2 u.A*3] = [xA11+yA21+zA31 xA12+yA22+zA32 xA13+yA23+zA33]
+         = [xA11,xA12,xA13] + [yA21,yA22,yA23] + [zA31,zA32,zA33]
+         = x[A11,A12,A13] + y[A21,A22,A23] + z[A31+A32+A33]
+         = xA1* + yA2* + zA3*
+
+      uA = xA1* + yA2* + zA3*
+      
+**** The Transpose Matrix
+      转置矩阵,就是将矩阵的行和列互换.假设一个矩阵:
+      M : m x n
+      MT : n x m (转置矩阵)
+
+      转置矩阵有以下性质:
+      (A+B)T = AT + BT --> 分配律
+      (cA)T = cAT --> 标量无关
+      (AB)T = BTAT
+      (AT)T = A
+      (A-1)T = (AT)-1
+**** The Identity Matrix
+     单位矩阵,是指 _行和列相等且除了对角线元素为1其他元素都为0的矩阵_.
+     假设 A : m x n , B : n x p , I : n x n
+     AI = A and IB = B
+     总体来说就是,矩阵和单位矩阵相乘不会改变此矩阵.就像自然数乘法中的1一样.
+     如果M是一个正方形矩阵,则有
+     MI = IM = M.
+**** The Determinant of a Matrix
+     *Determinant*[行列式],是一个特殊的函数,它可以 _将一个正方矩阵映射成实数_,
+     *正方矩阵*[square matrix]被表示为 detA.
+     在几何意义上,它表示是向量围成部分的体积.(描述了线性变换对体积所造成的影响)
+     所以问题在于,为什么需要 *矩阵行列式*?
+     答案是:
+     1. 为了得到它的 *逆矩阵*[inverse of a matrix].
+     2. 可以证明,当且仅当正方矩阵A的行列式 detA!=0时,它才可逆.
+**** Matrix Minors     
+      余子式,给定矩阵 A: m x n,余子式Aij是指删除了第i行和第j列后的(n-1)x(n-1)矩阵.
+      假设有矩阵A:
+          A11 A12 A13
+      A = A21 A22 A23
+          A31 A32 A33
+      
+      余子式(A11):
+            A22 A23
+      A11 = A32 A33
+      
+      余子式(A22)
+      A22 = A11 A13
+            A31 A33
+      余子式(A13)
+      A13 = A21 A22
+            A31 A32
+****** Definition
+       The determinant of a matrix is defined recursively.
+       行列式是用递归定义的.
+       一个4X4矩阵的行列式是3X3矩阵,一个3X3矩阵的行列式是一个2X2矩阵,
+       一个2X2矩阵的行列式是1X1矩阵.(det[A11] = A11)
+       
+* SOMEDAY [#B] Game Design Books[0/2]                            :GameDesign:
+   Things need to learn at this moment
+** SOMEDAY 游戏设计的236个技巧
+** SOMEDAY 游戏设计艺术
+
+* TODO [#C] Games[4/7]                                        :GamePlay:
+*** TODO The Witness
+*** TODO 天空之剑
+*** TODO 风之杖
+* SOMEDAY [#C] C++ Notes                                                :Cpp:
+** Part1 C++基础[C++ Basics]
+*** 声明和定义[declaration & defination]
+**** 变量[variable]
+     一个有名字的,可供程序操作的 *存储空间*.
+     1. 每个变量都有其 *数据类型*.
+     2. 在C++中, *变量[variable]* 和 *对象[object]* 基本等价.
+
+**** 声明[declaration]
+     规定 *变量* 的类型和名字,使得名字为程序所知.
+     一个文件若想使用别处定义的名字则必须包含对那个名字的声明.
+
+**** 定义[defination]
+     规定 *变量* 的类型和名字,同时申请 *存储空间*,也可能为变量赋一个 *初始值*.
+     tips
+     变量 _能且只能_ 被定义一次,但可以被多次声明.
+     e.g
+     #+BEGIN_SRC C++
+        extern int j; //声明
+        int j; //声明并定义
+        extern double pi = 3.14; //定义
+     #+END_SRC
+
+*** 初始化和赋值[initialization & assignment]
+**** 初始化[initialization]
+     1. 在创建变量时赋予其一个初始值.
+     2. 赋值[assignment]
+        将当前值擦除,以新的值来代替.
+*** 指针和引用[pointer & reference]
+**** 复合类型[compound type]
+     复合类型* 是指基于其它类型定义的类型.
+     *指针[pointer]* 和 *引用[reference]* 是其中之一.
+
+**** 指针
+     指针是指向另外一种类型的 *复合类型*.
+     1. 指针本身是一个 *对象*,允许对指针 *赋值* 和 *拷贝*,
+        同时指针可以在生命周期内指向几个不同的对象.
+     2. 指针无须在定义时 *初始化*,但是未初始化的指针的值是 _不确定_ 的.
+     3. 指针 *存放* 某个对象的 *地址*,通过 *解引用符[dereference]* 来获取该 _对象的值_.
+
+**** 引用
+     引用是 *对象的别名*.
+     1. 引用必须被 *初始化*.
+     2. 引用无法重新绑定到 *另外的对象*.
+
+*** 常量[const]
+    1. 如何区分 *常量指针* 和 *指向常量的指针*
+       const在*左边,是 *指向常量的指针* , const在*右边,是 *常量指针*.
+       e.g
+       #+BEGIN_SRC C++
+       int i = 0;
+       const int* p = &i; //指向常量的指针
+       int * const p = &i; //常量指针,
+       #+END_SRC
+
+*** 内联[inline]
+*** 内联函数[inline function]
+    _在编译时展开的函数(避免函数开销)_,通常代码量较小.
+    为什么要使用内联函数?
+          1. 为什么要使用函数?
+             a. 使用函数可以有效减少重复代码量.
+             b. 使用函数是代码更具可读性.
+          2. 为什么要内联?
+             a. 函数调用有开销,影响效率.
+             b. 内联函数在编译时展开,无函数开销.
+             e.g
+             #+BEGIN_SRC C++
+               class Screen
+               {
+               public:
+               using pos = std::string::size_type;
+               Screen() = default;
+               Scrren(pos ht, pos wd, char c) : height(ht), width(wd), contents(ht*wd, c) {};
+               char get() const { return contents[cursor]; }; //隐式内联
+               inline char get(pos ht, pos wd) const; //显示内联
+               Scrren& move(pos ht, pos wd); //可在类定义外设置为内联
+               private:
+               pos cursor = 0;
+               pos height = 0, width = 0;
+               std::string contents;
+               };
+
+               char Screen::get(pos ht,pos wd) const
+               {
+                 .....
+               } //必须在同一文件中
+               inline Screen& Screen::move(pos ht,pos wd)
+               {
+                 .....
+               }//必须在同一文件中
+             #+END_SRC
+             tips
+             声明为inline的类成员函数,声明和定义必须在 _同一个文件中(.h)_.
+
+*** 字符串,矢量和数组[string,vector & array]
+**** using
+     用于使用命名空间[namespace]的命令.
+**** 作用域操作符::
+     表示 *编译器* 应该从::左边的 *作用域* 中查找::右侧的名字.
+     e.g
+     #+BEGIN_SRC C++
+        using namespace std;
+        using std::cout;
+     #+END_SRC
+     tips
+     头文件 _不应该_ 包含using声明
+     因为头文件的内容会 _拷贝到其他引用它的文件_ 中去.
+
+**** 数组[array]
+     存放相同类型对象的 *容器[container]*.
+     1.) 数组是一种 *复合类型*.
+     2.) 数组大小是固定的.
+     3.) 不允许 *拷贝* 和 *赋值*.
+
+**** 数组和指针
+     e.g
+     #+BEGIN_SRC C++
+        string nums[] = {"one","two","three"};
+        string* p = &nums[0]; //与下面等价
+        string* p = nums;
+     #+END_SRC
+
+     C++11中通过 *begin()* 和 *end()* 获取数组 *首指针* 和 *尾指针*:
+     e.g
+     #+BEGIN_SRC C++
+        int ia[] = {0,3,5,11,7,-55};
+        int* beg = begin(ia);
+        int* last = end(ia);
+        for(auto i = beg; i!= last ; ++i)
+        {
+          cout<<*i<<endl;
+        }
+     #+END_SRC
+
+*** 函数[function]
+**** 函数[function]
+     _被命名了的代码块._ 一个函数包括以下部分:
+     返回类型 + 函数名 + 参数列表(>=0) + 函数体
+     int xxx(int y) {}
+
+**** 形参[parameter]和实参[argument]
+     实参是形参的 *初始值*,以对应顺序用实参初始化形参.
+
+**** 局部静态对象[local static object]
+     正常情况下,在函数体内的变量会在函数块执行结束后销毁,在某些时候,我们希望某个
+     局部变量能在函数调用后继续存在,所以需要将该对象定义为static.
+     1. 局部静态对象在 _第一次_ 函数被调用后就初始化,在 _程序终止_ 时被销毁.
+
+*** 类[classes]
+**** 类的基本思想:
+     数据抽象[data abstraction]
+     依赖于 *接口[interface]* 和 *实现[implementation]* 相分离的技术.
+     封装[encapsulation]
+     实现类的接口和实现的分离.
+     优点:
+     1. 确保用户代码不会无意间破坏封装对象的状态.
+
+**** 成员函数[member function]
+     也叫 *方法[method]*,是定义为 _类的一部分_ 的函数.
+
+**** this
+     当我们调用某个成员函数时,其实是在 _替某个对象_ 调用它.
+     成员函数通过名为 this 的额外的隐式参数来访问调用它的对象.
+     this是一个 *常量指针*,指向类生成的具体对象.
+     e.g
+     #+BEGIN_SRC C++
+        Sales_data total;
+        total.isbn() == Sales_data::isbn(&this); //伪代码
+        this->isbn() == (*this).isbn();
+     #+END_SRC
+
+     tips
+     之所以要使用this,主要原因不是要用它来调用成员函数,而
+     是需要把 _调用函数的对象当成一个整体来访问_.
+
+**** 构造函数[constructor]
+     类通过一个或多个特殊的成员函数来控制其对象初始化的过程,这些成员函数就叫
+     *构造函数*.
+     只要对象被创建,就会执行构造函数.
+     构造函数初始值列表[constructor initialize list]
+     e.g
+     #+BEGIN_SRC C++
+        Sales_data(cosnt std::string &s):bookNo(s),units_sold(0),revenue(0){}
+        Sales_data(const std::string &s)
+        {
+          bookNo(s);
+          units_sold(0);
+          revenue(0);
+        }
+     #+END_SRC
+            1. 上述两个构造函数都在对对象进行初始化,但是第二种初始化的方式实质上是先让数据成员以默认
+               值初始化,再对数据成员赋值,进行了不必要的操作.
+            2. 当成员是const或者引用时,必须在 *构造函数初始值列表* 中初始化.
+               e.g
+               #+BEGIN_SRC C++
+               class Initial
+               {
+                 public:
+                 Initial(int ii);
+                 private:
+                 int i;
+                 const int ci;
+                 int& ri;
+               }
+               Initial::Initial(int ii)
+               {
+                 i = ii; //ok
+                 ci = ii; //error
+                 ri = i; //error
+               }
+               Initial::Initial(int ii):i(ii),ci(ii),ri(ii)
+               {
+               } //ok
+               #+END_SRC
+               _推荐第一种_ 初始化方式.
+
+**** 拷贝[copy],赋值[assignment]和析构[destructor]
+     之所以需要手工管理,是因为在类需要分配 _类对象之外_ 的资源时,默认的合成版本往往会失效.
+     需要管理 *动态内存* 的类,几乎都要手动管理.(涉及到指针)
+
+**** 友元[friend]
+     若需要 _其他类或者函数_ 访问当前类的非公有成员,则需要让其他类或者函数成为当前类的友元.
+     友元不是类的成员,所以不受它所在区域的访问控制级别(public,protected,private)的约束.
+     此外,友元函数可以 _定义在类的内部_,这样它是 *隐式内联* 的.
+     优点:
+            1. 解决了必要情况下的访问问题.
+            2. 提高了运行效率(避免了频繁的函数调用带来的开销).
+               缺点:
+               1. 破坏了封装
+               总体 _不推荐_.
+               tips
+               尽量把友元的声明和类本身放在 _同一个头文件_ 中.
+
+**** 类的声明,也叫前向声明[forward declaration]
+     不完全类型[incomplete type]
+     类可以处于 _声明却未定义_ 的状态,我们把这种情况叫做 *不完全类型*.
+     我们已知有这个类类型,却不了解它具体包含哪些成员.
+     应用范围:
+     1. 定义指向这种类型的指针或引用.
+     2. 声明(但不定义)以不完全类型作为参数或者返回类型的函数.
+        e.g(链表的实现)
+        #+BEGIN_SRC C++
+        class Link_Screen
+        {
+          Screen Window;
+          Link_Screen* next;
+          Link_Screen* prev;
+        }
+        #+END_SRC
+**** 默认构造函数[default constructor]
+     当对象被 *默认初始化* 或 *值初始化* 时自动执行默认构造函数.
+     合成的默认构造函数[synthesized default constructor],即由 _编译器创建_ 的构造函数.
+     1. 默认初始化在以下情况发生
+        - 当我们在 _块作用域内_ 不使用任何初始值定义一个 *非静态变量* or *数组* 时.
+        - 当一个类本身含有 *类类型成员* and 使用 *合成的默认构造函数* 时.
+        - 当类类型成员没有在 *构造函数初始值列表* 中显示的初始化时.
+     2. 值初始化在以下情况发生
+        - 在数组初始化的过程中如果我们提供的初始值少于数组的大小时.
+        - 当我们不使用初始值定义一个局部静态变量时.
+        - 当我们通过如T()的表达式显示的请求值初始化时,T是类型名.
+        tips
+        在实际中,如果定义了其他构造函数,那么最好也提供一个默认构造函数.
+**** 隐式类类型转换
+     1. 隐式的类类型转换只出现于构造函数 _仅有一个实参_ 时.
+        通常我们把这种构造函数叫做 *转换构造函数[converting constructor]*.
+        e.g
+        #+BEGIN_SRC C++
+        string null_book = "9-99-999";
+        item.combine(null_book); //隐式转换为Sales_item(null_book)
+        #+END_SRC
+     2. 同时,编译器只会自动地执行 _一步类型转换_.
+        e.g
+        #+BEGIN_SRC C++
+        item.combine("9-99-999"); //error,"9.."->string->Sales_item 不止一步
+        item.combine(string("9-99-999")); //ok,(显示)string->(隐式)Sales_item
+        item.combine(Sales_item("9-99-999")); //ok,(隐式)string->(显示)Sales_item
+        #+END_SRC
+     3. 如何 _抑制_  构造函数定义的隐式转换.
+        将构造函数声明为 *explicit[显示的]*.
+        同时,explicit构造函数只能用于 _直接初始化_.而非 _拷贝形式的(使用=)_ 初始化.
+        e.g
+        #+BEGIN_SRC C++
+        Sales_item item1(null_book); //ok
+        Sales_item item2 = null_book; //error
+        #+END_SRC
+**** 类的静态成员[static member]
+     1. 与 _类本身_ 而不是它的对象相关的成员.
+     2. 同样, *静态成员函数* 也 _不与对象绑定_ and _不包含this指针_ and _不能声明成const_.
+     3. 通过作用域访问符::来直接访问静态成员 or obj.fun() or obj->fun().
+     4. 不由类的构造函数初始化 and 必须在 _类的外部定义和初始化_ 每个静态成员.
+     5. 一旦被定义,将存在于程序的整个生命周期中.
+     6. 静态数据成员可以是 *不完全类型*.
+
+        e.g
+        #+BEGIN_SRC C++
+      class Account
+      {
+      public:
+      Account() = default;
+      Account(string s,double n,double nn):owner(s),amount(n), interestRate(nn){}; //error
+      void calculate() { amount += amount * interestRate; };
+      static double rate() { return interestRate; }; //ok
+      const static double rate() { return interestRate; }; //ok
+      static double rate() const { return interestRate; }; //error
+      private:
+      string owener;
+      double amount;
+      static double interestRate;
+      };
+        #+END_SRC
+**** 静态成员函数[static member  function]
+     1. 可以通过类名或者类的对象来调用静态成员函数.
+        e.g
+        #+BEGIN_SRC C++
+        class Point
+        {
+          public:
+          void init();
+          static void output();
+        }
+        Point::init(); //error
+        Point::output(); //ok
+        Point p;
+        p.init(); //ok
+        p.output(); //ok
+        #+END_SRC
+     2. 静态成员函数中 _不能引用非静态成员_.
+        因为静态成员函数属于类而不是对象,在对象初始化之前就已经定义,而非静态成员必须在对象初始化后
+        才定义.
+     3. 类的非静态成员函数可以使用类的静态成员.
+        原理同上.
+     4. 类的静态成员变量 _使用前必须初始化_.
+
+** Par2 标准库[STL]
+*** IO
+    0. 流[stream]
+       术语 *流*,表示一个 *字符序列*,意味着 _从IO设备读出_ or _写入IO设备_.
+       *流* 想要表达的是,随着时间推移,字符是 _顺序生成或消耗_ 的.
+       a. 向流写入数据
+       输出运算符[<<]
+       <<运算符接受两个对象:左侧的运算对象必须是一个ostream对象,右侧的运算符
+       对象是 _要打印的值_.运算符将 _给定的值_ 写入到给定的ostream对象中.
+       <<运算符的计算结果就是其 _左侧运算对象_.
+       (实质上是把右侧的值放到ostream中,然后再把流输出到IO)
+       #+BEGIN_SRC C++
+          cout << "Enter two ..." << endl;
+       #+END_SRC
+       b. 从流读取数据
+       输入运算符[>>]
+       >>运算符接受一个istream作为其左侧对象,接受一个对象作为右侧对象,它从给定
+       的istream读入数据,并 _存入给定对象中_.
+       >>运算符返回 _左侧的运算对象_ 为计算结果.
+       (实质上是从IO中读取数据放到istream中,再把istream中的数据存入运算符右侧
+       对象)
+    1. IO库类型和头文件
+       | 头文件   | 类型                                     |
+       | iostream | istream ostream iostream                 |
+       | fstream  | ifstream ofstream fstream                |
+       | sstream  | istringstream ostringstream stringstream |
+
+       总结就三个, *流* | *文件* | *string* |
+       iostream -> fstream (fstream 继承自 iostream)
+       iostream -> stringstream (stringstream 继承自 iostream)
+
+    2. IO对象 _无拷贝和赋值_
+       由于不能拷贝IO对象,所以我们不能将 _形参或返回类型_ 设置为流类型.
+       通常情况下,以 *引用* 的方式传递和返回流.
+       同样,传递和返回的引用也不能是 const 的.
+       e.g
+       #+BEGIN_SRC C++
+       ofstream out1,out2;
+       out1 = out2;       //error,no assignment
+       ofstream print(ofstream); //error,can not initialize
+       out2 = print(out2) ;; //error,no copy
+       #+END_SRC
+
+    3. 输出缓冲[output buffer]
+       每个输出流都管理一个缓冲区,用来保存程序 _读写的数据_.
+       有了缓冲机制,操作系统可以将程序的 _多个输出操作_ 合成 _单一的_ *系统级写操作*.
+       而由于写操作可能很 *耗时*,将多个输出操作合为单一的写操作可以带来很大的性能提升.
+
+       导致缓冲刷新的原因有很多:
+       - 程序正常结束,作为main函数的return操作的一部分,缓冲刷新被执行.
+
+       - 缓冲区满时,需要刷新缓冲,而后新的数据才能写入缓冲区.
+
+       - 可以使用 *操纵符* 如endl来 _显示刷新_ 缓冲区.
+
+       - 在每个输出操作后,可以使用操纵符unitbuf设置流的内部状态来清空缓冲区.
+
+       - 一个 *输出流* 可能被关联到另一个流.在此情况下,当读写被关联的流时,关联到的流的缓冲区
+         会被刷新.
+
+    4. 刷新输出缓冲区
+       e.g
+       #+BEGIN_SRC C++
+       cout << "hi!" << endl;  //输出hi和一个 换行符,然后刷新缓冲区
+       cout << "hi!" << flush; //输出hi,然后刷新,不附加任何额外字符
+       cout << "hi!" << ends;  //输出hi和一个 空字符,然后刷新缓冲区
+       #+END_SRC
+
+       unitbuf
+       如果每次输出后都想刷新缓冲区,则使用unitbuf.
+       e.g
+       #+BEGIN_SRC C++
+       cout << unitbuf;   //开始unitbuf
+       cout << ...
+       ...
+       cout << nounitbuf; //关闭unitbuf,回到正常刷新状态
+       #+END_SRC
+**** 文件输入输出
+     fstream定义了三个类型来支持文件输入/输出:
+     - ifstream *从* 一个给定文件 _读取数据_.
+     - ofstream *向* 一个给定文件 _写入数据_.
+     - fstream 读写 _给定文件_.
+
+     - 文件模式[file mode]
+       用来指出如何使用文件.
+       每个文件流类型都定义了一个默认的文件模式.
+       a. 与ifstream关联的文件默认以in模式打开.
+       b. 与ofstream关联的文件默认以out模式打开.
+       c. 与fstream关联的文件默认以in和out模式打开.
+
+       | in     | 以只读方式打开               |
+       | out    | 以写方式打开                 |
+       | app    | 每次操作前均定位到文件末尾   |
+       | ate    | 打开文件后立即定位到文件末尾 |
+       | trunc  | 截断文件(截断:重写)          |
+       | binary | 以二进制方式进行IO           |
+       e.g
+       #+BEGIN_SRC C++
+       //file1被截断
+       ofstream out("file1"); //默认以输出模式打开并截断文件
+       ofstream out2("file1", ofstream::out); //隐含的截断文件
+       ofstream out3("file1", ofstream::out | ofstream::trunc); //显示的...
+       //为了保留文件内容,必须显示指定app模式
+       ofstream app("file2", ofstream::app); //默认以输出模式
+       ofstream app2("file2", ofstream::out | ofstream::app); //显示的...
+       #+END_SRC
+**** String流
+     1. istringstream
+        当我们的某些工作是对整行文本进行处理,而其他一些工作是处理行内的单个单词,通常
+        可以使用istringstream.
+        e.g
+        #+BEGIN_SRC C++
+        struct PersonInfo
+        {
+        std::string name;
+        std::vector<std::string> phones;
+        };
+        std::vector<PersonInfo> getline_PersonInfo()
+        {
+        std::string line, word;
+        std::vector<PersonInfo> people;
+        while (getline(std::cin,line))
+        {
+        PersonInfo info;
+        std::istringstream record(line);
+        record >> info.name;
+          while (record >> word)
+          {
+          info.phones.push_back(word);
+          }
+          people.push_back(info);
+        }
+        return people;
+        }
+
+        #+END_SRC
+     2. 当我们逐步构造输出,希望最后一起打印时,ostringstream是很有用的.
+
+*** 容器[container]
+   
+    **
+    **
+    **
+    **
+    **
+*** 动态内存[dynamic memory]
+**** 内存分类
+     - 栈[heap]
+       由编译器 _自动创建和销毁_.用于保存定义在函数内的非static对象,仅在 _定义的程序块运行时_ 存在.
+
+     - 静态内存[static memory]
+       由编译器 _自动创建和销毁_,用于保存局部static对象和类static数据成员.在 _程序结束时_ 销毁.
+
+     - 堆[heap],也叫自由空间[free memory]
+       用于存储 *动态分配[dynamically allocate]* 对象.
+**** 智能指针
+     默认的动态内存管理使用 new 和 delete.但在正确的时间释放内存很困难,所以才有了 *智能指针*.
+     1. shared_ptr
+        允许多个指针指向同一个对象.
+        e.g
+        #+BEGIN_SRC C++
+        shared_ptr<string> p1 = make_shared<string>("what"); //ok
+        cout<<p1.use_count(); //1
+        auto q(p);
+        cout<<p1.use_count(); //2
+        cout<<q.use_count(); //2
+        #+END_SRC
+     2. unique_ptr
+        独占该对象.
+        当unique_ptr被销毁时,它绑定的对象也随之销毁.
+        不支持普通的 *拷贝* 和 *赋值*.
+        e.g
+        #+BEGIN_SRC C++
+        unique_ptr<double> p1; //ok
+        unique_ptr<double> p2(new double(42)); //ok
+        auto p3(p2); //error
+        auto p4 = p2; //error
+        #+END_SRC
+     3. weak_ptr
+        弱引用,指向shared_ptr所管理的对象.
+
+     使用动态内存出于以下三种原因之一:
+     1. 程序不知道自己需要使用 _多少对象_.
+     2. 程序不知道所需对象的准确类型.
+     3. 程序需要对象间 _共享类型_.
+*** 泛型算法[generic algorithm]
+    叫它泛型:
+    可以将它用于不同类型的元素和多种容器类型.
+    叫它算法:
+    它实现了一些经典算法的 *公共接口*,如排序和搜索.
+
+**** 泛型算法的特点
+     1. 泛型算法的访问操作通过迭代器实现,而迭代器令其不依赖于容器.
+
+     2. 泛型算法依赖于元素类型的操作,因为匹配元素时要求元素支持 _相关的运算符_.
+
+     3. 算法 *永远不会* 执行容器的操作,而只会运行在迭代器上,执行迭代器的操作.
+        这个特性带来的是:算法永远不会 _改变底层容器的大小_.它可以改变容器元素,
+        移动元素位置,却不会直接添加/删除元素.
+
+***** 初识
+      标准库算法 _大部分_ 都是 _对一个范围内的元素_ 进行操作.这个范围被称作 *输入范围*.
+      而应用输入范围的算法的结构总是 algo(begin,end,...)
+      虽然大多数算法遍历输入范围的方式相似,但对范围内元素的 _操作却不同_ (读取元素/改变元素/重排元素...)
+
+** Part3 类设计者的工具
+*** 拷贝控制[copy control]
+    *拷贝和移动构造函数* 定义了当 _用同类型的另一个对象_ 初始化 _本对象_ 时做什么.
+    *拷贝和移动赋值运算符* 定义了将一个对象赋予 _同类型的另一个对象_ 时做什么.
+    实现拷贝控制最难的地方在于知道 _什么时候需要_ 定义这些操作.
+**** 拷贝构造函数[copy constructor]
+     e.g
+     #+BEGIN_SRC C++
+     class Foo
+     {
+       public:
+       Foo();
+       Foo(const Foo&) ;; //copy constructor
+     }
+     #+END_SRC
+
+**** 拷贝赋值运算符[copy-assignment operator]
+     赋值运算符通常应该返回一个指向其 _左侧运算对象的引用_.
+     如果一个运算符是一个 *成员函数*,其 _左侧运算对象_ 就绑定到隐式的this参数.
+     e.g
+     #+BEGIN_SRC C++
+     class Foo
+     {
+       public:
+       Foo();
+       Foo& operator=(const Foo&); //copy assignment
+     }
+     #+END_SRC
+**** 移动构造函数[move constructor]
+**** 移动赋值运算符[move-assignment operator]
+**** 析构函数[destructor]
+     不接受参数,所以不能被重载,一个类只有 *唯一* 的析构函数.
+     通常,析构函数释放对象在 *生存期* 分配的 _所有资源_.
+     需要析构函数的类 _也需要_ *拷贝* 和 *赋值* 操作.反之亦然.
+
+     1.什么时候会调用析构函数?
+     - *变量* 在离开其 *作用域* 时被销毁.
+     - 当一个 *对象* 被销毁时,其 *成员* 被销毁.
+     - *容器* 被销毁时,其 *元素* 被销毁.
+     - 对于 *动态分配的对象*,在对 *指向它的指针* 应用 *delete* 运算符时被销毁.
+     - 对于临时对象,当创建它的 *完整表达式结束* 时被销毁.
+**** =default和=delete
+     =default
+     表示 _显示地_ 要求编译器生成合成的版本.
+     e.g
+     #+BEGIN_SRC C++
+     class Sales_data
+     {
+       public:
+       Sales_data() = default;
+       Sales_data(const Sales_data&) = default;
+       Sales_data& operator= (const Sales_data&);
+       ~Sales_data();
+     }
+     Sales_data& Sales_data::operator= (const Sales_data&) = default;
+     #+END_SRC
+
+     =delete
+     目的在与 _阻止_ 拷贝与赋值.
+     不要delete *析构函数*.
+     e.g
+     #+BEGIN_SRC C++
+     struct NoCopy
+     {
+       NoCopy() = default;
+       NoCopy(const NoCopy&) = delete;
+       NoCopy& operator= (const NoCopy&) = delete;
+       ~NoCOpy() = default;
+     }
+     #+END_SRC
+
+     Warning
+     如果一个类有 *数据成员* 不能 _默认构造,拷贝,复制或销毁_,则对应的 *成员函数* 将被定义为
+     =delete.
+**** 拷贝控制和资源管理
+     在我们定义类的成员时,必须确定该类型对象的 *拷贝语义*.
+     可以定义拷贝操作,让类的行为像一个 *值* 或者像一个 *指针*.
+     1.) 类的行为像值
+     当我们拷贝一个像值的对象时, *副本* 和 *原对象* 是完全独立的.
+     e.g
+     #+BEGIN_SRC C++
+         class HasPtr
+         {
+           public:
+             HasPtr(const string& s = string()):ps(new string(s)),i(0) {}
+             HasPtr(const HasPtr& p):ps(new string(*p.ps)),i(p.i){}
+             HasPtr& operator=(const HasPtr&);
+             ~HasPtr(){ delete ps;}
+           private:
+             string* ps;
+             int i;
+         }
+         HasPtr& HasPtr::operator=(const HasPtr& p)
+         {
+           auto newp = new string(*p.ps);
+           delete ps;
+           ps = newp;
+           i = p.i;
+           return *this;
+         }
+     #+END_SRC
+     赋值运算符必须要考虑两点:
+     - 如果将一个对象赋予自身,赋值运算符必须能正确工作.(所以要先拷贝,再析构)
+     - 大多数赋值运算符 _组合了_ *析构函数* 和 *拷贝构造函数* 的工作:
+       a.拷贝右侧对象 b.析构左侧对象 c.赋值
+     2.) 类的行为像指针
+     副本和原对象 *共享状态*.改变副本也会改变原对象.
+***** 引用计数[reference count]
+      引用计数的工作方式:
+      - 除了初始化对象,每个构造函数(不包括拷贝构造函数)还要创建一个引用计数,用来
+        记录有多少对象与正在创建的对象 *共享状态*.
+      - 拷贝构造函数不分配新的计数器,而是拷贝给定对象的数据成员,包括计数器.拷贝构
+        造函数 *递增* 共享的计数器.
+      - 析构函数 *递减* 计数器.若计数器变为0,则析构函数 *释放状态*.
+      - 拷贝赋值运算符 *递增右侧* 对象的计数器, *递减左侧* 对象的计数器.如果左侧
+        变为0,则拷贝运算符 *销毁状态*.
+*** 面向对象程序设计[OOP]
+    OOP的三大概念:
+    数据抽象[data abstraction],将 *接口* 和 *实现* 分离.
+    继承[inheritance],定义相似的类并对其相似关系 *建模*.
+    动态绑定[dynamic binding],一定程度忽略相似类型的区别,以统一的方式使用它们的对象.
+    当且仅当 _通过指针或引用_ 调用 *虚函数* 时,才会在运行时解析该调用,也只有在这种情况
+    下对象的 _动态类型才会与静态类型_ 才 _有可能_ 不同.
+**** 继承[inheritance]
+     1. 基类[base class],其他类直接或间接从基类派生,基类为最根部的类.
+        定义基类
+        基类通常都应该定义一个 *虚析构函数[virtual destructor]*.
+
+     2. 派生类[derived class],从基类继承了成员和接口的类.
+        定义派生类
+        如果一个派生类是公有[public]的,则基类的公有成员也是派生类接口的组成部分.同时,我们也能将
+        公有派生类的对象绑定到 _基类的引用或指针_ 上.
+
+        一个派生类对象包含多个组成部分,一个含有派生类 _自己定义的(非静态)成员_ 的自对象,以及一个
+        与该派生类继承的 _基类对应_ 的自对象.
+        因为在派生类对象中含有与其基类对应的组成部分,所以我们能 _把派生类对象当基类对象用_,而且也
+        能将 _基类的指针或引用绑定到派生类对象中的基类部分_.
+        e.g
+        #+BEGIN_SRC C++
+        Quote item;         //base class
+        Bulk_Quote bulk;    //derived class
+        Quote* p = &item;   //p指向Quote
+        p = &bulk;          //p指向Bulk_Quote的Quote部分
+        Quote& r = bulk;    //r绑定到bulk的Quote部分
+        #+END_SRC
+        以上,叫做 _派生类到基类_ 的 *隐式类型转换*.
+        在派生类对象中含有基类对应的组成成分,所以才能叫做 *继承*.
+
+     3. 虚函数[virtual function]
+        对于某些函数,基类希望它的派生类各自定义合适自身的版本,具体做法就是将该函数声明为virtual.
+        派生类必须在其内部对所有重新定义的虚函数进行 *声明*(override),也可以在派生的虚函数前加
+        virtual关键字,但 _不是必须_ 的.
+        如果派生类没有覆盖其基类中的某个虚函数,则派生类 _直接继承_ 其在基类中的版本.
+
+     4. 动态绑定[dynamic binding],也叫 运行时绑定[run-time binding]
+        所谓动态绑定,就是当在调用基类的虚函数时,根据调用对象是基类对象还是派生类对象来选择
+        调用的函数的版本.
+
+     5. 派生类构造函数[constructor of derived class ]
+        每个类控制 _它自己的_ 成员初始化过程.
+        尽管派生类对象中含有从基类继承而来的成员,但是派生类 _并不能直接初始化_ 这些成员.
+        派生类需要用 _基类的构造函数_ 来初始化它的基类部分.
+        派生类应该 _遵循基类的接口_,并且通过调用基类的构造函数来初始化那些从基类继承而来的成员.
+
+        e.g
+        #+BEGIN_SRC C++
+        Bulk_Quote(const string& book,double p,size_t qty,double disc):
+                   Quote(book,p),
+                   min_qty(qty),
+                   discount(disc)
+                   {};
+        #+END_SRC
+     6. 继承与静态成员
+        如果基类定义了一个 *静态成员*,则在整个体系中都只存在它的 _唯一定义_.
+        #+BEGIN_SRC C++
+        class Base
+        {
+          public:
+          static void statmem();
+        }
+        class Derived : public Base
+        {
+          void f(cosnt Derived&)
+        }
+        void Derived::f(const Derevied&)
+        {
+          Base::statmem(); //ok
+          Derived::statmem(); //ok
+          derived_obj.statmem(); //access by obj
+          statmem(); //access by this
+        }
+        #+END_SRC
+     7. final
+        当我们不希望定义的类被其他类继承时,为了防止继承的发生,我们可以在类后面加关键词
+        final.
+        e.g
+        #+BEGIN_SRC C++
+        class NoDerived final {}
+        #+END_SRC
+     8. 重构[refactoring]
+        重构负责 _重新设计类的体系_ 以便将 *操作和/或数据* 从一个类移动到另一个类中.
+
+***** 类型转换与继承[type converting and inheritance]
+      理解基类和派生类之间的类型转换是理解C++面向对象编程的关键所在.
+      通常情况下,如果我们想把引用或者指针绑定到一个对象,引用与指针的类型应该与对象一致.
+      而在继承关系的类中则是例外,我们可以 _把基类的指针和引用绑定到派生类对象上_.
+      这意味着,当使用基类的指针或引用时,我们并不清楚所绑定的对象的真实类型.
+
+      1. 静态类型与动态类型
+         静态类型的表达式或者对象在 *编译时* 可知.
+         动态类型的直到 *运行时* 才可知.
+         如果表达式既不是引用也不是指针,则它的动态类型永远与静态类型一致.
+
+      2. 不存在 _从基类向派生类_ 的隐式类型转换.
+         每个派生类都包含了基类的完整部分,所以存在从派生向基类的类型转换.
+         这是一个包含与被包含的关系.
+
+      3. 当用一个派生类对象为一个基类对象初始化或者赋值时,只有该派生类对象中的
+         _基类部分_ 会被拷贝,移动或赋值,它的派生类部分会直接被忽略.
+
+      4. 关键概念:
+         - 从派生类向基类的类型转换只对 _指针或引用类型_ 有效.
+         - 基类向派生类 _不存在_ 隐式类型转换.
+         - 派生类向基类的类型转换也可能由于 *访问受限* 而不可行.
+***** 虚函数[virtual function]
+      不管它是否被用到,我们必须为每个虚函数都提供 *定义*.因为虚函数可能在 *运行时* 才被
+      解析,所以编译器无法确定到底会使用哪个虚函数.
+      动态绑定[dynamic binding] 只有在我们 _通过指针或引用_ 调用虚函数时才会发生.
+
+      纯虚函数[pure virtual]
+      如果当前类的函数在现实中无意义(是抽象的),则需要用纯虚函数来表示.
+      若类的函数中有纯虚函数,则该类为 *抽象基类*,意味着该类不能创建具体的 *对象*.
+      e.g
+      #+BEGIN_SRC C++
+     double net_price(size_t n) const = 0; //只需要加=0就行,virtual不是必须
+      #+END_SRC
+
+      虚析构函数[virtual destructor]
+      在继承关系中,务必将基类的析构函数声明为虚函数.只有这样,才能动态分配继承体系中的对象.
+
+***** 访问控制与继承[access control and inheritance]
+      受保护的成员[protected]
+      protected表示类希望与它的派生类分享但是不想被其他公共访问使用的成员.
+      - protected成员对 _类的用户_ 来说是 *不可访问* 的.(像private成员)
+
+      - protected成员对 _派生类成员和友元_ 是 *可访问* 的.(像public成员)
+
+      - 派生类的成员或友元只能通过 *派生类对象* 来访问基类的protected成员.派生类对于
+        *基类对象* 中的受保护成员没有任何访问特权.
+
+        e.g
+        #+BEGIN_SRC C++
+        class AnotherBase
+        {
+        protected:
+        int prot_mem;
+        };
+
+        class Sneaky : public AnotherBase
+        {
+        friend void clobber(Sneaky&);
+        friend void clobber(AnotherBase&);
+        int j;
+        };
+
+        void clobber(Sneaky& s)
+        {
+        s.j = s.prot_mem = 0;        //ok
+        }
+
+        void clobber(AnotherBase& b)
+        {
+        b.prot_mem = 0;              //error,派生类对于基类对象的protected成员没有访问权限
+        }
+        #+END_SRC
+***** 名字查找与继承[name-find and inheritance]
+      以p->mem() or obj.mem() 为例,介绍继承时函数调用的解析过程.
+      1. 首先确定p(or obj)的静态类型.
+      2. 在p(or obj)的静态类型对应的类中查找mem.如果找不到,则依次在直接基类中不断查找
+         直到到达继承链的顶端.如果依然找不到,则报错.(向上回溯)
+      3. 如果找到了mem,则进行常规的类型检查以确认对于当前找到的mem,本次调用是否合法.
+      4. 如果调用合法,则编译器将根据用户是否是虚函数而产生不同的代码:
+         - 如果是虚函数 and 我们是通过引用 or 指针进行的调用,则编译器产生的代码将在运行时
+           确定调用虚函数的具体版本,依据是对象的 *动态类型*.
+         - 反之,不是虚函数 or 非引用 or 指针,则编译器产生一个 _常规函数调用_.
+***** 合成拷贝控制与继承[synthesized copy control and inheritance]
+      1. 在类的继承关系中,基类或派生类的 *合成拷贝控制成员* 的行为与其他合成的构造函数,
+         赋值运算符或析构函数类似:它们对 _类本身的成员_ 依次进行初始化,赋值或销毁操作.
+      2. 此外,这些成员还负责使用 *直接基类* 中对应的操作对 _一个对象的直接基类部分_ 进行
+         初始化,赋值或销毁.
+
+         e.g
+         - 合成的Bulk_Quote默认构造函数运行Disc_Quote的默认构造函数,后者则运行Quote
+           的默认构造函数.(constructor: Bulk_Quote -> Disc_Quote -> Quote)
+         - Quote的默认构造函数将bookNo成员默认初始化为空字符串,同时使用类内初始值将price
+           初始化为0.
+         - Quote的构造函数完成后,继续执行Disc_Quote的构造函数,它使用类内初始值初始化qty
+           和discount.
+         - Disc_Quote的构造函数完成后,继续执行Bulk_Quote的构造函数,但是它什么具体工作
+           也不做.
+
+      3. 对于派生类的析构函数来说,它除了销毁派生类自己的成员外,还负责 _销毁_ 派生类的
+         *直接基类*,而该直接基类又销毁它自己的直接基类,以此类推.(直接基类就是自己继承
+         的上一级的类)
+***** WAITING 动态数组[dynamic array]
+   注意: _大多数_ 应用都没有直接访问动态数组的需求.在大部分情况下,使用标准库容器而不是
+   动态分配的数组是更好的选择.
+   e.g
+   #+BEGIN_SRC C++
+   int* pia = new int[get_size()];
+
+   typedef int arrT[42]; //ok
+   using arrS = int [42]; //ok
+   int* p = new arrT; //ok
+   int* q = new arrS; //ok
+   #+END_SRC
+   1. 分配一个数组会得到一个元素类型的 *指针*.
+      当用new分配一个数组时,我们并未得到一个数组类型的对象,而是一个数组元素类型的指针.
+      由于分配的并存并不是一个数组类型,所以不能对动态数组调用begin或end操作,
+      同样也不能用for范围语句来处理数组中的元素.
+      //e.g
+     #+BEGIN_SRC C++
+     int a[] = { 1,4,2,33,15 };
+	 auto begit = begin(a);
+	 auto endit = end(a);
+	 while(begit!=endit)
+	 {
+		 cout << *begit << " ";
+		 ++begit;
+	 }
+     #+END_SRC
+
+   2. 初始化动态分配对象的数组.
+      默认情况下,new分配的对象都是 *默认初始化* 的.
+      也可以对数组中的元素进行 *值初始化*,方法就是在数组大小后接 ().
+      动态分配一个 _空数组_ 是合法的,它的指针是一个空指针.
+      e.g
+      #+BEGIN_SRC C++
+      int* pia = new int[10]; //默认初始化
+      int* pia2 = new int[10](); //值初始化
+      int* pia3 = new int[10]{1,2,3,4,5,6,7,8,9,0}; //C++11
+
+      const int n = 10;
+	  int* pia = new int[n]{ 0,2,3,4,9,8,10,22,31,9 };
+	  int* p = pia;
+  	  while (p != pia+n)
+	  {
+		  cout << *p << " ";
+		  ++p;
+	  }
+      #+END_SRC
+
+   3. 释放动态数组
+      delete[] p; //必须加[]
+
+   4. 智能指针和动态数组
+      在使用unique_ptr的动态数组时,不支持成员访问运算符(. 和 ->).
+      但是可以使用 [].
+      e.g
+      #+BEGIN_SRC C++
+      unique_ptr<int[]> up(new int[10]);
+      up.release(); //自动调用delete[]销毁其指针.
+      for (size_t n = 0; n != 10; ++n)
+      {
+        up[n] = n;
+      }
+
+      //如果要使用shared_ptr,需要自定义删除器
+      shared_ptr<int> sp(new int[10],[](int* p) {delete []p;});
+      #+END_SRC
+
+   5. allocator
+      new在灵活性上有一定的缺陷,其中一个原因是它将 *内存分配* 和 *对象构造* 组合在了一起.
+      类似的,delete将 *对象析构* 和 *内存释放* 组合在一起.
+      我们分配 _单个对象_ 时,当然希望将内存分配和对象构造组合在一起.
+      但是考虑我们需要分配一大块内存时,我们通常按需来构造不同的对象以组合.在这种情况下,我们
+      希望内存分配和对象构造分离开.
+      解决这个问题,就意味着我们可以先分配一大块内存,在需要时才执行对象创建.
+      *allocator* 就是为了让我们将 *内存分配* 和 *对象构造* 分离开来而准备的.
+
+      e.g
+      #+BEGIN_SRC C++
+      string* const p = new string[n];
+      string s;
+      string* q = p;
+      while (cin>>s && q!=p+n)
+      {
+        *q++ = s;
+      }
+      const size_t size = q-p;
+      delete[] p;
+      //上面版本造成了不必要的浪费,二次赋值,初始化分配的n个元素不一定能用到
+
+      allocator<string> alloc;
+      auto const p = alloc.allocate(n);
+      auto q = p;
+      alloc.construct(q++); //*q == null
+      alloc.construct(q++,10,'c'); //*q = cccccccccc
+      alloc.construct(q++,"hi"); //*q = hi
+
+      while (q != p)
+      {
+        alloc.destroy(--q);
+      }
+
+      #+END_SRC
+     
+
+* SOMEDAY Spacemacs                                               :Spacemacs:
+** 简介
+   Spacemacs 是一份 emacs 的配置文件，想要使用它，你先要有 emacs。
+** 安装 & 使用
+   $ git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+   $ emacs
+** 配置文件
+   Spacemacs 的配置文件位于 ~/.spacemacs 中，我们只需要修改这个文件就可以制定自己的配置了。
+
+   一般情况下，我们只需要在 dotspacemacs-configuration-layers 中添加自己需要的 layer 就可以了。
+** 常用快捷键
+*** 配置文件管理
+   SPC f e d 快速打开配置文件 .spacemacs
+   SPC f e R 同步配置文件
+   SPC q R 重启 emacs
+
+*** 帮助文档
+   SPC h d 查看 describe 相关的文档
+   SPC h d f 查看指定函数的帮助文档
+   SPC h d b 查看指定快捷键绑定了什么命令
+   SPC h d v 查看指定变量的帮助文档
+
+*** 文件管理
+   SPC f f 打开文件（夹），相当于 $ open xxx 或 $ cd /path/to/project
+   SPC / 用合适的搜索工具搜索内容，相当于 $ grep/ack/ag/pt xxx 或 ST / Atom 中的 Ctrl + Shift + f
+   SPC s c 清除搜索高亮
+   SPC f R 重命名当前文件
+
+   SPC b k 关闭当前 buffer (spacemacs 0.1xx 以前)
+   SPC b d 关闭当前 buffer (spacemacs 0.1xx 以后)
+   SPC SPC 搜索当前文件
+
+***  窗口管理
+
+   SPC f t 或 SPC p t 用 NeoTree 打开/关闭侧边栏，相当于 ST / Atom 中的 Ctrl(cmd) + k + b
+   SPC f t 打开当前文件所在的目录
+   SPC p t 打开当前文件所在的根目录
+
+   SPC 0 光标跳转到侧边栏（NeoTree）中
+   SPC n(数字) 光标跳转到第 n 个 buffer 中
+
+   SPC w s 或 SPC w - 水平分割窗口
+   SPC w v 或 SPC w / 垂直分割窗口
+   SPC w c 关闭当前窗口 (spacemacs 0.1xx 以前)
+   SPC w d 关闭当前窗口 (spacemacs 0.1xx 以后)
+*** 项目管理
+   SPC p p 切换项目
+   SPC p D 在 dired 中打开项目根目录
+   SPC p f 在项目中搜索文件名，相当于 ST / Atom 中的 Ctrl + p
+   SPC p R 在项目中替换字符串，根据提示输入「匹配」和「替换」的字符串，然后输入替换的方式：
+
+   E 修改刚才输入的「替换」字符串
+   RET 表示不做处理
+   y 表示只替换一处
+   Y 表示替换全部
+   n 或 delete 表示跳过当前匹配项，匹配下一项
+   ^ 表示跳过当前匹配项，匹配上一项
+   , 表示替换当前项，但不移动光标，可和 n 或 ^ 配合使用
+
+*** 对齐
+   SPC j = 自动对齐，相当于 beautify
+   Shell 集成 (必须先配置 Shell layer)
+
+   SPC '(单引号) 打开/关闭 Shell
+   C-k 前一条 shell 命令，相当于在 shell 中按上箭头
+   C-j 后一条 shell 命令，相当于在 shell 中按下箭头
+   快速翻页 (在 spacemacs 0.1xx 中没测试过)
+
+   SPC n , 或 . 或 < 或 > 进入 scrolling transient state
+   然后重复按 , 或 . 或 < 或 > 即可，
+   按其他键会退出 scrolling transient state
+   , 向上翻一页
+   . 向下翻一页
+   < 向上翻半页
+   > 向下翻半页

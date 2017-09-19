@@ -1,0 +1,80 @@
+* TODO Org Basic
+  :LOGBOOK:
+  CLOCK: [2017-09-18 周一 22:51]--[2017-09-18 周一 22:51] =>  0:00
+  :END:
+M = Alt , S = Shift , C = Ctrl
+
+//基本操作
+TAB 遍历文档
+
+//标题操作
+M-Ret 从当前位置插入同级标题(可能会隔断当前标题)
+C-Ret 从当前位置插入同级标题
+M-O 插入下一级标题
+M-Left/Right 升级/降级当前标题
+M-Up/Down 在同级标题中上移/下移当前标题
+
+//进度管理
+S-Left/Right  设置标题状态[todo / done ...]
+S-Up/Down 设置标题优先级[#A #B #C]
+
+//文本列表
+有序列表:
+1. 或者 1) 开头
+
+无序列表:
+-,+ 或者 * 开头
+
+描述列表:
+使用::将项和描述分开
+
+脚注:
+输入[fn:xxx] 或者 [, i f] 可以插入脚注,按回车查看注释.
+在脚注范围内按下 [, ,] 可以在脚注和解释之间移动.
+
+插入链接:
+[[http:www.xxx.com][]] 后面的[]输入描述.
+[[http:www.theorymystic.com][我的网站]]
+
+待办事项:
+t 来确定 TODO | DONE 等状态
+
+日程表 org-agenda
+(, a) 呼出菜单
+q 退出
+ 
+时间
+(, s) scheduled time
+(, d) deadline
+shift + left/right 以天为单位调整日期
+(, .) 时间戳
+在写入时间后面 
++1d(每天重复) +1w(每周重复) +1m(每月重复)  +1y(每年重复)
+e.g
+2017-09-18 周一 10:00 +1d 表示每天都要重复
+
+时间段
+2017-09-18 周一 11:00--2017-09-18 周一 12:00  中间加两个--
+
+记录工作时间
+M-x clock-in 开始计时
+M-x clock-out 结束
+
+
+* Top Level HeadLine :milk:
+** Second[fn:word] Level[2/4]
+*** TODO 3rd Level 1 :work:
+*** TODO 3rd Level 2 :notes:
+    some other text
+      + some other txt1
+      + some other txt2
+*** DONE [#B] 3rd Level 3 :others:
+    CLOSED: [2017-09-17 周日 17:47]
+    some another text
+      1. some another txt1
+      2. some another txt2
+* Another Top Level
+Footnotes  
+[fn:word] 我去这儿了
+[fn:1] 今天在这里
+
