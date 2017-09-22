@@ -1,4 +1,43 @@
-* TODO A Little Schemer at Work                                         :UE4:
+* TODO A Little Schemer at Work                                         :Daily:
+* TODO [#A]Daily Exercise                                          :Exercise:
+   :PROPERTIES:
+   :LAST_REPEAT: [2017-09-22 周五 15:01]
+   :END:
+   - State "FAIL "      from "TODO"       [2017-09-22 周五 15:01]
+   - State "FAIL"       from "TODO"       [2017-09-21 周四 22:55]
+   - State "DONE"       from "TODO"       [2017-09-20 周三 22:55]
+   - State "DONE"       from "TODO"       [2017-09-19 周二 23:37]
+       <2017-09-22 周五 11:30 +1d>
+       
+       锻炼/饮食
+
+* TODO [#A] 3D Math Primer :GameMath:
+** Chapter 1 Cartesian Coordinate Systems[笛卡尔坐标系]
+       3D math is all about measuring *locations*, *distances* and *angles* precisely and
+       mathematically in 3D space.
+       3D数学是关于如何在3维空间中精确测量 *位置*, *距离* 和 *角度* 的学科.
+
+*** 1D Mathematics[1D数学]
+       natural numbers[自然数]  
+       --> A numbers line for the natural numbers[数轴]
+       --> negative numbers[负数] 
+       --> fractional numbers[分数]  
+       --> rational numbers[有理数]
+       --> real numbers[实数] [fn:real_number]
+       --> discrete mathematics[离散数学] (study of natural numbers and integers)
+       --> continuous mathematics[连续数学] (study of real numbers)
+
+       _The First Law of Computer Graphics_
+       If it _looks_ right, it _is_ right.
+
+*** 2D Cartesian Space[2D笛卡尔空间]
+        *origin*[原点]  --> 坐标(0,0)
+        *axis*[轴] --> 穿过原点并且互相 *垂直*[perpendicular]的直线.
+        
+
+
+
+* TODO Unreal Notes                                                     :UE4:
 ** Unreal Basis
 *** UE4 API Fundamentals
 **** .generated file
@@ -80,14 +119,6 @@
 **** Transition Rules[转换条件]
      当你定义了多个状态之后,就需要确定在某种条件下完成从一个状态到另一个状态的转换.
 
-* TODO [#A]Daily Exercise                                          :Exercise:
-   :PROPERTIES:
-   :LAST_REPEAT: [2017-09-19 周二 23:37]
-   :END:
-   - State "DONE"       from "TODO"       [2017-09-19 周二 23:37]
-       <2017-09-20 周三 11:30 +1d>
-       锻炼/饮食
-
 * TODO [#A] D3D Learning                                              :D3D:
 ** TODO 0.MATHEMATICAL PREREQUISITES
 *** DONE 0.1 Vector Algebra
@@ -97,7 +128,7 @@
     *velocity*[速度], *force*[力] 等等.
     --> *computer graphics* / *collision detection* / *physical simulation*
 
-***** Vectors[向量]
+**** Vectors[向量]
      向量,就是具有 *大小*[magnitude]和 *方向*[direction]的 *量*[quantity].
      我们把向量箭头位置叫做 *head*[头],相反位置叫做 *tail*[尾].
      (tail)---->(head)
@@ -380,10 +411,10 @@
 ** SOMEDAY 游戏设计的236个技巧
 ** SOMEDAY 游戏设计艺术
 
-* TODO [#C] Games[4/7]                                        :GamePlay:
-*** TODO The Witness
-*** TODO 天空之剑
-*** TODO 风之杖
+* SOMEDAY [#C] Games[0/3]                                          :GamePlay:
+*** SOMEDAY The Witness
+*** SOMEDAY 天空之剑
+*** SOMEDAY 风之杖
 * SOMEDAY [#C] C++ Notes                                                :Cpp:
 ** Part1 C++基础[C++ Basics]
 *** 声明和定义[declaration & defination]
@@ -1328,9 +1359,7 @@
       }
 
       #+END_SRC
-     
-
-* SOMEDAY Spacemacs                                               :Spacemacs:
+* SOMEDAY [#C] Spacemacs                                          :Spacemacs:
 ** 简介
    Spacemacs 是一份 emacs 的配置文件，想要使用它，你先要有 emacs。
 ** 安装 & 使用
@@ -1405,3 +1434,12 @@
    . 向下翻一页
    < 向上翻半页
    > 向下翻半页
+ 
+
+** Org-Notes
+
+* Footnotes
+[fn:real_number] 
+  首先我们要知道,这个世界 _并不是连续的_,所以 *real number* 只是可能只是我们一厢情愿
+的想法.
+  但是在 *三角学*[trigonometry] 中,我们会频繁的涉及到 *实数*[real number].
