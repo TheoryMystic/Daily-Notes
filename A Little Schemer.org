@@ -1,14 +1,37 @@
 * TODO A Little Schemer at Work                                         :Daily:
+** Learning Snippets
+*** Animation Blueprint[动画蓝图]
+    An *Animation Blueprint* is a specialized Blueprint that _controls the_
+    _animation of a Skeletal Mesh_.
+**** EventGraph[事件图表]Graph
+     Every Animation Blueprint has a single EventGraph,which is a standrad
+     Graph that uses _a collection of special animation-related events to_
+     _initiate sequences of nodes_.
+     The most common use of the EventGraph is to update values used by
+     *BlendSpaces* and other blend nodes to drive animations in the AnimGraph.
+**** BlendSpaces[混合空间]
+      Blend Spaces are special assets which can be sampled in AnimGraphs that
+      allow for blending of animations based on the values of two inputs.
+**** AnimGraph[动画图表]
+*** State Machines[状态机]
+    简而言之,状态机就是用来管理角色动画的.
+    一个角色有多个动作,而每个动作被定义为 *State*[状态],状态机则管理多个状态之间的切换.
+    State Machines provide a graphical way to _break the animation of a_
+    _Skeletal Mesh into a series of States_.
+**** Transition Rules[转换条件]
+     当你定义了多个状态之后,就需要确定在某种条件下完成从一个状态到另一个状态的转换.
+
 * TODO [#A]Daily Exercise                                          :Exercise:
    :PROPERTIES:
-   :LAST_REPEAT: [2017-09-23 周六 22:44]
+   :LAST_REPEAT: [2017-09-24 周日 22:32]
    :END:
+   - State "FAIL "      from "TODO"       [2017-09-24 周日 22:32]
    - State "DONE"       from "TODO"       [2017-09-23 周六 22:44]
    - State "FAIL "      from "TODO"       [2017-09-22 周五 15:01]
    - State "FAIL"       from "TODO"       [2017-09-21 周四 22:55]
    - State "DONE"       from "TODO"       [2017-09-20 周三 22:55]
    - State "DONE"       from "TODO"       [2017-09-19 周二 23:37]
-       <2017-09-23 周六 23:30 +1d>
+       <2017-09-24 周日 23:30 +1d>
        
        锻炼/饮食
 
@@ -190,29 +213,98 @@
       AClass::Aclass(const FObjectInitializer& ObjectInitializer) 
                      : Super(ObjectInitializer)
       #+END_SRC
-       
-** Learning Snippets
-*** Animation Blueprint[动画蓝图]
-    An *Animation Blueprint* is a specialized Blueprint that _controls the_
-    _animation of a Skeletal Mesh_.
-**** EventGraph[事件图表]Graph
-     Every Animation Blueprint has a single EventGraph,which is a standrad
-     Graph that uses _a collection of special animation-related events to_
-     _initiate sequences of nodes_.
-     The most common use of the EventGraph is to update values used by
-     *BlendSpaces* and other blend nodes to drive animations in the AnimGraph.
-**** BlendSpaces[混合空间]
-      Blend Spaces are special assets which can be sampled in AnimGraphs that
-      allow for blending of animations based on the values of two inputs.
-**** AnimGraph[动画图表]
-*** State Machines[状态机]
-    简而言之,状态机就是用来管理角色动画的.
-    一个角色有多个动作,而每个动作被定义为 *State*[状态],状态机则管理多个状态之间的切换.
-    State Machines provide a graphical way to _break the animation of a_
-    _Skeletal Mesh into a series of States_.
-**** Transition Rules[转换条件]
-     当你定义了多个状态之后,就需要确定在某种条件下完成从一个状态到另一个状态的转换.
+*** Gameplay Framework[游戏框架]
+    游戏框架主要由以下几个部分组成:
+    - *游戏模式*[GameMode]
+    - *人物属性*
+    - *人物控制*
+    - *HUD*
+**** Actors
+     *Actor* : 
+     - An Actor is any object that can be placed into a *Level*.
+     - Actor are a generic class that support 3D *transformations*.
+     - Actor can be created(spawned) and destroyed through gameplay code.
+     简言而之,Actor就是 1) _存在于关卡中_ 2)可以被 _创造或销毁_ 的 3)具有3D _变换属性_ 的物体.
 
+     *Pawn* :
+     - The Pawn is the base class of all *Actors* that  _can be controlled by players or AI_.
+       Pawn就是能被玩家或者AI *控制*[controlled] 的 *Actor*.
+     - A Pawn is the physical representation of a player or AI entity within the world. 
+       一个Pawn不仅有实体,并且还能与世界产生某些物理上的交互(如碰撞).
+
+     *Character*
+     - A *Character* is a *Pawn* With the addtion of a *CharacterMovementComponent*, a 
+       *CapsuleComponent* and a *SkeletalMeshComponent*,which can walk, run, jump, fly 
+       and swim through the world.
+       一个 *Character* 就是多了 *人物移动*, *人物骨骼* 和 *人物碰撞体积*  等 *组件*[component]
+       的 *Actor*.
+**** Controllers
+     *Controller* :
+     Controllers are non-physical Actors that can _possess a Pawn to control its actions_.
+     Controller是 1)不具有物理性质的 2)控制Pawn行动的 3)Actor.
+
+     Controllers receive notifications for many of the *events* occuring for the Pawn they
+     are controlling.
+     Controller 会频繁的处理关于它控制的Pawn的 *事件* 的消息.(对玩家操作的实时反馈)
+**** UI & Camera
+***** UI
+          A game interface generally consists of two main elements:
+          - HUD
+          - User Interface
+
+       *HUD*[Heads Up Display]
+      主要用来 *Display*[表现] 玩家当前的状态(生命值,道具,所处地图位置等)
+      通常这些信息是 *non-interactive*[不可交互]的.
+
+      *UI*[User Interface]
+      主要用来对游戏参数进行设置,最典型的例子就是 *菜单*[menu].
+      它是可 *交互*[interactive] 的对象.
+
+      *Canvas*
+      The Canvas is an object that can be used during the render loop of the HUD to draw 
+      elements - _text,texture and material tiles_.
+
+      *Slate*
+***** Camera
+****** CameraComponent
+       Camera在游戏中的作用如同人的眼睛.每个 *PlayerController* 都有一个 *Camera*.
+       在UE4里, *CameraComponent* 可以设置两种 *模式*[mode],
+       - Perspective[透视]
+         在透视模式下,观察到的东西符合近大远小的规则,看起来更具有立体感.
+       - Orthographic[正交]
+         正交模式下,看东西更像是平面的.
+         *FOV*(field of view)[视场]
+****** PlayerCameraManager
+             它是一个CameraManager,主要作用在于:
+             - blending pending view targets.
+             - debug cameras triggered console commands.
+             - queries the *ViewTarget* for what to do for the camera's viewpoint.
+             - all other camera settings.
+               
+               *ViewTarget*[观察目标]
+               作用在于给 *PlayerCameraManager* 一个理想的 POV(Point of View),
+               一个 *ViewTarget* 包含了以下三个信息:
+               1. target Actor
+               2. Controller of the target Actor
+               3. PlayerState
+****** SprintArm[弹簧臂]
+           SprintArm的主要作用就是在处理人物移动时,摄像头不会及时跟随,而是像弹簧一样
+           通过一定的收缩时间来体现镜头的跟随.
+**** Rules of a Game[游戏规则]
+         描述游戏的 *规则*.
+         有两个类来处理游戏的相关信息:
+         1. *GameMode*
+           主要用于设定游戏规则,比如:
+            - 呈现的人物数量,允许的最大人物上限.
+            - 人物怎样出现在游戏中,比如初始位置等.
+            - 是否可以暂停游戏.
+            - 胜利条件/失败条件.
+         2. *GameState*
+            游戏开始后发生的 _游戏规则相关的事件信息_ 需要被所有玩家共享和同步,包括有:
+            - 游戏运行时间(运行了多久)
+            - 每个player加入的时间
+            - 游戏是否已经开始
+     
 * TODO [#A] D3D Learning                                              :D3D:
 ** TODO 0.MATHEMATICAL PREREQUISITES
 *** DONE 0.1 Vector Algebra
