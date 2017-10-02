@@ -1,0 +1,119 @@
+* TODO [#A] 3D Math Primer :GameMath:
+** Chapter 1 Cartesian Coordinate Systems[笛卡尔坐标系]
+       3D math is all about measuring *locations*, *distances* and *angles* precisely and
+       mathematically in 3D space.
+       3D数学是关于如何在3维空间中精确测量 *位置*, *距离* 和 *角度* 的学科.
+
+*** 1D Mathematics[1D数学]
+       natural numbers[自然数]  
+       --> A numbers line for the natural numbers[数轴]
+       --> negative numbers[负数] 
+       --> fractional numbers[分数]  
+       --> rational numbers[有理数]
+       --> real numbers[实数] [fn:real_number]
+       --> discrete mathematics[离散数学] (study of natural numbers and integers)
+       --> continuous mathematics[连续数学] (study of real numbers)
+
+       _The First Law of Computer Graphics_
+       If it _looks_ right, it _is_ right.
+
+*** 2D Cartesian Space[2D笛卡尔空间]
+        *origin*[原点]  --> 坐标(0,0)
+        *axis*[轴] --> 穿过原点并且互相 *垂直*[perpendicular]的直线.
+        *Cartesian coordinates*[笛卡尔坐标系] --> 由两个 *点* 来指明
+        一个 *位置*[location].
+        *signed distance*[有符号距离] --> 表示坐标点的x,y值分别到y,x轴
+        的距离.(根据方向判断正负)
+
+*** 3D Cartesian Space[3D笛卡尔空间]
+        *Plane*[平面],就是由两条不平行的线张成的空间.
+        与2D坐标系不同,3D笛卡尔空间的x,y,z轴并没有标准的定义.
+        在2D坐标系中,x轴正方向向右,y轴正方向向上.
+        而在3D笛卡尔空间中,指定了两种x,y,z轴位置的方法.
+        一个是 *左手坐标系*[Left-handed],一个是 *右手坐标系*[Right-handed].
+        在标准3D坐标系中,当:
+        x -> 右 y ->上 z-> 外   -----> 左手坐标系
+        x -> 右 y ->上 z-> 里   -----> 右手坐标系
+        判断任意坐标系是左手还是右手时,将该坐标系旋转到标准坐标系,再根据z轴指向确定
+        具体是左手还是右手坐标系.
+        
+*** Odds and Ends[其他东西]
+       *Summation Notation*[连加] -->  Σ
+        *Product Notation*[连乘] -->  ∏
+        *Interval Notation* [区间] -->  [a,b]   (a,b]   (a,b)
+**** Angles,Degrees,and Radians[角,角度与弧度]
+         *angle* --> an angle measures an amount of rotation in the plane.
+          角表示的是 _对平面上旋转大小的度量_. 通常用希腊文θ表示.
+          角有两种 *单位*[units],一种是 *degree*[角度°],另一种是 *radians*[弧度rad].
+          πrad = 180°, 
+          1 rad = (180/π)° , 1° = (π/180)rad.
+**** Trig Functions[三角函数]
+          以原点o(0,0)为圆心,做半径为1的单位圆.
+          在单位圆上的点坐标为(x,y),作如下定义:
+          sinθ = x/1 = x;
+          cosθ = y/1 = y;
+          tanθ = x/y;
+          cscθ = 1/sinθ = 1/x;
+          secθ = 1/cosθ = 1/y;
+          cotθ = 1/tanθ = y/x;
+
+          由勾股定理,有 x^2 + y^2 = 1 ---> sin^2θ + cos^2θ = 1;
+          同理,有 1+tan^2θ = sec^2θ, 1+cot^2θ = csc^2θ;
+          
+***** Trig Identities[三角恒等式]
+          同时,由单位圆几何图像可知,
+          sin(-θ) = -x/1 = -x = -sinθ;
+          cos(-θ) = y/1 = y = cosθ;
+          tan(-θ) = -x/y = -tanθ;
+
+          sin(π/2-θ) = cosθ;
+          cos(π/2-θ) = sinθ;
+          tan(π/2-θ) = cosθ/sinθ = cotθ;
+
+          由向量点积 a.b = |a| |b| cosθ可得:
+          cos(a+b) = cosacosb - sinasinb;
+          cos(a-b) = cosacosb + sinasinb;
+          sin(a+b) = sinacosb + cosasinb;
+          sin(a-b) = sinacosb - cosasinb;
+          tan(a+b) = (tana+tanb) / (1 - tanatanb);
+          tan(a-b) = (tana -tanb) / (1 + tanatanb);
+          
+          若 θa = θb,则有:
+          (sin2θ) = 2sinθcosθ;
+          (cos2θ) = cos^2θ-sin^2θ = 1 - 2sin^2θ = 2cos^2θ - 1;
+          (tan2θ) = (2tanθ) / (1 - tan^2θ);
+
+          *law of sines*[sin法则] 和 *law of cosines*[cos法则]
+          SinA/a = SinB/b = SinC/c;
+          a^2 = b^2 + c^2 - 2bc cosA;
+          b^2 = a^2 + c^2 - 2ac cosB;
+          c^2 = a^2 + b^2 - 2ab cosC;
+** Chapter 2 Vectors[向量]
+       vector在数学和物理上具有不同的含义.
+       在数学上,vector就是 *数的集合*[list of numbers].
+       而在物理上,vector表示 _同时具有大小[magnitude]和方向[direction]的量[quantity]_.
+*** In Mathematical
+        在讨论vector的时候,我们需要明白vector[向量]与 *scalar*[标量]的区别.
+        The *dimension*[维度] of a vector tells how many numbers the vector contains.
+        vector有几个维度就包括了几个量.
+        而scalar可以看成是1维的vector.也就是只包含了单个量的vector.
+        至此,我们将引入两个新的概念:
+        - *row vector*[行向量]  ---> [1,2,3]
+        - *column vector*[列向量] --->  [1]
+                                                         [2]
+                                                         [3]
+*** Geometric Definition of Vector[vector的几何定义]
+        vector表示 _同时具有大小[magnitude]和方向[direction]的线段[line segment]_.
+        vector有 *头*[head] 和 *尾*[tail],头表示 *结束*[ends]的位置,尾表示 *开始*[starts]的位置.
+*** Vector as a Sequence of Displacements
+        *Displacements*[位移],表示物体的位置变化,定义为 _由初位置到末位置的有向线段_.
+        由定义可知,位移是一个vector.
+        而在3D向量中,我们通常把向量的位置分解成x,y,z三个位移量.分别表示该向量到三个
+        轴的 *有符号距离*[signed distance].
+*** The Zero Vector[零向量]
+        定义:zero vector 是每个维度的值都为0的向量. --> [0,0,0]
+        那么零向量到底有什么用?
+        我们知道每个向量的值都表示了位移位置的变化,零向量则意味着 _没有发生位移_.
+*** Vectors VS Points 
+        *向量*[vector] 表示物体的 *位移*[displacement],
+        *点*[points]表示物体的位置.
