@@ -92,7 +92,7 @@
        vector在数学和物理上具有不同的含义.
        在数学上,vector就是 *数的集合*[list of numbers].
        而在物理上,vector表示 _同时具有大小[magnitude]和方向[direction]的量[quantity]_.
-*** In Mathematical
+*** In Mathematical [在数学里]
         在讨论vector的时候,我们需要明白vector[向量]与 *scalar*[标量]的区别.
         The *dimension*[维度] of a vector tells how many numbers the vector contains.
         vector有几个维度就包括了几个量.
@@ -102,18 +102,62 @@
         - *column vector*[列向量] --->  [1]
                                                          [2]
                                                          [3]
-*** Geometric Definition of Vector[vector的几何定义]
+*** Geometric Definition of Vector [vector的几何定义]
         vector表示 _同时具有大小[magnitude]和方向[direction]的线段[line segment]_.
         vector有 *头*[head] 和 *尾*[tail],头表示 *结束*[ends]的位置,尾表示 *开始*[starts]的位置.
-*** Vector as a Sequence of Displacements
+*** Vector as a Sequence of Displacements [vector-作为一系列的位移]
         *Displacements*[位移],表示物体的位置变化,定义为 _由初位置到末位置的有向线段_.
         由定义可知,位移是一个vector.
         而在3D向量中,我们通常把向量的位置分解成x,y,z三个位移量.分别表示该向量到三个
         轴的 *有符号距离*[signed distance].
-*** The Zero Vector[零向量]
+*** The Zero Vector [零向量]
         定义:zero vector 是每个维度的值都为0的向量. --> [0,0,0]
         那么零向量到底有什么用?
         我们知道每个向量的值都表示了位移位置的变化,零向量则意味着 _没有发生位移_.
-*** Vectors VS Points 
+*** Vectors VS Points
         *向量*[vector] 表示物体的 *位移*[displacement],
         *点*[points]表示物体的位置.
+**** Relative Positions[相对位置]
+     所谓 *相对位置*,就是说,一个物体的位置一定是以某个坐标为原点,通过计算原点和物体的距离
+     来确定的.
+*** Unit Vectors [单位向量]
+    Unit vector  <-->  normalized vector <--> normals[法线]
+    因为有些时候我们只想要知道 _向量的方向_,而不管它的 _大小_,由此就产生了 *Unit Vector*.
+    *Unit vector*,就是模为1的矢量.
+
+    而单词 *normal* 通常还有另一层含义: *perpendicular*[正交],表示垂直.
+    当我们说 *normal vector* 的时候,其实是在说这个 *vector* 与另外的什么东西垂直.
+
+    When this book refers to a vector as a *normal*, it means _a unit vector perpendicular to_
+    _something else_.
+    
+    最后总结如下,一个 *normalized* vector 总有 *unit length*,但是一个 *normal* vector 表示的是
+    一个 1) *垂直*[perpendicular] 于什么东西且 2)通常有 *单位长度*[unit length] 的vector.
+
+    vhat = v / |v|
+    e.g
+    [15 -3] / |[15 -3]| = [15 -3] / sqrt(15^2,-3^2) = [15 -3] / sqrt(225+9) = [15 -3] / sqrt(234)
+
+*** Vector Dot Product [向量点积]
+    在向量的乘法中,除了 *向量*[vector] 与 *标量*[scalar] 相乘,还有向量与向量的乘法.
+    而向量乘法分为两种,一种叫做 *点积*[dot product] , 一种叫做 *叉积*[cross product].
+    点积在游戏编程中的使用无处不在,从 *图形学*[graphics] 到 *模拟*[simulation],或者是
+    AI,都随处可见.
+    
+    dot product formula
+    a · b = a1b1 + a2b2 + a3b3 + .... anbn
+    
+**** Geometric Interpretation[几何解释]
+     关于点积有两种几何解释,
+     - 点积结果是一个向量到另一个向量的 *投影*[projection].
+        *投影*,就是指 1)在光线垂直射下来的某个平面的 2)某个物体的 *影子*[shadow].
+        也可以说, *投影* 是 _二维到一维的_ *线性变换*[linear transformation].
+
+        *线性*[linear] --> 任意一组 _共线_ 的 _等距离分布_ 的点在变换后依然保持 _共线_
+        且 _等距离分布_ , 则说明这个变换是 *线性* 的.
+
+        任何一个从二维到一维的线性变换,其效果等价于 _与向量(a,b)做点乘_,其中a和b为
+        两个 *基向量* 被变换到的位置.
+        
+     - 用三角函数来解释,重点在于vector之间的 *夹角*(angle between the vectors)
+       由
