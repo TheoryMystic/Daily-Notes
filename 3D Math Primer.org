@@ -134,7 +134,7 @@
     最后总结如下,一个 *normalized* vector 总有 *unit length*,但是一个 *normal* vector 表示的是
     一个 1) *垂直*[perpendicular] 于什么东西且 2)通常有 *单位长度*[unit length] 的vector.
 
-    vhat = v / |v|
+    $\hat{v} = \frac{v}{|v|}$
     e.g
     [15 -3] / |[15 -3]| = [15 -3] / sqrt(15^2,-3^2) = [15 -3] / sqrt(225+9) = [15 -3] / sqrt(234)
 
@@ -145,11 +145,14 @@
     AI,都随处可见.
     
     dot product formula
-    a · b = a1b1 + a2b2 + a3b3 + .... anbn
+    $a \cdot b = \sum_{i=1}^n ai$
     
 **** Geometric Interpretation[几何解释]
      关于点积有两种几何解释,
-     - 点积结果是一个向量到另一个向量的 *投影*[projection].
+     - The dot product a · b is equal to the signed length of the projection of b onto any line 
+       parallel to a, multiplied by the length of a.
+       点积结果是向量a到另一个向量b的 *投影*[projection]再乘以a的模.
+        a . b = projb(a) 乘 |a|
         *投影*,就是指 1)在光线垂直射下来的某个平面的 2)某个物体的 *影子*[shadow].
         也可以说, *投影* 是 _二维到一维的_ *线性变换*[linear transformation].
 
@@ -160,4 +163,72 @@
         两个 *基向量* 被变换到的位置.
         
      - 用三角函数来解释,重点在于vector之间的 *夹角*(angle between the vectors)
-       由
+       $cos\theta = \frac {\hat{a} \cdot \hat{b}} {1} = \hat{a} \cdot \hat{b}$
+       $a \cdot b = |a| |b| cos\theta$
+**** Summarize[总结]
+     - The dot product a . b measures the length of the projection of b onto a,
+        multiplied by the length of a.
+     - The dot product can be used to measure displacement in a particular
+        dirction.
+     - The projection operation is closely related to the cosine function.The dot
+        product a . b also is equal to |a| |b| cosθ, where theta is the angle between
+        the vectors.
+     
+*** Vector Cross Product [向量叉积]
+     向量叉积不同于点积,点积生成一个 *标量*[scalar],而叉积生成一个3D向量同时 _不满足交换律_.
+     叉积最重要的作用在于生成一个垂直于平面的向量,生成三角形或者多边形.
+**** Geometric Interpretation [几何解释]
+     向量的叉积生成一个同时与两个原向量正交[perpendicular]的新向量.
+     向量叉积的模:
+     $|a \times b| = |a| |b| sin\theta$
+     a x b 产生的新向量可能指向两个相反的方向,判断方式如下:
+     - 首先,把a的 *头*[head] 和b的尾[tail]相连.
+     - 其次,看a到b是顺时针还是逆时针.
+     - 1) 如果在左手坐标系中:
+            a到b是顺时针,则a x b 生成的新向量会靠近你.
+            a到b是逆时针,则a x b 生成的新向量会远离你.
+     - 2) 如果在右手坐标系中:
+            a到b是顺时针,则a x b 生成的新向量会远离你.
+            a到b是逆时针,则a x b 生成的新向量会靠近你.
+*** Norm of a Vector [范数]
+    范数[norm][fn:norm],是具有长度概念的 *函数*.在线性代数等相关数学领域,其含义为 _为向量空间内的_
+    _所有向量赋予非0的正常度或者大小._
+    范数的本质是 *距离*,它把 _不能比较的向量通过函数来转换为可以比较的实数_.
+    1-范数:
+    $\vert x \vert_{p} \equiv (\sum_{i=1}^n |x_{i}|^p)^{1/p}$
+    
+    - $L^1$ norm.(p = 1). --> Taxicab norm (表示向量元素绝对值之和)
+
+      $|x|_{1} \equiv \sum_{i=1}^n |x_{i}|$
+
+    - $L^2$ norm.(p = 2). --> Euclidean norm (计算向量长度)
+      
+      $|x|_{2} \equiv \sqrt{\sum_{i=1}^n |x_{i^2}|}$
+
+    - The infinity norm.(p = ∞) --> Chebyshev norm (求所有向量元素中最大值)
+
+      $|x|_{∞} \equiv max(|x_{1},...,|x_{n}|)$
+
+* Footnotes
+
+[fn:norm] 
+  要更好的理解范数,就要从 _函数、几何与矩阵_ 的角度去理解,我尽量讲的通俗一些。
+我们都知道,函数与几何图形往往是有对应的关系,这个很好想象,特别是在三维以下的空间内,
+函数是几何图像的数学概括,而几何图像是函数的高度形象化,比如一个函数对应几何空间
+上若干点组成的图形。
+  但当函数与几何超出三维空间时,就难以获得较好的想象,于是就有了 *映射* 的概念,映射表达
+的就是 _一个集合通过某种关系转为另外一个集合_
+  通常数学书是先说映射,然后再讨论函数,这是因为 _函数是映射的一个特例_,为了更好的在数学
+上表达这种映射关系,（这里特指线性关系）于是就引进了矩阵。
+  这里的矩阵就是表征上述空间映射的 *线性关系*. 而通过向量来表示上述映射中所说的这个集合,
+而我们通常所说的 *基* ,就是这个集合的最一般关系。
+  于是,我们可以这样理解,一个集合（向量）,通过一种映射关系（矩阵）,得到另外一个几何（另外
+一个向量）。
+  那么向量的范数，就是表示这个 _原有集合的大小_ 。
+  而矩阵的范数,就是表示这个 _变化过程的大小的一个度量_ 。
+  那么说到具体几几范数，其不过是定义不同,一个矩阵范数往往由一个向量范数引出,我们称之为
+*算子范数*,其物理意义都如我上述所述。
+  0范数,向量中非零元素的个数
+  1范数,为绝对值之和
+  2范数,就是通常意义上的模
+  无穷范数,就是取向量的最大值

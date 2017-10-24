@@ -60,7 +60,6 @@ e.g
 M-x clock-in 开始计时
 M-x clock-out 结束
 
-
 * Top Level HeadLine :milk:
 ** Second[fn:word] Level[2/4]
 *** TODO 3rd Level 1 :work:
@@ -77,4 +76,3 @@ M-x clock-out 结束
 Footnotes  
 [fn:word] 我去这儿了
 [fn:1] 今天在这里
-
