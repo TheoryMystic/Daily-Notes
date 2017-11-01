@@ -1,122 +1,123 @@
 * TODO [#A] 3D Math Primer :GameMath:
 ** Chapter 1 Cartesian Coordinate Systems[笛卡尔坐标系]
-       3D math is all about measuring *locations*, *distances* and *angles* precisely and
-       mathematically in 3D space.
-       3D数学是关于如何在3维空间中精确测量 *位置*, *距离* 和 *角度* 的学科.
+   3D math is all about measuring *locations*, *distances* and *angles* precisely and
+   mathematically in 3D space.
+   3D数学是关于如何在3维空间中精确测量 *位置*, *距离* 和 *角度* 的学科.
 
 *** 1D Mathematics[1D数学]
-       natural numbers[自然数]  
-       --> A numbers line for the natural numbers[数轴]
-       --> negative numbers[负数] 
-       --> fractional numbers[分数]  
-       --> rational numbers[有理数]
-       --> real numbers[实数] [fn:real_number]
-       --> discrete mathematics[离散数学] (study of natural numbers and integers)
-       --> continuous mathematics[连续数学] (study of real numbers)
+    natural numbers[自然数]  
+    --> A numbers line for the natural numbers[数轴]
+    --> negative numbers[负数] 
+    --> fractional numbers[分数]  
+    --> rational numbers[有理数]
+    --> real numbers[实数] [fn:real_number]
+    --> discrete mathematics[离散数学] (study of natural numbers and integers)
+    --> continuous mathematics[连续数学] (study of real numbers)
 
-       _The First Law of Computer Graphics_
-       If it _looks_ right, it _is_ right.
+    _The First Law of Computer Graphics_
+    If it _looks_ right, it _is_ right.
 
 *** 2D Cartesian Space[2D笛卡尔空间]
-        *origin*[原点]  --> 坐标(0,0)
-        *axis*[轴] --> 穿过原点并且互相 *垂直*[perpendicular]的直线.
-        *Cartesian coordinates*[笛卡尔坐标系] --> 由两个 *点* 来指明
-        一个 *位置*[location].
-        *signed distance*[有符号距离] --> 表示坐标点的x,y值分别到y,x轴
-        的距离.(根据方向判断正负)
+    *origin*[原点]  --> 坐标(0,0)
+    *axis*[轴] --> 穿过原点并且互相 *垂直*[perpendicular]的直线.
+    *Cartesian coordinates*[笛卡尔坐标系] --> 由两个 *点* 来指明
+    一个 *位置*[location].
+    *signed distance*[有符号距离] --> 表示坐标点的x,y值分别到y,x轴
+    的距离.(根据方向判断正负)
 
 *** 3D Cartesian Space[3D笛卡尔空间]
-        *Plane*[平面],就是由两条不平行的线张成的空间.
-        与2D坐标系不同,3D笛卡尔空间的x,y,z轴并没有标准的定义.
-        在2D坐标系中,x轴正方向向右,y轴正方向向上.
-        而在3D笛卡尔空间中,指定了两种x,y,z轴位置的方法.
-        一个是 *左手坐标系*[Left-handed],一个是 *右手坐标系*[Right-handed].
-        在标准3D坐标系中,当:
-        x -> 右 y ->上 z-> 外   -----> 左手坐标系
-        x -> 右 y ->上 z-> 里   -----> 右手坐标系
-        判断任意坐标系是左手还是右手时,将该坐标系旋转到标准坐标系,再根据z轴指向确定
-        具体是左手还是右手坐标系.
+    *Plane*[平面],就是由两条不平行的线张成的空间.
+    与2D坐标系不同,3D笛卡尔空间的x,y,z轴并没有标准的定义.
+    在2D坐标系中,x轴正方向向右,y轴正方向向上.
+    而在3D笛卡尔空间中,指定了两种x,y,z轴位置的方法.
+    一个是 *左手坐标系*[Left-handed],一个是 *右手坐标系*[Right-handed].
+    在标准3D坐标系中,当:
+    x -> 右 y ->上 z-> 外   -----> 左手坐标系
+    x -> 右 y ->上 z-> 里   -----> 右手坐标系
+    判断任意坐标系是左手还是右手时,将该坐标系旋转到标准坐标系,再根据z轴指向确定
+    具体是左手还是右手坐标系.
         
 *** Odds and Ends[其他东西]
-       *Summation Notation*[连加] -->  Σ
-        *Product Notation*[连乘] -->  ∏
-        *Interval Notation* [区间] -->  [a,b]   (a,b]   (a,b)
+    *Summation Notation*[连加] -->  Σ
+    *Product Notation*[连乘] -->  ∏
+    *Interval Notation* [区间] -->  [a,b]   (a,b]   (a,b)
 **** Angles,Degrees,and Radians[角,角度与弧度]
-         *angle* --> an angle measures an amount of rotation in the plane.
-          角表示的是 _对平面上旋转大小的度量_. 通常用希腊文θ表示.
-          角有两种 *单位*[units],一种是 *degree*[角度°],另一种是 *radians*[弧度rad].
-          πrad = 180°, 
-          1 rad = (180/π)° , 1° = (π/180)rad.
+     *angle* --> an angle measures an amount of rotation in the plane.
+     角表示的是 _对平面上旋转大小的度量_. 通常用希腊文θ表示.
+     角有两种 *单位*[units],一种是 *degree*[角度°],另一种是 *radians*[弧度rad].
+     πrad = 180°, 
+     1 rad = (180/π)° , 1° = (π/180)rad.
 **** Trig Functions[三角函数]
-          以原点o(0,0)为圆心,做半径为1的单位圆.
-          在单位圆上的点坐标为(x,y),作如下定义:
-          sinθ = x/1 = x;
-          cosθ = y/1 = y;
-          tanθ = x/y;
-          cscθ = 1/sinθ = 1/x;
-          secθ = 1/cosθ = 1/y;
-          cotθ = 1/tanθ = y/x;
+     以原点o(0,0)为圆心,做半径为1的单位圆.
+     在单位圆上的点坐标为(x,y),作如下定义:
+     sinθ = x/1 = x;
+     cosθ = y/1 = y;
+     tanθ = x/y;
+     cscθ = 1/sinθ = 1/x;
+     secθ = 1/cosθ = 1/y;
+     cotθ = 1/tanθ = y/x;
 
-          由勾股定理,有 x^2 + y^2 = 1 ---> sin^2θ + cos^2θ = 1;
-          同理,有 1+tan^2θ = sec^2θ, 1+cot^2θ = csc^2θ;
+     由勾股定理,有 x^2 + y^2 = 1 ---> sin^2θ + cos^2θ = 1;
+     同理,有 1+tan^2θ = sec^2θ, 1+cot^2θ = csc^2θ;
           
 ***** Trig Identities[三角恒等式]
-          同时,由单位圆几何图像可知,
-          sin(-θ) = -x/1 = -x = -sinθ;
-          cos(-θ) = y/1 = y = cosθ;
-          tan(-θ) = -x/y = -tanθ;
+      同时,由单位圆几何图像可知,
+      sin(-θ) = -x/1 = -x = -sinθ;
+      cos(-θ) = y/1 = y = cosθ;
+      tan(-θ) = -x/y = -tanθ;
 
-          sin(π/2-θ) = cosθ;
-          cos(π/2-θ) = sinθ;
-          tan(π/2-θ) = cosθ/sinθ = cotθ;
+      sin(π/2-θ) = cosθ;
+      cos(π/2-θ) = sinθ;
+      tan(π/2-θ) = cosθ/sinθ = cotθ;
 
-          由向量点积 a.b = |a| |b| cosθ可得:
-          cos(a+b) = cosacosb - sinasinb;
-          cos(a-b) = cosacosb + sinasinb;
-          sin(a+b) = sinacosb + cosasinb;
-          sin(a-b) = sinacosb - cosasinb;
-          tan(a+b) = (tana+tanb) / (1 - tanatanb);
-          tan(a-b) = (tana -tanb) / (1 + tanatanb);
+      由向量点积 a.b = |a| |b| cosθ可得:
+      cos(a+b) = cosacosb - sinasinb;
+      cos(a-b) = cosacosb + sinasinb;
+      sin(a+b) = sinacosb + cosasinb;
+      sin(a-b) = sinacosb - cosasinb;
+      tan(a+b) = (tana+tanb) / (1 - tanatanb);
+      tan(a-b) = (tana -tanb) / (1 + tanatanb);
           
-          若 θa = θb,则有:
-          (sin2θ) = 2sinθcosθ;
-          (cos2θ) = cos^2θ-sin^2θ = 1 - 2sin^2θ = 2cos^2θ - 1;
-          (tan2θ) = (2tanθ) / (1 - tan^2θ);
+      若 θa = θb,则有:
+      (sin2θ) = 2sinθcosθ;
+      (cos2θ) = cos^2θ-sin^2θ = 1 - 2sin^2θ = 2cos^2θ - 1;
+      (tan2θ) = (2tanθ) / (1 - tan^2θ);
 
-          *law of sines*[sin法则] 和 *law of cosines*[cos法则]
-          SinA/a = SinB/b = SinC/c;
-          a^2 = b^2 + c^2 - 2bc cosA;
-          b^2 = a^2 + c^2 - 2ac cosB;
-          c^2 = a^2 + b^2 - 2ab cosC;
+      *law of sines*[sin法则] 和 *law of cosines*[cos法则]
+      SinA/a = SinB/b = SinC/c;
+      a^2 = b^2 + c^2 - 2bc cosA;
+      b^2 = a^2 + c^2 - 2ac cosB;
+      c^2 = a^2 + b^2 - 2ab cosC;
 ** Chapter 2 Vectors[向量]
-       vector在数学和物理上具有不同的含义.
-       在数学上,vector就是 *数的集合*[list of numbers].
-       而在物理上,vector表示 _同时具有大小[magnitude]和方向[direction]的量[quantity]_.
+   vector在数学和物理上具有不同的含义.
+   在数学上,vector就是 *数的集合*[list of numbers].
+   而在物理上,vector表示 _同时具有大小[magnitude]和方向[direction]的量[quantity]_.
+
 *** In Mathematical [在数学里]
-        在讨论vector的时候,我们需要明白vector[向量]与 *scalar*[标量]的区别.
-        The *dimension*[维度] of a vector tells how many numbers the vector contains.
-        vector有几个维度就包括了几个量.
-        而scalar可以看成是1维的vector.也就是只包含了单个量的vector.
-        至此,我们将引入两个新的概念:
-        - *row vector*[行向量]  ---> [1,2,3]
-        - *column vector*[列向量] --->  [1]
-                                                         [2]
-                                                         [3]
+    在讨论vector的时候,我们需要明白vector[向量]与 *scalar*[标量]的区别.
+    The *dimension*[维度] of a vector tells how many numbers the vector contains.
+    vector有几个维度就包括了几个量.
+    而scalar可以看成是1维的vector.也就是只包含了单个量的vector.
+    至此,我们将引入两个新的概念:
+    - *row vector*[行向量]  ---> [1,2,3]
+    - *column vector*[列向量] --->  [1]
+      [2]
+      [3]
 *** Geometric Definition of Vector [vector的几何定义]
-        vector表示 _同时具有大小[magnitude]和方向[direction]的线段[line segment]_.
-        vector有 *头*[head] 和 *尾*[tail],头表示 *结束*[ends]的位置,尾表示 *开始*[starts]的位置.
+    vector表示 _同时具有大小[magnitude]和方向[direction]的线段[line segment]_.
+    vector有 *头*[head] 和 *尾*[tail],头表示 *结束*[ends]的位置,尾表示 *开始*[starts]的位置.
 *** Vector as a Sequence of Displacements [vector-作为一系列的位移]
-        *Displacements*[位移],表示物体的位置变化,定义为 _由初位置到末位置的有向线段_.
-        由定义可知,位移是一个vector.
-        而在3D向量中,我们通常把向量的位置分解成x,y,z三个位移量.分别表示该向量到三个
-        轴的 *有符号距离*[signed distance].
+    *Displacements*[位移],表示物体的位置变化,定义为 _由初位置到末位置的有向线段_.
+    由定义可知,位移是一个vector.
+    而在3D向量中,我们通常把向量的位置分解成x,y,z三个位移量.分别表示该向量到三个
+    轴的 *有符号距离*[signed distance].
 *** The Zero Vector [零向量]
-        定义:zero vector 是每个维度的值都为0的向量. --> [0,0,0]
-        那么零向量到底有什么用?
-        我们知道每个向量的值都表示了位移位置的变化,零向量则意味着 _没有发生位移_.
+    定义:zero vector 是每个维度的值都为0的向量. --> [0,0,0]
+    那么零向量到底有什么用?
+    我们知道每个向量的值都表示了位移位置的变化,零向量则意味着 _没有发生位移_.
 *** Vectors VS Points
-        *向量*[vector] 表示物体的 *位移*[displacement],
-        *点*[points]表示物体的位置.
+    *向量*[vector] 表示物体的 *位移*[displacement],
+    *点*[points]表示物体的位置.
 **** Relative Positions[相对位置]
      所谓 *相对位置*,就是说,一个物体的位置一定是以某个坐标为原点,通过计算原点和物体的距离
      来确定的.
@@ -152,44 +153,44 @@
      - The dot product a · b is equal to the signed length of the projection of b onto any line 
        parallel to a, multiplied by the length of a.
        点积结果是向量a到另一个向量b的 *投影*[projection]再乘以a的模.
-        a . b = projb(a) 乘 |a|
-        *投影*,就是指 1)在光线垂直射下来的某个平面的 2)某个物体的 *影子*[shadow].
-        也可以说, *投影* 是 _二维到一维的_ *线性变换*[linear transformation].
+       a . b = projb(a) 乘 |a|
+       *投影*,就是指 1)在光线垂直射下来的某个平面的 2)某个物体的 *影子*[shadow].
+       也可以说, *投影* 是 _二维到一维的_ *线性变换*[linear transformation].
 
-        *线性*[linear] --> 任意一组 _共线_ 的 _等距离分布_ 的点在变换后依然保持 _共线_
-        且 _等距离分布_ , 则说明这个变换是 *线性* 的.
+       *线性*[linear] --> 任意一组 _共线_ 的 _等距离分布_ 的点在变换后依然保持 _共线_
+       且 _等距离分布_ , 则说明这个变换是 *线性* 的.
 
-        任何一个从二维到一维的线性变换,其效果等价于 _与向量(a,b)做点乘_,其中a和b为
-        两个 *基向量* 被变换到的位置.
+       任何一个从二维到一维的线性变换,其效果等价于 _与向量(a,b)做点乘_,其中a和b为
+       两个 *基向量* 被变换到的位置.
         
      - 用三角函数来解释,重点在于vector之间的 *夹角*(angle between the vectors)
        $cos\theta = \frac {\hat{a} \cdot \hat{b}} {1} = \hat{a} \cdot \hat{b}$
        $a \cdot b = |a| |b| cos\theta$
 **** Summarize[总结]
      - The dot product a . b measures the length of the projection of b onto a,
-        multiplied by the length of a.
+       multiplied by the length of a.
      - The dot product can be used to measure displacement in a particular
-        dirction.
+       dirction.
      - The projection operation is closely related to the cosine function.The dot
-        product a . b also is equal to |a| |b| cosθ, where theta is the angle between
-        the vectors.
+       product a . b also is equal to |a| |b| cosθ, where theta is the angle between
+       the vectors.
      
 *** Vector Cross Product [向量叉积]
-     向量叉积不同于点积,点积生成一个 *标量*[scalar],而叉积生成一个3D向量同时 _不满足交换律_.
-     叉积最重要的作用在于生成一个垂直于平面的向量,生成三角形或者多边形.
+    向量叉积不同于点积,点积生成一个 *标量*[scalar],而叉积生成一个3D向量同时 _不满足交换律_.
+    叉积最重要的作用在于生成一个垂直于平面的向量,生成三角形或者多边形.
 **** Geometric Interpretation [几何解释]
      向量的叉积生成一个同时与两个原向量正交[perpendicular]的新向量.
      向量叉积的模:
      $|a \times b| = |a| |b| sin\theta$
      a x b 产生的新向量可能指向两个相反的方向,判断方式如下:
-     - 首先,把a的 *头*[head] 和b的尾[tail]相连.
+     - 首先,把a的 *头*[head] 和b的 *尾*[tail]相连.
      - 其次,看a到b是顺时针还是逆时针.
      - 1) 如果在左手坐标系中:
-            a到b是顺时针,则a x b 生成的新向量会靠近你.
-            a到b是逆时针,则a x b 生成的新向量会远离你.
+       a到b是顺时针,则a x b 生成的新向量会靠近你.
+       a到b是逆时针,则a x b 生成的新向量会远离你.
      - 2) 如果在右手坐标系中:
-            a到b是顺时针,则a x b 生成的新向量会远离你.
-            a到b是逆时针,则a x b 生成的新向量会靠近你.
+       a到b是顺时针,则a x b 生成的新向量会远离你.
+       a到b是逆时针,则a x b 生成的新向量会靠近你.
 *** Norm of a Vector [范数]
     范数[norm][fn:norm],是具有长度概念的 *函数*.在线性代数等相关数学领域,其含义为 _为向量空间内的_
     _所有向量赋予非0的正常度或者大小._
@@ -208,27 +209,101 @@
     - The infinity norm.(p = ∞) --> Chebyshev norm (求所有向量元素中最大值)
 
       $|x|_{∞} \equiv max(|x_{1},...,|x_{n}|)$
+** Chapter 3 Multiple Coordinate Spaces[多个坐标系统]
+   关于多个坐标系统,我们会讨论如下问题:
+   1. 为何需要多个坐标系?
+   2. 对几个常见坐标系的介绍:
+      - world space
+      - object space
+      - camera space
+      - upright space
+   3. 坐标系的 *转换*[transformation]
+   4. 讨论 *嵌套坐标系*[nested coordinate spaces],主要用于 _3D对象的层级动画(animating 
+hierarchically segmented objects in 3D space)_
 
+*** Why bother with Multiple Coordinate Spaces?[为什么要使用多个坐标系?]
+    从直觉上来说,我们把所有的东西放在一个坐标系里,记录每个东西的位置,是理所当然的做法.
+    通常我们把这个坐标系叫做 *世界坐标系*[world coordinate space].
+    但是考虑一个问题,当我们把一个物体置入世界坐标系的时候,到底怎么样才能清晰直观的表现
+它的位置,方向等信息?
+    同样显而易见的是,我们以物体自身为坐标系,来表示它的 *位置*[position], *旋转*[rotation] 和
+*大小*[scale],符合我们的直觉的同时也更简单.
+    而在这种情况下,最理想的办法无疑是让自身的坐标系和世界坐标系并存,让物体从自身坐标系转换
+到世界坐标系.
+*** Some Useful Coordinate Spaces
+**** World Space
+     世界坐标系是用来表示 *绝对位置*[absolute position] 的,在游戏中, 意味着它表示的是在游
+     戏范围内最大的坐标空间.
+     同样, *世界坐标系*[world coordinate space] 也被叫做 *全球*[global] 或者 *通用*[universal]
+     坐标系.
+**** Object Space
+     *对象空间* 是指依附于某个具体对象的 *坐标空间*[cordinate space].
+     同样的, *对象空间* 也被叫做 *model space* 或者是 *body space*.
+     这里有个有趣的例子[fn:worldspace].
+**** Camera Space
+     首先要明白,Camera Space 是 1. _带有 *视点*[viewpoint]_ 2. _用于渲染的_ Object Space.
+     在Camera Space中(Left-handed conventions),
+       - +x --> *right*
+       - +y --> *up*
+       - +z --> *forward*
+     需要区别的在于 *Camera Space* (是一个3D Space), *Screen Space*(是一个2D Space).
+     为了让 Camera Space 映射到 Screen Space,我们需要用的一个技巧是 *投影*[projection].
+**** Upright Space
+     Upright Space 是什么意思?它表示的是 *World Space*  <---> *Object Space* 的 *中间状态*.
+     就是说,
+     - Upright Space 的轴分别 *平行*[parallel] 于 World Space 的轴.
+     - Upright Space 的坐标原点与 *Object Space* 的坐标原点一致.
+
+     为什么需要Upright Space?
+     仔细想想,在世界坐标系中的物体的所有位置,都可以通过对该物体 *平移*[translation] 和
+     *旋转*[rotation] 得到.
+*** Basis Vectors and Coordinate Space[基向量与坐标空间]
+    在实际的游戏编程中,我们常常会遇到一个问题:我知道某个物体在当前坐标的具体位置,但是
+它在另一个坐标系中应该如何表示?
+    这个过程被叫做 *coordinate space translation*[坐标空间转换].
+**** Dual Perspectives[双重视角]
+    我们已经知道,在世界坐标系中的物体的位置都可通过物体的平移与旋转得到.而在实际考虑
+问题的时候,我们的具体步骤是:
+     1. 旋转
+     2. 平移
+    为什么要先旋转再平移?原因在于围绕 *原点* 进行旋转是 *线性变换*[linear transform],而围绕
+其他点旋转则是在进行 *仿射变换*[affine transformation],仿射变换要麻烦的多.
+    如果我们要先平移再旋转,就需要进行如下步骤:
+    1. 将旋转中心平移到原点
+    2. 以原点为中心旋转到指定角度
+    3. 平移
+    而最终,为了能渲染出摄像机视野内的物体,我们需要将目标模型变换到 *Camera Space*.但是就算
+是转换到了Camera Space,故事也还没有结束,我们还需要将顶点转换到 *Clip Space*,最后 *投影* 到
+*Screen Space*.
+    整个流程大概是:
+     Object Space --> World Space --> Camera Space --> Clip Space --> Screen Space
+     其中,World Space 到 Camera Space 则通过 *顶点着色器*[vertex shader] 完成.
+     *active transformation*
+     *passive transformation*
 * Footnotes
 
+[fn:worldspace]
+     在南方人/北方人指路的时候,北方人往往告诉你,往北面/南面走,而南方人则是沿着这儿到
+下个路口往左/往右,可见北方人采用的世界坐标系,而南方人采用的是对象坐标系.
+
 [fn:norm] 
-  要更好的理解范数,就要从 _函数、几何与矩阵_ 的角度去理解,我尽量讲的通俗一些。
-我们都知道,函数与几何图形往往是有对应的关系,这个很好想象,特别是在三维以下的空间内,
+    要更好的理解范数,就要从 _函数、几何与矩阵_ 的角度去理解,我尽量讲的通俗一些。
+    我们都知道,函数与几何图形往往是有对应的关系,这个很好想象,特别是在三维以下的空间内,
 函数是几何图像的数学概括,而几何图像是函数的高度形象化,比如一个函数对应几何空间
 上若干点组成的图形。
-  但当函数与几何超出三维空间时,就难以获得较好的想象,于是就有了 *映射* 的概念,映射表达
+    但当函数与几何超出三维空间时,就难以获得较好的想象,于是就有了 *映射* 的概念,映射表达
 的就是 _一个集合通过某种关系转为另外一个集合_
-  通常数学书是先说映射,然后再讨论函数,这是因为 _函数是映射的一个特例_,为了更好的在数学
+    通常数学书是先说映射,然后再讨论函数,这是因为 _函数是映射的一个特例_,为了更好的在数学
 上表达这种映射关系,（这里特指线性关系）于是就引进了矩阵。
-  这里的矩阵就是表征上述空间映射的 *线性关系*. 而通过向量来表示上述映射中所说的这个集合,
-而我们通常所说的 *基* ,就是这个集合的最一般关系。
-  于是,我们可以这样理解,一个集合（向量）,通过一种映射关系（矩阵）,得到另外一个几何（另外
+    这里的矩阵就是表征上述空间映射的 *线性关系*. 而通过向量来表示上述映射中所说的这个集合,
+    而我    们通常所说的 *基* ,就是这个集合的最一般关系。
+    于是,我们可以这样理解,一个集合（向量）,通过一种映射关系（矩阵）,得到另外一个几何（另外
 一个向量）。
-  那么向量的范数，就是表示这个 _原有集合的大小_ 。
-  而矩阵的范数,就是表示这个 _变化过程的大小的一个度量_ 。
-  那么说到具体几几范数，其不过是定义不同,一个矩阵范数往往由一个向量范数引出,我们称之为
+    那么向量的范数，就是表示这个 _原有集合的大小_ 。
+    而矩    阵的范数,就是表示这个 _变化过程的大小的一个度量_ 。
+    那么说到具体    几几范数，其不过是定义不同,一个矩阵范数往往由一个向量范数引出,我们称之为
 *算子范数*,其物理意义都如我上述所述。
-  0范数,向量中非零元素的个数
-  1范数,为绝对值之和
-  2范数,就是通常意义上的模
-  无穷范数,就是取向量的最大值
+    0范数,向量中非零元素的个数
+    1范数,为绝对值之和
+    2范数,就是通常意义上的模
+    无穷范数,就是取向量的最大值
