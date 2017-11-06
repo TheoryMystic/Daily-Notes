@@ -219,17 +219,17 @@
       - upright space
    3. 坐标系的 *转换*[transformation]
    4. 讨论 *嵌套坐标系*[nested coordinate spaces],主要用于 _3D对象的层级动画(animating 
-hierarchically segmented objects in 3D space)_
+   hierarchically segmented objects in 3D space)_
 
 *** Why bother with Multiple Coordinate Spaces?[为什么要使用多个坐标系?]
     从直觉上来说,我们把所有的东西放在一个坐标系里,记录每个东西的位置,是理所当然的做法.
     通常我们把这个坐标系叫做 *世界坐标系*[world coordinate space].
     但是考虑一个问题,当我们把一个物体置入世界坐标系的时候,到底怎么样才能清晰直观的表现
-它的位置,方向等信息?
+    它的位置,方向等信息?
     同样显而易见的是,我们以物体自身为坐标系,来表示它的 *位置*[position], *旋转*[rotation] 和
-*大小*[scale],符合我们的直觉的同时也更简单.
+    *大小*[scale],符合我们的直觉的同时也更简单.
     而在这种情况下,最理想的办法无疑是让自身的坐标系和世界坐标系并存,让物体从自身坐标系转换
-到世界坐标系.
+    到世界坐标系.
 *** Some Useful Coordinate Spaces
 **** World Space
      世界坐标系是用来表示 *绝对位置*[absolute position] 的,在游戏中, 意味着它表示的是在游
@@ -243,9 +243,9 @@ hierarchically segmented objects in 3D space)_
 **** Camera Space
      首先要明白,Camera Space 是 1. _带有 *视点*[viewpoint]_ 2. _用于渲染的_ Object Space.
      在Camera Space中(Left-handed conventions),
-       - +x --> *right*
-       - +y --> *up*
-       - +z --> *forward*
+     - +x --> *right*
+     - +y --> *up*
+     - +z --> *forward*
      需要区别的在于 *Camera Space* (是一个3D Space), *Screen Space*(是一个2D Space).
      为了让 Camera Space 映射到 Screen Space,我们需要用的一个技巧是 *投影*[projection].
 **** Upright Space
@@ -259,51 +259,122 @@ hierarchically segmented objects in 3D space)_
      *旋转*[rotation] 得到.
 *** Basis Vectors and Coordinate Space[基向量与坐标空间]
     在实际的游戏编程中,我们常常会遇到一个问题:我知道某个物体在当前坐标的具体位置,但是
-它在另一个坐标系中应该如何表示?
+    它在另一个坐标系中应该如何表示?
     这个过程被叫做 *coordinate space translation*[坐标空间转换].
 **** Dual Perspectives[双重视角]
-    我们已经知道,在世界坐标系中的物体的位置都可通过物体的平移与旋转得到.而在实际考虑
-问题的时候,我们的具体步骤是:
+     我们已经知道,在世界坐标系中的物体的位置都可通过物体的平移与旋转得到.而在实际考虑
+     问题的时候,我们的具体步骤是:
      1. 旋转
      2. 平移
-    为什么要先旋转再平移?原因在于围绕 *原点* 进行旋转是 *线性变换*[linear transform],而围绕
-其他点旋转则是在进行 *仿射变换*[affine transformation],仿射变换要麻烦的多.
-    如果我们要先平移再旋转,就需要进行如下步骤:
-    1. 将旋转中心平移到原点
-    2. 以原点为中心旋转到指定角度
-    3. 平移
-    而最终,为了能渲染出摄像机视野内的物体,我们需要将目标模型变换到 *Camera Space*.但是就算
-是转换到了Camera Space,故事也还没有结束,我们还需要将顶点转换到 *Clip Space*,最后 *投影* 到
-*Screen Space*.
-    整个流程大概是:
+     为什么要先旋转再平移?原因在于围绕 *原点* 进行旋转是 *线性变换*[linear transform],而围绕
+     其他点旋转则是在进行 *仿射变换*[affine transformation],仿射变换要麻烦的多.
+     如果我们要先平移再旋转,就需要进行如下步骤:
+     1. 将旋转中心平移到原点
+     2. 以原点为中心旋转到指定角度
+     3. 平移
+     而最终,为了能渲染出摄像机视野内的物体,我们需要将目标模型变换到 *Camera Space*.但是就算
+     是转换到了 *Camera Space*,故事也还没有结束,我们还需要将顶点转换到 *Clip Space*,最后 *投影* 
+     到 *Screen Space*.
+     整个流程大概是:
      Object Space --> World Space --> Camera Space --> Clip Space --> Screen Space
      其中,World Space 到 Camera Space 则通过 *顶点着色器*[vertex shader] 完成.
      *active transformation*
      *passive transformation*
+     active和passive都用来表示Object的状态,active表示移动Object,passive表示让Object静止,移动坐
+     标系.
+**** Specifying Coordinate Spaces[指定坐标空间]
+     通过描述 *原点*[origin] 和 *轴*[axis],就能指定一个坐标空间.
+     *原点* 是一个用来 _定义空间位置的点_,而 *轴* 则是用来 _描述空间方向的向量_.
+     我们定义的原点是相对于 *父坐标空间*[parent coordinate space]而言的,因为在 *子空间*[child space]
+     中,原点总被表示为(0,0,0).
+**** Basis Vectors[基向量]
+     $\vec{v} = x\vec{p}+y\vec{q}+z\vec{r}$
+     其中,$\vec{p}=[1,0,0] \vec{q}=[0,1,0],\vec{r}=[0,0,1]$,也就是所谓的基向量.
+
+
+     如何将本地坐标系中的位置转换到世界坐标系?
+     1. 找到本地坐标系的原点,将 _原点以世界坐标系的位置_ 表示.
+     2. 以upright坐标系的 *单位向量*[unit vector]为基础,分别将本地坐标系的单位向量(+x +y)在upright
+     坐标系中表示.
+     3. 
+     原点位置
+     + 根据向量在本地坐标系中的位置的标量值,分别乘以upright坐标系中表示的 _本地坐标系的单位向量_
+     = 该本地向量在世界坐标系中的位置
+     公式为:
+     $\vec{w} = \vec{o} + b_{x}\vec{p} + b_{y}\vec{q}$
+     以基向量的 *线性组合*[linear combination]的方式表示一个3D向量:
+     $\vec{v} = x\vec{p} + y\vec{q} + z\vec{r}$
+    
+     在理想状况下,我们希望基向量都互相垂直并且具有相同的大小,然而现实往往并不能如愿.
+     我们举以下几个例子来说明下非理想状况下的基向量的应用:
+
+     1. _Scale an Object_
+     当我们对一个物体进行缩放的时候,考虑到不是同时对x,y,z轴都进行缩放,所以往往缩放后的结果是原
+物体的基向量不再垂直或者具有相同的长度.
+
+     2. _Texture Mapping/Bump Mapping_
+     在 *表面*[surface]上建立一个轴(+z)平行于 *表面法线*[fn:surfacenormal]的本地坐标系通常会很有用.
+     而另外的两个轴 u 和 v 分别被叫做 *切线* [tangent] 和 *次法线*[binormal],在2D纹理中,分别沿 *水平*
+     和 *垂直* 方向延伸.
+     通常在 *平面2D纹理*[flat 2D texture]中,通常会将纹理贴在不规则的表面上,并且基向量往往不能保证
+     是互相垂直的.
+
+     之所以基向量不必非要互相垂直,是因为在一个平面上,只要 _两个不平行的基向量_ 就能描述平面内的任意
+     向量,也即是说,在同一平面内的任意两个不平行的基向量即可构成一个平面.
+     这些由基向量线性变换得来的向量的集合被叫做 _the *span* of the basis_.由此可推:
+     2 basis vectors --> the span is an infinite 2D plane.
+     3 basis vectors --> the span is an infinite 3D plane.
+     *linear span* --> 线性生成空间
+     *rank* -->
+     _秩,由基向量张成的空间的维度数量被叫做秩._
+     the number of dimensions in the space _spanned by the basis_ is the *rank* of the basis.
+     *linear dependent* --> 线性相关
+     *linear independent* --> 线性无关 --> *满秩*[full rank]
+
+     _如何判断一组向量是否线性相关?_
+     $a_{1}\vec{v}_{1} + a_{2}\vec{v}_{2} +  ... a_{n}\vec{v}_{n} = 0$
+     即:
+     $\sum_{i=1}^n a_{i}\vec{v}_{i} = 0$
+     若等式成立,则这组向量是线性相关的.
+
+     A set of basis vectors that are _mutually perpendicular_ is called an *orthogonal basis*.
+     一组互相垂直的基向量被叫做 *正交基*.
+     *orthonormal basis*[标准正交基],在正交基的基础上还具有 *单位长度*[unit length].
+**** Nested Coordinate Spaces[嵌套坐标空间]
+     *Articulated model*[关节模型] --> 由嵌套坐标空间构成的模型.
+     在物体的动画系统中,使用嵌套坐标空间能简单高效的描述各个部分的运动关系.
+**** In Defense of Upright Space[再次为upright space站台]
+     在程序代码里,一个数据类型如 *float3*,往往具有两个含义:
+     1. 作为一个 *vector*
+     2. 作为一个 *point*
+     永远要记住,一个 *vector* 表示的是 _一段位移(同时具有大小和方向)_,而一个 *Point* 表示的是
+*位置*[Position].
 * Footnotes
 
+[fn:surfacenormal] 三维平面的法线是 _垂直_ 于该平面的 *三维向量*.法线是与多边形的曲面垂直的理论线.
+
 [fn:worldspace]
-     在南方人/北方人指路的时候,北方人往往告诉你,往北面/南面走,而南方人则是沿着这儿到
+在南方人/北方人指路的时候,北方人往往告诉你,往北面/南面走,而南方人则是沿着这儿到
 下个路口往左/往右,可见北方人采用的世界坐标系,而南方人采用的是对象坐标系.
 
 [fn:norm] 
-    要更好的理解范数,就要从 _函数、几何与矩阵_ 的角度去理解,我尽量讲的通俗一些。
-    我们都知道,函数与几何图形往往是有对应的关系,这个很好想象,特别是在三维以下的空间内,
+要更好的理解范数,就要从 _函数、几何与矩阵_ 的角度去理解,我尽量讲的通俗一些。
+我们都知道,函数与几何图形往往是有对应的关系,这个很好想象,特别是在三维以下的空间内,
 函数是几何图像的数学概括,而几何图像是函数的高度形象化,比如一个函数对应几何空间
 上若干点组成的图形。
-    但当函数与几何超出三维空间时,就难以获得较好的想象,于是就有了 *映射* 的概念,映射表达
+但当函数与几何超出三维空间时,就难以获得较好的想象,于是就有了 *映射* 的概念,映射表达
 的就是 _一个集合通过某种关系转为另外一个集合_
-    通常数学书是先说映射,然后再讨论函数,这是因为 _函数是映射的一个特例_,为了更好的在数学
+通常数学书是先说映射,然后再讨论函数,这是因为 _函数是映射的一个特例_,为了更好的在数学
 上表达这种映射关系,（这里特指线性关系）于是就引进了矩阵。
-    这里的矩阵就是表征上述空间映射的 *线性关系*. 而通过向量来表示上述映射中所说的这个集合,
-    而我    们通常所说的 *基* ,就是这个集合的最一般关系。
-    于是,我们可以这样理解,一个集合（向量）,通过一种映射关系（矩阵）,得到另外一个几何（另外
+这里的矩阵就是表征上述空间映射的 *线性关系*. 而通过向量来表示上述映射中所说的这个集合,
+而我    们通常所说的 *基* ,就是这个集合的最一般关系。
+于是,我们可以这样理解,一个集合（向量）,通过一种映射关系（矩阵）,得到另外一个几何（另外
 一个向量）。
-    那么向量的范数，就是表示这个 _原有集合的大小_ 。
-    而矩    阵的范数,就是表示这个 _变化过程的大小的一个度量_ 。
-    那么说到具体    几几范数，其不过是定义不同,一个矩阵范数往往由一个向量范数引出,我们称之为
+那么向量的范数，就是表示这个 _原有集合的大小_ 。
+而矩    阵的范数,就是表示这个 _变化过程的大小的一个度量_ 。
+那么说到具体    几几范数，其不过是定义不同,一个矩阵范数往往由一个向量范数引出,我们称之为
 *算子范数*,其物理意义都如我上述所述。
-    0范数,向量中非零元素的个数
-    1范数,为绝对值之和
-    2范数,就是通常意义上的模
-    无穷范数,就是取向量的最大值
+0范数,向量中非零元素的个数
+1范数,为绝对值之和
+2范数,就是通常意义上的模
+无穷范数,就是取向量的最大值
