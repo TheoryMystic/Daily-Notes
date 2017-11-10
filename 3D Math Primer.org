@@ -349,6 +349,449 @@
      2. 作为一个 *point*
      永远要记住,一个 *vector* 表示的是 _一段位移(同时具有大小和方向)_,而一个 *Point* 表示的是
 *位置*[Position].
+** Chapter 4 Introduction to Matrices[矩阵导论]
+   *矩阵*[Matrices],主要用来描述两个坐标空间之间的关系.它计算从一个坐标空间到另一个坐标
+空间的 _向量变换_ .
+*** Mathematical Definition of Matrix[矩阵的数学定义]
+    A vector is an _array of scalars_,and a matrix is an _array of vectors_.
+**** Matrix Dimensions and Notation[矩阵行列和符号]
+\begin{bmatrix}
+         4 & 0 & 12\\
+         -5 & \Sqrt{4} & 3\\
+         12 & -4/3 & -1\\
+         1/2 & 18 & 0 \\
+\end{bmatrix}
+    这是一个 4(row)x3(col)矩阵.表示矩阵由4 *行*[row] 3 *列*[column]组成.
+\begin{bmatrix}
+         m_{11} & m_{12} & m_{13}\\
+         m_{21} & m_{22} & m_{23}\\
+         m_{31} & m_{32} & m_{33}\\
+\end{bmatrix}
+    符号 $m_{ij}$ 表示在M中i行j列的元素的值.需要注意的是在很多编程语言中,数组下标是从0开始的,而矩阵下
+标则是从1开始的.在编程的时候使用矩阵时,一定要注意区别.
+**** Square Matrices[方阵]
+     *方阵*[square matrices]就是 _行和列相等_ 的矩阵.
+     *对角元素*[diagonal elements] 就是指 _行和列的下标相同_ 的 *方阵* 中的元素.
+     如下:
+\begin{bmatrix}
+         \boldsymbol{m_{11}} & m_{12} & m_{13}\\
+         m_{21} & \boldsymbol{m_{22}} & m_{23}\\
+         m_{31} & m_{32} & \boldsymbol{m_{33}}\\
+\end{bmatrix}
+
+     *对角矩阵*[diagonal matrix] 就是指 *非对角元素* 为0的矩阵.
+     如下:
+\begin{bmatrix}
+         \boldsymbol{m_{11}} & 0 & 0\\
+         0 & \boldsymbol{m_{22}} & 0\\
+         0 & 0 & \boldsymbol{m_{33}}\\
+\end{bmatrix}
+    *单位矩阵*[identity matrix] 就是指对角元素都为1的 *对角矩阵*.
+    如下:
+\begin{equation}
+\boldsymbol{I_{3}} =
+\begin{bmatrix}
+         \boldsymbol{1} & 0 & 0\\
+         0 & \boldsymbol{1} & 0\\
+         0 & 0 & \boldsymbol{1}\\
+\end{bmatrix}
+\end{equation}
+    单位矩阵的特殊之处在于它是乘法恒等式.如果你让一个矩阵与单位矩阵做乘法,得到的是原矩阵.
+单位矩阵之于矩阵,就如同数字1之于标量.
+**** Vectors as Matrices[向量作标量]
+    矩阵通常由n行n列组成(n>=1),而一个 *向量*[vector]可以被看成是 *一行*[$1 \times n$] 或者是 *一列*[$n \times 1$]
+的矩阵.
+    *行向量*[row vector] --> $1 \times n$ 矩阵
+    e.g
+    \begin{bmatrix}
+    1 & 2 & 3
+    \end{bmatrix}
+    *列向量*[column vector] --> $n \times 1$ 矩阵
+    e.g
+\begin{bmatrix}
+1 \\
+2 \\
+3
+\end{bmatrix}
+**** Matrix Transposition[转置矩阵]
+     假设有一个矩阵$\boldsymbol{M} (r \times c)$,则它的 *转置*[transpose] 矩阵为
+     $\boldsymbol{M^T} (c \times r)$,有$\boldsymbol{M^T_{ij}} = \boldsymbol{M_{ji}}$.
+     e.g
+\begin{equation}
+\begin{bmatrix}
+         1 & 2 & 3\\
+         4 & 5 & 6\\
+         7 & 8 & 9\\
+         10 & 11 & 12\\
+\end{bmatrix}
+^T =
+\begin{bmatrix}
+         1 & 4 & 7 & 10\\
+         2 & 5 & 8 & 11\\
+         3 & 6 & 9 & 12\\
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\begin{bmatrix}
+         a & b & c\\
+         d & e & f\\
+         g & h & i\\
+\end{bmatrix}
+^T =
+\begin{bmatrix}
+         a & d & g\\
+         b & e & h\\
+         c & f & i\\
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\begin{bmatrix}
+         x & y & z\\
+\end{bmatrix}
+^T =
+\begin{bmatrix}
+         x\\
+         y\\
+         z\\
+\end{bmatrix}
+\end{equation}
+    如下,有两个结论:
+    $(\boldsymbol{M}^T)^T = \boldsymbol{M}$
+    $\boldsymbol{D^T} = \boldsymbol{D} , D = (Diagonal Matrix)$
+**** Multiply a Matrix with Scalar[矩阵的标量乘法]
+     与向量的标量乘法相同:
+     \begin{equation}
+     k \boldsymbol{M} = k
+     \begin{bmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     m_{41} & m_{42} & m_{43} \\
+     \end{bmatrix} 
+     =
+     \begin{bmatrix}
+     km_{11} & km_{12} & km_{13} \\
+     km_{21} & km_{22} & km_{23} \\
+     km_{31} & km_{32} & km_{33} \\
+     km_{41} & km_{42} & km_{43} \\
+     \end{bmatrix} 
+     \end{equation}
+**** Multiplying Two Matrix[矩阵乘法]
+     $\boldsymbol{A} (r \times n) , \boldsymbol{B} (n \times c) , \boldsymbol{AB} (n \times c)$
+     矩阵乘法中,第一个矩阵的列数必须与第二个矩阵的行数相等才能进行.
+     同时,矩阵乘法不满足交换律.
+     公式如下:
+     $c_{ij} = \sum_{k=1}^n a_{ik}b_{kj}$
+     第一个矩阵的行向量与第二个矩阵的列向量做 *点乘*.
+     e.g
+\begin{equation}
+\boldsymbol{AB} =
+\begin{bmatrix}
+a_{11} & a_{12} \\
+a_{21} & a_{22}
+\end{bmatrix}
+\begin{bmatrix}
+b_{11} & b_{12} \\
+b_{21} & b_{22}
+\end{bmatrix}
+=
+\begin{bmatrix}
+a_{11}b_{11} + a_{12}b_{21} & a_{11}b_{12} + a_{12}b_{22} \\
+a_{21}b_{11} + a_{22}b_{21} & a_{21}b_{12} + a_{22}b_{22} \\
+\end{bmatrix}
+\end{equation}
+
+\begin{equation*}
+\begin{flushleft}
+\boldsymbol{A} =
+\begin{bmatrix}
+-3 & 0 \\
+5 & 1/2
+\end{bmatrix},
+\boldsymbol{B} =
+\begin{bmatrix}
+-7 & 2 \\
+4 & 6 
+\end{bmatrix},
+\\
+\boldsymbol{AB} =
+\begin{bmatrix}
+(-3)(-7) + (0)(4) & (-3)(2) + (0)(6) \\
+(5)(-7) + (1/2)(4) & (5)(2) + (1/2)(6)\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+21 & -6 \\
+-33 & 13 
+\end{bmatrix}
+\end{flushleft}
+\end{equation*}
+下面是矩阵乘法的一些特点:
+    - M与方阵相乘,得到的矩阵大小和原矩阵相同.而M与单位矩阵相乘,结果是M自身.
+      $\boldsymbol{MI} = \boldsymbol{IM} = \boldsymbol{M}$
+
+    - 矩阵乘法不满足交换律
+      $\boldsymbol{AB} \neq  \boldsymbol{BA}$
+
+    - 矩阵乘法满足结合律
+      $\boldsymbol{(AB)C} = \boldsymbol{A(BC)}$
+
+    - 标量(或向量)与矩阵相乘满足结合律
+      $\boldsymbol{(kA)B} = \boldsymbol{k(AB)}$
+      $\boldsymbol{(\vec{v}A)B} = \boldsymbol{\vec{v}(AB)}$
+
+    - 矩阵乘法的转置
+      $\boldsymbol{(AB)^T} = \boldsymbol{B^TA^T}$
+**** Multiplying a Vector and a Matrix[矩阵的向量乘法]
+    首先要注意的是,向量与矩阵相乘或者矩阵与向量相乘的前提是,第一个参数的 *列* 必须要与第二个参数
+的 *行* 一致,否则不能进行乘法运算.
+\begin{equation*}
+\begin{flushleft}
+\begin{bmatrix}
+x & y & z
+\end{bmatrix}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} \\
+m_{21} & m_{22} & m_{23} \\
+m_{31} & m_{32} & m_{33} \\
+\end{bmatrix}
+=
+\\
+\begin{bmatrix}
+xm_{11}+ym_{21}+zm_{31} & xm_{12}+ym_{22}+zm{32} & xm_{13}+ym_{23}+zm_{33}
+\end{bmatrix}
+\end{flushleft}
+\end{equation*}
+
+\begin{equation*}
+\begin{flushleft}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} \\
+m_{21} & m_{22} & m_{23} \\
+m_{31} & m_{32} & m_{33} \\
+\end{bmatrix}
+\begin{bmatrix}
+x \\
+y \\ z
+\end{bmatrix}
+=
+\\
+\begin{bmatrix}
+xm_{11}+ym_{12}+zm_{13} & xm_{21}+ym_{22}+zm{23} & xm_{31}+ym_{32}+zm_{33}
+\end{bmatrix}
+\end{flushleft}
+\end{equation*}
+
+    向量与矩阵相乘满足分配律:
+    e.g
+    $(\vec{v}+\vec{w})\boldsymbol{M} = \vec{v}\boldsymbol{M} + \vec{w}\boldsymbol{M}$
+    Finally, and perhaps most important at all,the result of the multiplication is a _linear combination_
+_of the rows or columns of the matrix_.
+**** Row versus Column Vectors[行向量和列向量]
+\begin{equation*}
+\begin{flushleft}
+\begin{bmatrix}
+x & y & z
+\end{bmatrix}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} \\
+m_{21} & m_{22} & m_{23} \\
+m_{31} & m_{32} & m_{33} \\
+\end{bmatrix}
+=
+\\
+\begin{bmatrix}
+xm_{11}+ym_{21}+zm_{31} & xm_{12}+ym_{22}+zm{32} & xm_{13}+ym_{23}+zm_{33}
+\end{bmatrix}
+\end{flushleft}
+\end{equation*}
+
+\begin{equation*}
+\begin{flushleft}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} \\
+m_{21} & m_{22} & m_{23} \\
+m_{31} & m_{32} & m_{33} \\
+\end{bmatrix}
+\begin{bmatrix}
+x \\
+y \\ z
+\end{bmatrix}
+=
+\\
+\begin{bmatrix}
+xm_{11}+ym_{12}+zm_{13} & xm_{21}+ym_{22}+zm{23} & xm_{31}+ym_{32}+zm_{33}
+\end{bmatrix}
+\end{flushleft}
+\end{equation*}
+
+     从上面的矩阵与相同元素的行/列向量相乘我们可以发现,相乘的结果是不同的.
+     先解释一下为什么会有这种区别,再给出建议使用 *行向量*[row vector]给出一些理由.
+     - *行向量* 是 _从左到右_ 的顺序读写的.特别是在进行多个变换的时候. 
+       *列向量* 却必须 _从右到左_.
+       e.g
+       $\vec{v} \boldsymbol{ABC}$ (row vector)
+       $\boldsymbol{CBA} \vec{v}$ (col vector)
+
+     - 尽管在实际生活中,使用列向量会让矩阵看起来更直观(特别是在维数增加的时候),但是在游戏编程里,
+代码的可读性往往比公式的可读性更重要.
+
+    在许多API里,DirectX使用的是行向量,而OpenGL使用的则是列向量,在实际编程中要注意区分.
+*** Geometric Interpretation of Matrix[矩阵的几何解释]
+     不管怎么样,一个 *方阵*[square matrix] 可以描述 _任何矩阵变换_.
+     一个 *线性变换* 可以 *伸展*[stretch] 坐标空间,但是却不能 *弯曲*[warp] 它.
+     常见的线性变换包括:
+     - *rotation*[旋转]
+     - *scale*[缩放]
+     - *orthographic projection*[正交投影]
+     - *shearing*[裁剪]
+     - *reflection*[反射]
+
+    已知 *基向量*[basis vectors] $\vec{i} = [1,0,0],\vec{j} = [0,1,0], \vec{k} = [0,0,1]$,与任意矩阵$\boldsymbol{M}$
+相乘结果如下:
+\begin{equation*}
+\boldsymbol{\vec{i}M} =
+\begin{bmatrix}
+1 & 0 & 0
+\end{bmatrix}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} \\
+m_{21} & m_{22} & m_{23} \\
+m_{31} & m_{32} & m_{33} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13}
+\end{bmatrix}
+\end{equation*}
+
+ \begin{equation*}
+\boldsymbol{\vec{i}M} =
+\begin{bmatrix}
+0 & 1 & 0
+\end{bmatrix}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} \\
+m_{21} & m_{22} & m_{23} \\
+m_{31} & m_{32} & m_{33} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+m_{21} & m_{22} & m_{23}
+\end{bmatrix}
+\end{equation*}
+    
+ \begin{equation*}
+\boldsymbol{\vec{i}M} =
+\begin{bmatrix}
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} \\
+m_{21} & m_{22} & m_{23} \\
+m_{31} & m_{32} & m_{33} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+m_{31} & m_{32} & m_{33}
+\end{bmatrix}
+\end{equation*}
+
+而我们之前已经知道任何向量都可以表示成基向量的 *线性组合*[linear combination],
+$\boldsymbol{\vec{v}} = v_{x} \boldsymbol{\vec{i}} + v_{y} \boldsymbol{\vec{j}} + v_{z} \boldsymbol{\vec{k}}$
+则向量与矩阵相乘可表示为:
+\begin{equation*}
+\begin{flushleft}
+\boldsymbol{\vec{v}M} = 
+(v_{x} \boldsymbol{\vec{i}} + v_{y} \boldsymbol{\vec{j}} + v_{z} \boldsymbol{\vec{k}}) \boldsymbol{M}
+\\=
+(v_{x} \boldsymbol{\vec{i}})\boldsymbol{M} + 
+(v_{y} \boldsymbol{\vec{j}})\boldsymbol{M} + 
+(v_{z} \boldsymbol{\vec{k}})\boldsymbol{M})
+\\=
+v_{x} (\boldsymbol{\vec{i}} \boldsymbol{M}) + 
+v_{y} (\boldsymbol{\vec{j}} \boldsymbol{M}) + 
+v_{z} (\boldsymbol{\vec{k}} \boldsymbol{M}))
+\\=
+v_{x}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13}
+\end{bmatrix}
++v_{y}
+\begin{bmatrix}
+m_{21} & m_{22} & m_{23}
+\end{bmatrix}
++v_{z}
+\begin{bmatrix}
+m_{31} & m_{32} & m_{33}
+\end{bmatrix}
+\end{flushleft}
+\end{equation*}
+等价于:
+\begin{equation*}
+\begin{flushleft}
+\boldsymbol{\vec{v}M} = 
+\begin{bmatrix}
+v_{x} & v_{y} & v_{z}
+\end{bmatrix}
+\begin{bmatrix}
+\boldsymbol{-p-}\\
+\boldsymbol{-q-}\\
+\boldsymbol{-r-}\\
+\end{bmatrix}
+=
+v_{x} \boldsymbol{\vec{p}} + v_{y} \boldsymbol{\vec{q}} + v_{z} \boldsymbol{\vec{r}}
+\end{flushleft}
+\end{equation*}
+
+    从上可知,矩阵的行其实可以看成是 _该坐标空间的基向量[basis vectors]_.
+    e.g
+\begin{equation*}
+\boldsymbol{M}=
+\begin{bmatrix}
+2 & 3 \\
+1 & 2
+\end{bmatrix}
+\end{equation*}
+    在这里,可以看成是,基向量$\boldsymbol{p} = [2 , 3], \boldsymbol{q} = [1 , 2]$.
+    把n维矩阵看成是n个基向量的集合,那么向量与矩阵的乘法,就可以看成是 _对每个矩阵中的基向量做线性_
+_组合_
+    *总结*
+
+    - The rows of a *square matrix* can be interpreted as the basis vectors of a coordinate space.
+      方阵的行可以看成是坐标空间中的基向量.
+
+    - To transform a vector from original coordinate space to the new coordinate space,we multiply
+      the vector by matrix.
+      向量与矩阵相乘的几何意义是:把向量从原坐标空间转换到新的坐标空间.
+
+    - The transformation from the original coordinate space to the coordinate space defined by these
+basis vectors is a linear transformation. A linear transformation preserves straight lines,and parallel
+lines remain parallel. However, angles, lengths, areas, and volumes may be altered after transfor-
+mation.
+      由基向量定义的从原始坐标空间到新的坐标空间的转换是一个线性变换.线性变换的时候直线和平行线仍
+然保持平行.但是,角度,长度,面积,体积等都会受变换影响改变.
+
+    - Multiplying the zero vector by any square matrix results in the zero vector.Therefor, the linear trans-
+formation represented by a square matrix has the same origin as the original coordinate space -->
+the transformation does not contain translation.
+      方阵与零向量相乘只会得到一个零向量.对方阵做线性变换不会改变原点坐标--> _变换不包括平移_.
+
+    - We can visualize a matrix by visualizing the basis vector of the coordinate space after transfor-
+mation.These basis vectors form an 'L' in 2D,and a tripod in 3D.Using a box or auxiliary object also
+helps in visualiation.
+      通过把矩阵的行当作基向量,我们可以把矩阵形象化.在2D中,基向量呈L型,在3D中就像一个三脚架.
+*** The Bigger Picture of Linear Algebra[关于更多:线性代数]
+     线性代数是用来操作和求解线性方程的.在游戏中,求解线性方程组最频繁的是 *物理引擎*[physics 
+engine].另外一些常见的应用是 *最小二乘方法*[least squares approximation] 和 *数据拟合*[data fitting].
+     虽然传统的线性代数和方程组在基础的游戏编程中不是必须的,但是在很多高级领域,它们确是必不可少的,
+来看下现在的某些技术:
+     *fluid*[流体], *cloth*[布料], *hair simulation(and rendering)*[头发模拟(和渲染)],
+     *procedural animation of characters*[角色程序动画], *real-time global illumination*[实施全局光照],
+     *machine vision*[机器视觉], *gesture recognition*[手势识别] ...
+     都需要用到线性代数.
 * Footnotes
 
 [fn:surfacenormal] 三维平面的法线是 _垂直_ 于该平面的 *三维向量*.法线是与多边形的曲面垂直的理论线.
