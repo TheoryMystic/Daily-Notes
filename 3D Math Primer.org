@@ -209,7 +209,7 @@
     - The infinity norm.(p = ∞) --> Chebyshev norm (求所有向量元素中最大值)
 
       $|x|_{∞} \equiv max(|x_{1},...,|x_{n}|)$
-** Chapter 3 Multiple Coordinate Spaces[多个坐标系统]
+** Chapter 3 Multiple Coordinate Spaces[多坐标空间]
    关于多个坐标系统,我们会讨论如下问题:
    1. 为何需要多个坐标系?
    2. 对几个常见坐标系的介绍:
@@ -792,12 +792,230 @@ engine].另外一些常见的应用是 *最小二乘方法*[least squares approx
      *procedural animation of characters*[角色程序动画], *real-time global illumination*[实施全局光照],
      *machine vision*[机器视觉], *gesture recognition*[手势识别] ...
      都需要用到线性代数.
-* Footnotes
+** Chapter 5 Matrices and Linear Transformations[矩阵和线性变换]
+   *仿射变换*[affline transformation] = *线性变换*[linear transformation] + *平移*[displacement]
+*** Rotation[旋转]
+**** Rotation in 2D[2D下的旋转]
+     在2D坐标中,只有一种可能的旋转 -- 围绕 *点*[point]旋转.
+     2D下的旋转公式如下:
+     \begin{equation*}
+     \boldsymbol{R}(\theta) =
+     \begin{bmatrix}
+     -\boldsymbol{p'}- \\
+     -\boldsymbol{q'}- \\
+     \end{bmatrix}
+     =
+      \begin{bmatrix}
+      cos\theta & sin\theta \\
+      -sin\theta & cos\theta
+     \end{bmatrix}
+     \end{equation*}
+**** 3D Rotation about Cardinal Axes[围绕坐标轴的3D旋转]
+     在3D场景下,围绕 *轴*[axis] 的旋转比围绕点的旋转更为普遍.
+     3D场景下绕坐标轴旋转的公式如下:
+     围绕x轴旋转:
+     \begin{equation*}
+     \boldsymbol{R}_{x}(\theta) =
+     \begin{bmatrix}
+     -\boldsymbol{p'}- \\
+     -\boldsymbol{q'}- \\
+     -\boldsymbol{r'}- \\
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     1 & 0 & 0 \\
+     0 & cos\theta &sin\theta \\
+     0 & -sin\theta & cos\theta
+     \end{bmatrix}
+     \end{equation*}
+     围绕y轴旋转:
+     \begin{equation*}
+     \boldsymbol{R}_{y}(\theta) =
+     \begin{bmatrix}
+     -\boldsymbol{p'}- \\
+     -\boldsymbol{q'}- \\
+     -\boldsymbol{r'}- \\
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     cos\theta & 0 & -sin\theta \\
+     0 & 1 & 0 \\
+     sin\theta & 0 & cos\theta & \\
+     \end{bmatrix}
+     \end{equation*}
+     围绕z轴旋转:
+     \begin{equation*}
+     \boldsymbol{R}_{y}(\theta) =
+     \begin{bmatrix}
+     -\boldsymbol{p'}- \\
+     -\boldsymbol{q'}- \\
+     -\boldsymbol{r'}- \\
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     cos\theta & sin\theta & 0\\
+     -sin\theta & cos\theta & 0 \\
+     0 & 0 & 1\\
+     \end{bmatrix}
+     \end{equation*}
+**** 3D Rotation about an Arbitrary Axis[围绕任意轴的3D旋转]
+     在不考虑位移的情况下,现在我们讨论如何围绕任意轴做旋转.
+     首先,定义围绕任意轴旋转的角度为$\theta$,而该轴则由单位向量 $\hat{n}$ 来定义.
+     $\boldsymbol{v'} = \boldsymbol{vR}(\hat{n},\theta)$
+     其中,$\boldsymbol{v'}$ 表示围绕单位向量$\hat{n}$ 旋转角度$\theta$ 后的值.
+     在实现矩阵之前,我们先来看看能不能把$v'$ 用$\vec{v}$,$\hat{n}$ 和 $\theta$ 描述出来.
+     1. 首先,一个向量总是可以看成是多段基向量相加组成,
+        $\vec{v} = x\hat{p} + y\hat{q} + z\hat{r}$
+     2. 同样,一个向量可以表示成
+        $\vec{v} = \vec{v}_{||} + \vec{v}_{\perp}$,其中$\vec{v}_{||}$ 可以表示为向量在某一向量上的投影
+     3. 由此,有
+        $\vec{v} = \vec{v}_{||} + \vec{v}_{\perp} = proj(\vec{v},\hat{n}) + \vec{v}_{\perp}$
+        $\vec{v'}= \vec{v'}_{||} + \vec{v'}_{\perp} = proj(\vec{v'},\hat{n'}) + \vec{v'}_{\perp}$
+     4. 其中有 $\vec{v}_{||} = \vec{v'}_{||}$ ,所以问题被化简为求向量 $\vec{v'}_{\perp}$ .
+     5. $\vec{v}_{\perp}$ 绕轴旋转$\theta$ 得到 $\vec{v'}_{\perp}$,根据此条件来求出$\vec{v'}_{\perp}$ .
+     6. $\hat{n}$ 和 $\vec{v}_{\perp}$ 的叉积可以得到一个分别垂直于它们的向量 $\vec{w}$ ,而显而易见的是,
+        $\vec{v}_{\perp}$ , $\vec{v'}_{\perp}$  和 $\vec{w}$ 同处一个平面内,同时 $\vec{v}_{\perp}$ (作x轴) 和 $\vec{w}$ (作y轴)还构成了一个正交的2D坐标空间.
+        由此,我们就可以在正交的2D坐标空间内通过坐标轴旋转来得到向量 $\vec{v'}_{\perp}$.可得出
+        $\vec{v'}_{\perp} = cos\theta \vec{v}_{\perp} + sin\theta \vec{w}$
 
+     综上,各向量可表示为:
+     $\vec{v}_{||} = (\vec{v} \cdot \hat{n})\hat{n}$
+     $\vec{v}_{\perp} = \vec{v} - \vec{v}_{||} = \vec{v} - (\vec{v} \cdot \hat{n})\hat{n}$
+     $\vec{w} = \hat{n} \times \vec{v}_{\prep} = \hat{n} \times (\vec{v} - \vec{v}_{||}) = \hat{n} \times \vec{v} - 0 = \hat{n} \times \vec{v}$
+     $\vec{v'}_{\perp} = cos\theta\vec{v}_{\perp} + sin\theta\vec{w} = cos\theta(\vec{v}-(\vec{v} \cdot \hat{n})\hat{n}) + sin\theta(\hat{n} \times \vec{v}))$
+     $\vec{v'} = \vec{v'}_{\perp} + \vec{v'}_{||} = cos\theta(\vec{v}-(\vec{v} \cdot \hat{n})\hat{n}) + sin\theta(\hat{n} \times \vec{v}) + (\vec{v} \cdot \hat{n})\hat{n}$
+     
+\begin{equation*}
+p =
+\begin{bmatrix}
+1 & 0 & 0 \\
+\end{bmatrix},
+p' =
+\begin{bmatrix}
+n_{x^2}(1-cos\theta) + cos\theta \\
+n_{x}n_{y}(1-cos\theta) + n_{z}sin\theta \\
+n_{x}n_{z}(1-cos\theta) - n_{y}sin\theta
+\end{bmatrix}^T
+\end{equation*}
+
+\begin{equation*}
+q =
+\begin{bmatrix}
+0 & 1 & 0 \\
+\end{bmatrix},
+q' =
+\begin{bmatrix}
+n_{x}n_{y}(1-cos\theta) - n_{z}sin\theta \\
+n_{y^2}(1-cos\theta) + cos\theta \\
+n_{y}n_{z}(1-cos\theta) + n_{x}sin\theta
+\end{bmatrix}^T
+\end{equation*}
+
+\begin{equation*}
+r =
+\begin{bmatrix}
+0 & 0 & 1 \\
+\end{bmatrix},
+r' =
+\begin{bmatrix}
+n_{x}n_{z}(1-cos\theta) + n_{y}sin\theta \\
+n_{y}n_{z}(1-cos\theta) - n_{x}sin\theta \\
+n_{z^2}(1-cos\theta) + cos\theta \\
+\end{bmatrix}^T
+\end{equation*}
+
+\begin{equation*}
+\boldsymbol{R(\hat{n},\theta)} =
+\begin{bmatrix}
+-p'- \\
+-q'- \\
+-r'- \\
+\end{bmatrix} =
+\begin{bmatrix}
+n_{x^2}(1-cos\theta) + cos\theta & n_{x}n_{y}(1-cos\theta) + n_{z}sin\theta & n_{x}n_{z}(1-cos\theta) - n_{y}sin\theta \\
+n_{x}n_{y}(1-cos\theta) - n_{z}sin\theta & n_{y^2}(1-cos\theta) + cos\theta & n_{y}n_{z}(1-cos\theta) + n_{x}sin\theta \\
+n_{x}n_{z}(1-cos\theta) + n_{y}sin\theta & n_{y}n_{z}(1-cos\theta) - n_{x}sin\theta & n_{z^2}(1-cos\theta) + cos\theta
+\end{equation*}
+*** Scale[缩放]
+    在缩放的时候,我们往往会考虑两种缩放的情况.
+    一种是 *Uniform Scale*,即表示对整个物体以原点为中心,全体等比例缩放.
+    如果缩放比例为k的话,则缩放长度为k,缩放面积为k^2,缩放体积为k^3.
+
+    一种是 *None-uniform Scale*,即表示可以让物体沿各个方向缩放.
+    由于缩放的大小取决于缩放方向,所以k的大小会造成不同的影响:
+    $|k| <1$ -> 物体在该方向上会变得更短,$|k| > 1$ -> 物体在该方向上会变得更长.
+    $k = 0$ -> 物体 *投影*[projection] 在该方向上, $k < 0$  -> 造成物体的 *反射*[reflection].
+**** Scaling along the Cardinal Axes[以坐标轴缩放]
+     先考虑2D的情况,其实在2D的情况下很简单,我们只需要将基向量乘以k就行了.
+     \begin{equation*}
+     \boldsymbol{p'} = k_{x} \boldsymbol{p} = k_{x}
+     \begin{bmatrix}
+     1 & 0 \\
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     k_{x} & 0 \\
+     \end{bmatrix}
+     ,
+     \boldsymbol{q'} = k_{y} \boldsymbol{q} = k_{y}
+     \begin{bmatrix}
+     0 & 1 \\
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     0 & k_{y} \\
+     \end{bmatrix}.
+     \end{equation*}
+     由此可得Matrix $S(k_{x},k_{y})$ :
+
+     \begin{equation*}
+     \boldsymbol{S}(k_{x},k_{y}) =
+     \begin{bmatrix}
+     \boldsymbol{-p'-} \\
+     \boldsymbol{-q'-}
+     \end{bmatrix} =
+     \begin{bmatrix}
+     k_{x} & 0\\
+     0 & k_{y}
+     \end{bmatrix}
+     \end{equation*}
+
+     在3D中,表达也很简单,由2D可推:
+
+     \begin{equation*}
+     \boldsymbol{S}(k_{x},k_{y},k_{z}) =
+     \begin{bmatrix}
+     \boldsymbol{-p'-} \\
+     \boldsymbol{-q'-} \\
+     \boldsymbol{-r'-}
+     \end{bmatrix} =
+     \begin{bmatrix}
+     k_{x} & 0 & 0\\
+     0 & k_{y} & 0 \\
+     0 & 0 & k_{z} 
+     \end{bmatrix}
+     \end{equation*}
+
+     如果要让矩阵与任意的向量相乘,结果就是把向量的每个部分分别扩大,结果如下
+
+     \begin{equation*}
+     \begin{bmatrix}
+     x & y & z \\
+     \end{bmatrix}
+     \begin{bmatrix}
+     k_{x} & 0 & 0\\
+     0 & k_{y} & 0 \\
+     0 & 0 & k_{z} 
+     \end{bmatrix} =
+     \begin{bmatrix}
+     k_{x}x & k_{y}y & k_{z}z \\
+     \end{bmatrix}
+     \end{equation*}
+**** Scaling in an Arbitrary Direction[以任意方向缩放]
+* Footnotes
 [fn:surfacenormal] 三维平面的法线是 _垂直_ 于该平面的 *三维向量*.法线是与多边形的曲面垂直的理论线.
 
-[fn:worldspace]
-在南方人/北方人指路的时候,北方人往往告诉你,往北面/南面走,而南方人则是沿着这儿到
+[fn:worldspace] 在南方人/北方人指路的时候,北方人往往告诉你,往北面/南面走,而南方人则是沿着这儿到
 下个路口往左/往右,可见北方人采用的世界坐标系,而南方人采用的是对象坐标系.
 
 [fn:norm] 
