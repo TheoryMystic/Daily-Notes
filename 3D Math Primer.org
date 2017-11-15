@@ -1012,6 +1012,105 @@ n_{x}n_{z}(1-cos\theta) + n_{y}sin\theta & n_{y}n_{z}(1-cos\theta) - n_{x}sin\th
      \end{bmatrix}
      \end{equation*}
 **** Scaling in an Arbitrary Direction[以任意方向缩放]
+     对比按照任意轴进行旋转,按照任意方向缩放与它有共通之处.在此我们考虑,绕任意方向旋转,就是绕 _与_
+_该方向平行的 *基向量* 按一定 *长短* 缩放_,那么,这里就产生了两个参数: *基向量* 和 *长短*.
+     在此,我们将问题表示为: $\boldsymbol{S}(\hat{n},k)$
+     由此,参考绕任意轴旋转,我们可以得出以下方程:
+     $\vec{v} = \vec{v}_{||} + \vec{v}_{\perp}$,
+     $\vec{v}_{||} = (\vec{v} \cdot \hat{n}) \hat{n}$,
+     $\vec{v'}_{\perp} = \vec{v}_{\perp} = \vec{v} - \vec{v}_{||} = \vec{v} - (\vec{v} \cdot \hat{n}) \hat{n}$,
+     $\vec{v'}_{||} = k\vec{v}_{||} = k(\vec{v} \cdot \hat{n}) \hat{n}$,
+     $\vec{v'} = \vec{v'}_{||} + \vec{v'}_{\perp} = k(\vec{v} \cdot \hat{n}) \hat{n} + \vec{v} - (\vec{v} \cdot \hat{n}) \hat{n} = \vec{v} + (k-1)(\vec{v}\cdot \hat{n}) \hat{n}$.
+     由此,在基向量为$\vec{p}(1,0),\vec{q}(0,1)$ 的2D空间中, 可得:
+\begin{align*}
+\vec{p'} = \vec{p} + (k-1) (\vec{p}\cdot \hat{n}) \hat{n} =
+\begin{bmatrix}
+1 \\
+0 \\
+\end{bmatrix}
++ 
+(k-1) (
+\begin{bmatrix}
+1 \\
+0 \\
+\end{bmatrix}
+\cdot 
+\begin{bmatrix}
+n_{x} \\
+n_{y} \\
+\end{bmatrix}
+) 
+\begin{bmatrix}
+n_{x} \\
+n_{y} \\
+\end{bmatrix}
+\\=
+\begin{bmatrix}
+1 \\
+0 \\
+\end{bmatrix}
++ (k-1) 
+n_{x}
+\begin{bmatrix}
+n_{x} \\
+n_{y} \\
+\end{bmatrix}
+\\=
+\begin{bmatrix}
+1 \\
+0 \\
+\end{bmatrix}
++
+\begin{bmatrix}
+(k-1)n_{x^2} \\
+(k-1)n_{x}n_{y} \\
+\end{bmatrix}
+\\=
+\begin{bmatrix}
+1+(k-1)n_{x^2} \\
+(k-1)n_{x}n_{y} \\
+\end{bmatrix}
+\end{align*}
+
+同理可得,
+\begin{equation*}
+\vec{q} = 
+\begin{bmatrix}
+0 & 1 \\
+\end{bmatrix},
+\vec{q'} = 
+\begin{bmatrix}
+(k-1)n_{x}n_{y} \\
+1+(k-1)n_{y}^2
+\end{bmatrix}
+\end{equation*}
+现在我们知道在2D空间中如何表示任意方向上k的缩放了:
+\begin{equation*}
+\boldsymbol{S}(\hat{n},k) = 
+\begin{bmatrix}
+-\boldsymbol{p'}- \\
+-\boldsymbol{q'}-
+\end{bmatrix} =
+\begin{bmatrix}
+1+(k-1)n_{x^2} & (k-1)n_{x}n_{y}\\
+(k-1)n_{x}n_{y} & 1+(k-1)n_{x^2}
+\end{bmatrix}
+\end{equation*}
+同理,在3D空间中则有:
+\begin{equation*}
+\boldsymbol{S}(\hat{n},k) = 
+\begin{bmatrix}
+-\boldsymbol{p'}- \\
+-\boldsymbol{q'}- \\
+-\boldsymbol{r'}-
+\end{bmatrix} =
+\begin{bmatrix}
+1+(k-1)n_{x^2} & (k-1)n_{x}n_{y} & (k-1)n_{x}n_{z}\\
+(k-1)n_{x}n_{y} & 1+(k-1)n_{y^2} & (k-1)n_{y}n_{z}\\
+(k-1)n_{x}n_{z} & (k-1)n_{y}n_{z} & 1+(k-1)n_{z^2}\\
+\end{bmatrix}
+\end{equation*}
+**** Orthographic Projection[正交投影]
 * Footnotes
 [fn:surfacenormal] 三维平面的法线是 _垂直_ 于该平面的 *三维向量*.法线是与多边形的曲面垂直的理论线.
 
