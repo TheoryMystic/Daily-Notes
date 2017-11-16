@@ -935,6 +935,7 @@ n_{z^2}(1-cos\theta) + cos\theta \\
 n_{x^2}(1-cos\theta) + cos\theta & n_{x}n_{y}(1-cos\theta) + n_{z}sin\theta & n_{x}n_{z}(1-cos\theta) - n_{y}sin\theta \\
 n_{x}n_{y}(1-cos\theta) - n_{z}sin\theta & n_{y^2}(1-cos\theta) + cos\theta & n_{y}n_{z}(1-cos\theta) + n_{x}sin\theta \\
 n_{x}n_{z}(1-cos\theta) + n_{y}sin\theta & n_{y}n_{z}(1-cos\theta) - n_{x}sin\theta & n_{z^2}(1-cos\theta) + cos\theta
+\end{bmatrix}
 \end{equation*}
 *** Scale[缩放]
     在缩放的时候,我们往往会考虑两种缩放的情况.
@@ -1093,7 +1094,7 @@ n_{y} \\
 \end{bmatrix} =
 \begin{bmatrix}
 1+(k-1)n_{x^2} & (k-1)n_{x}n_{y}\\
-(k-1)n_{x}n_{y} & 1+(k-1)n_{x^2}
+(k-1)n_{x}n_{y} & 1+(k-1)n_{y^2}
 \end{bmatrix}
 \end{equation*}
 同理,在3D空间中则有:
@@ -1110,7 +1111,292 @@ n_{y} \\
 (k-1)n_{x}n_{z} & (k-1)n_{y}n_{z} & 1+(k-1)n_{z^2}\\
 \end{bmatrix}
 \end{equation*}
-**** Orthographic Projection[正交投影]
+*** Orthographic Projection[正交投影]
+     简而言之,所谓的 *投影*[projection] 就是一种 *降维操作*.从上一节缩放的知识我们可以推断,在某一个
+方向上将缩放的k值取0,就完成了投影的操作(在2D中被转换为平行的直线,在3D中被转换为一个平面).这种
+投影方式被称作 *正交投影*[orthographic projection],在后面还会学习另一种投影, *透视投影*[perspective
+projection].
+***** Projecting onto a Cardinal Axis or Plane[投影到坐标轴或者平面上]
+      最简单的投影就是投影在 *坐标轴*[cardinal axis](2D) 和 *平面*[plane](3D).
+      投影到坐标轴:
+\begin{equation*}
+\boldsymbol{P_{x}} = \boldsymbol{S}(
+\begin{bmatrix}
+0 & 1 \\
+\end{bmatrix}
+,0) =
+\begin{bmatrix}
+1 & 0 \\
+0 & 0 \\
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+\boldsymbol{P_{x}} = \boldsymbol{S}(
+\begin{bmatrix}
+1 & 0 \\
+\end{bmatrix}
+,0) =
+\begin{bmatrix}
+0 & 0 \\
+0 & 1 \\
+\end{bmatrix}
+\end{equation*}
+
+      投影到平面:
+
+\begin{equation*}
+\boldsymbol{P_{xy}} = \boldsymbol{S}(
+\begin{bmatrix}
+0 & 0 & 1\\
+\end{bmatrix}
+,0) =
+\begin{bmatrix}
+1 & 0 & 0\\
+0 & 1  & 0\\
+0 & 0 & 0\\
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+\boldsymbol{P_{xz}} = \boldsymbol{S}(
+\begin{bmatrix}
+0 & 1 & 0\\
+\end{bmatrix}
+,0) =
+\begin{bmatrix}
+1 & 0 & 0\\
+0 & 0  & 0\\
+0 & 0 & 1\\
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+\boldsymbol{P_{yz}} = \boldsymbol{S}(
+\begin{bmatrix}
+1 & 0 & 0\\
+\end{bmatrix}
+,0) =
+\begin{bmatrix}
+0 & 0 & 0\\
+0 & 1  & 0\\
+0 & 0 & 1\\
+\end{bmatrix}
+\end{equation*}
+***** Projecting onto an Arbitrary Line or Plane[投影到任意直线或平面]
+      参考上一节的内容,只需要将$\hat{n},和k$ 代入即可.
+      2D时,
+\begin{equation*}
+\boldsymbol{S}(\hat{n},0) = 
+\begin{bmatrix}
+1+(0-1)n_{x^2} & (0-1)n_{x}n_{y}\\
+(0-1)n_{x}n_{y} & 1+(0-1)n_{y^2}
+\end{bmatrix}=
+\begin{bmatrix}
+1-n_{x^2} & -n_{x}n_{y}\\
+-n_{x}n_{y} & 1-n_{y^2}
+\end{bmatrix}
+\end{equation*}
+
+      3D时,
+\begin{equation*}
+\boldsymbol{S}(\hat{n},k) = 
+\begin{bmatrix}
+1+(0-1)n_{x^2} & (0-1)n_{x}n_{y} & (0-1)n_{x}n_{z}\\
+(0-1)n_{x}n_{y} & 1+(0-1)n_{y^2} & (0-1)n_{y}n_{z}\\
+(0-1)n_{x}n_{z} & (0-1)n_{y}n_{z} & 1+(0-1)n_{z^2}\\
+\end{bmatrix}=
+\begin{bmatrix}
+1-n_{x^2} & -n_{x}n_{y} & -n_{x}n_{z}\\
+-n_{x}n_{y} & 1-n_{y^2} & -n_{y}n_{z}\\
+-n_{x}n_{z} & -n_{y}n_{z} & 1-n_{z^2}\\
+\end{bmatrix}
+\end{equation*}
+*** Reflection[反射]
+     *反射*[reflection],又叫 *镜像*[mirroring], 对象以某条线(2D)或者某个平面(3D)创造一个它的镜像.要完
+成镜像的操作也很简单,参考上一节,我们将 $k$ 的值代换为1就能得到物体的镜像了.
+    2D的情况下:
+ \begin{equation*}
+\boldsymbol{R}(\hat{n}) = 
+\boldsymbol{S}(\hat{n},-1) = 
+\begin{bmatrix}
+1+(-1-1)n_{x^2} & (-1-1)n_{x}n_{y}\\
+(-1-1)n_{x}n_{y} & 1+(-1-1)n_{y^2}
+\end{bmatrix}=
+\begin{bmatrix}
+1-2n_{x^2} & -2n_{x}n_{y}\\
+-2n_{x}n_{y} & 1-2n_{y^2}
+\end{bmatrix}
+\end{equation*}
+    3D的情况下:
+\begin{equation*}
+\boldsymbol{R}(\hat{n}) = 
+\boldsymbol{S}(\hat{n},-1) = 
+\begin{bmatrix}
+1+(-1-1)n_{x^2} & (-1-1)n_{x}n_{y} & (-1-1)n_{x}n_{z}\\
+(-1-1)n_{x}n_{y} & 1+(-1-1)n_{y^2} & (-1-1)n_{y}n_{z}\\
+(-1-1)n_{x}n_{z} & (-1-1)n_{y}n_{z} & 1+(-1-1)n_{z^2}\\
+\end{bmatrix}=
+\begin{bmatrix}
+1-2n_{x^2} & -2n_{x}n_{y} & -2n_{x}n_{z}\\
+-2n_{x}n_{y} & 1-2n_{y^2} & -2n_{y}n_{z}\\
+-2n_{x}n_{z} & -2n_{y}n_{z} & 1-2n_{z^2}\\
+\end{bmatrix}
+\end{equation*}
+*** Shearing[裁剪]
+    *裁剪*[shearing]看起来像是在歪斜坐标空间.与缩放不同的是,裁剪 _不会改变_ 物体的 *面积*[area]和
+*体积*[volume],相同的在于两者都会改变物体的角度大小.
+    裁剪变换并不经常被使用,它也被称作 *斜变换*[skew transformation].要注意的是,在同时混合了 *裁剪* 
+和 *缩放* 的变换中,由于两者变换的时候一个不成比例(裁剪),一个成比例(缩放),往往不太能分辨出来.
+    在2D空间中,有矩阵如下:
+\begin{equation*}
+\boldsymbol{H}_{x}(s) = 
+\begin{bmatrix}
+1 & 0 \\
+s & 1 \\
+\end{bmatrix}
+\end{equation*}
+\begin{equation*}
+\boldsymbol{H}_{y}(s) = 
+\begin{bmatrix}
+1 & s \\
+0 & 1 \\
+\end{bmatrix}
+\end{equation*}
+
+    其中,x,y各自表示被固定的那个轴,s表示裁剪的大小.
+    同理,在3D空间中,有:
+\begin{equation*}
+\boldsymbol{H}_{xy}(s,t) = 
+\begin{bmatrix}
+1 & 0 & 0\\
+0 & 1 & 0 \\
+s & t & 1
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+\boldsymbol{H}_{xz}(s,t) = 
+\begin{bmatrix}
+1 & 0 & 0\\
+s & 1 & t \\
+0 & 0 & 1
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+\boldsymbol{H}_{yz}(s,t) = 
+\begin{bmatrix}
+1 & s & t\\
+0 & 1 & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+\end{equation*}
+*** Combining Transformations[组合变换]
+    本章节主要讲述的是如何将各种不同的变换(旋转/缩放/投影/反射/裁剪...)组合为一个单一的矩阵.
+    组合变换的一个例子是 *渲染*[rendering].想象一下在世界坐标系中有一个任意位置和方向的物体,我们的
+目的是让它在一个给定的 *摄像机*[camera] 下渲染.
+    首先,我们要知道它的所有顶点坐标,并且将它们从 *本地空间*[local space] 转移到 *世界空间*[world 
+space],这个过程被叫作 *模型变换*[model transform],用 $\boldsymbol{M}_{wld\to cam}$ 表示.
+    然后,我们将变换到世界坐标系的物体的顶点转换到 *摄像机空间*[camera space],这个过程被叫作 *视角变换*[view
+transform],用 $\boldsymbol{M}_{wld \to cam}$ 表示.
+    总结如下:
+    $\boldsymbol{P}_{wld} = \boldsymbol{P}_{obj} \boldsymbol{M}_{obj \to wld}$,
+    $\boldsymbol{P}_{cam} = \boldsymbol{P}_{wld} \boldsymbol{M}_{wld \to cam} = (\boldsymbol{P}_{obj} \boldsymbol{M}_{obj \to wld}) \boldsymbol{M}_{wld \to cam}$.
+    $\boldsymbol{P}_{cam} = \boldsymbol{P}_{wld} \boldsymbol{M}_{wld \to cam} = \boldsymbol{P}_{obj} (\boldsymbol{M}_{obj \to wld} \boldsymbol{M}_{wld \to cam})$.
+    $\boldsymbol{P}_{cam} = \boldsymbol{P}_{wld} \boldsymbol{M}_{wld \to cam} = \boldsymbol{P}_{obj} (\boldsymbol{M}_{obj \to cam})$.
+    以上是从代数角度来描述矩阵乘法,下面我们从几何的方式来了解.
+\begin{equation*}
+\boldsymbol{A}=
+\begin{bmatrix}
+-\boldsymbol{a}_{1}- \\
+-\boldsymbol{a}_{2}- \\
+-\boldsymbol{a}_{3}- \\
+\end{bmatrix},
+\boldsymbol{AB}=
+(
+\begin{bmatrix}
+-\boldsymbol{a}_{1}- \\
+-\boldsymbol{a}_{2}- \\
+-\boldsymbol{a}_{3}- \\
+\end{bmatrix}
+\boldsymbol{B})
+=
+\begin{bmatrix}
+-\boldsymbol{a}_{1} \boldsymbol{B}- \\
+-\boldsymbol{a}_{2} \boldsymbol{B}- \\
+-\boldsymbol{a}_{3} \boldsymbol{B}- \\
+\end{bmatrix}
+\end{equation*}
+    在几何方式上,我们将矩阵看成是基向量的集合,而矩阵与矩阵的乘法,就分解成了向量与矩阵的乘法.
+*** Classes of Transformations[变换的种类]
+    当我们讨论 *变换*[transformation]的时候,几乎就等同于在讨论 *映射*[mapping] 或者 *函数*[function].
+简而言之,所谓的 *映射* 就是这样一个规则:接受一个输入,提供一个输出.一个映射可以表示为:
+    $F(a) = b$ (read "F of a euqals b")
+    同样,变换也是接受一个矩阵,输出另一个矩阵.
+**** Linear Transformations[线性变换]
+     在映射的角度, *线性变换*[linear transformation]表示为:
+     $F(a+b) = F(a) + F(b)$ 
+     $F(ka) = kF(a)$
+     从矩阵的线性变换来看,可表示为:
+     $F(a) = aM$
+      $F(a+b) = (a+b)M = aM + bM = F(a) + F(b)$ 
+      $F(ka) = (ka)M = k(aM) = kF(a)$
+      总结如下:
+      1. 任何可以用矩阵乘法实现的变换都是线性变换.
+      2. 线性变换 _不包括_ *位移*[translation].
+         If $F(0) = a, a \neq 0$  then not a linear translation
+      3. 一个线性变换可能会 a)使物体 *伸缩*[stretch],
+          但是, b)不会让直线 *变弯*,c) 平行线仍然 *平行*.
+          A linear translation may "stretch" things,but straight lines are not "warped" and parallel lines
+remain parallel.
+**** Affline Transformations[仿射变换]
+     *仿射变换*[affline transformation] = *线性变换*[linear transformation] + *平移*[translation]
+     线性变换是仿射变换的 *子集*[subset].每个线性变换都是仿射变换,但是每个仿射变换却不一定是线性变
+换,仿射变换有如下公式:
+    $\vec{v'} = \vec{v}M +b$
+**** Invertible Transformations[可逆变换]
+     *可逆变换*[invertible transformation],类似于对已有的变换做 *撤销*[undo]操作.
+     $F^{-1}(F(a)) = F(F^{-1}(a)) = a$ 
+     如果对所有的a都能满足上述等式,就说明F(a)是一个可逆变换.现在我们要考虑的是, *仿射变换*[affline 
+transformation] 是否是可逆的?
+    我们知道 *仿射变换* = *线性变换* + *位移*,很明显,位移的撤销操作就是取负,那么现在问题就被简化为:
+_线性变换是否可逆_?
+    从直觉上来说, *旋转* / *缩放* / *反射* / *裁剪* ,我们都可以进行撤销操作,唯独 *投影*,我们不知道怎么
+怎么搞.
+    从前面章节可以知道,所有的线性变换都可以被表达成与矩阵相乘的结果,那么找线性变换的 *逆*[inverse]
+实际上就是找到矩阵的 *逆*.
+   如果一个矩阵 _没有逆_,那么它就是一个 *奇异矩阵*[singular matrix].一个 *可逆矩阵* 的 *行列式*[det]
+是 _非零_ 的.
+    在一个 *非奇异矩阵* 中,零向量的输入输出是 *一一对应* 的,即输入零向量必然输出零向量,而输入其他向
+量则输出其它非零向量.
+    在一个 *奇异矩阵*[singular matrix] 中,零向量的输入输出是 *多对一* 的,即存在多个向量它们的输出结
+果是一个零向量,而这些向量被称作矩阵的 *零空间*[null space].
+    一个 *奇异矩阵* 的基向量肯定是 *线性相关*[linearly correlation]的(因为映射是多对一的).我们知道如果
+基向量是 *线性无关*[linearly independent]的,那它是 *满秩*[full rank]的,并且空间中给定的任意向量都是唯
+一确定的.
+**** Angle-Preserving Transformations
+     如果一个角在转换后它的大小和方向仍然保持不变,我们就把这个变换叫做 *angle-preserving*.
+
+     符合 *angle-preserving* 的变换有
+     *平移*[translation] , *旋转*[rotation] , *统一缩放*[uniform scale].
+
+     之所以 *反射*[reflection]变换不符合 *angle-preserving*,是因为在变换后角的方可能变成了它的 *逆*.
+     所有的 *angle-preserving* 变换都是 *仿射*[affline] 和 *可逆*[invertible] 的.
+**** Orthogonal Transformations[正交变换]
+     *Orthogonal* 在之前已经解释过了,它表示 *互相垂直*[perpendicular] 的 *单位向量*[unit length].
+     在此 *Orthogonal Matrix* 表示的是它的每个 *行向量* (即基向量) 之间是 *正交* 的.
+     符合 *正交变换* 的有:
+     *平移*[translation], *旋转*[rotation], *反射*[reflection].
+     所有的 *正交变换* 都是 *仿射变换* 并且 *可逆*. 正交变换能保证 _不改变_ 变换后的 *角度大小*, *面积*
+, *体积*,但是却不能保证它们的正负.
+**** Rigid Body Transformations[刚体变换]
+     *刚体变换*[rigid body transformation] 是一种改变物体 *位置*[position], *方向*[orientation] 但是不改
+变物体 *形状*[shape] 的变换.
+     这就意味着, *刚体变换* 不会改变 *角度*, *长度*, *面积* 和 *体积*.同样也意味着, *刚体变换* 满足
+*正交*[orthogonal], *angle-preserving*, *可逆*[invertible] 和 *仿射*[affline].
+     从上面的说明可以感受到, *刚体变换* 是限制最多的变换,但是,在实际的游戏开发中,运用的却最多.
+
 * Footnotes
 [fn:surfacenormal] 三维平面的法线是 _垂直_ 于该平面的 *三维向量*.法线是与多边形的曲面垂直的理论线.
 
