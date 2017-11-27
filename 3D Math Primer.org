@@ -4,7 +4,7 @@
    mathematically in 3D space.
    3D数学是关于如何在3维空间中精确测量 *位置*, *距离* 和 *角度* 的学科.
 
-*** 1D Mathematics[1D数学]
+*** 1.1 1D Mathematics[1D数学]
     natural numbers[自然数]  
     --> A numbers line for the natural numbers[数轴]
     --> negative numbers[负数] 
@@ -17,7 +17,7 @@
     _The First Law of Computer Graphics_
     If it _looks_ right, it _is_ right.
 
-*** 2D Cartesian Space[2D笛卡尔空间]
+*** 1.2 2D Cartesian Space[2D笛卡尔空间]
     *origin*[原点]  --> 坐标(0,0)
     *axis*[轴] --> 穿过原点并且互相 *垂直*[perpendicular]的直线.
     *Cartesian coordinates*[笛卡尔坐标系] --> 由两个 *点* 来指明
@@ -25,7 +25,7 @@
     *signed distance*[有符号距离] --> 表示坐标点的x,y值分别到y,x轴
     的距离.(根据方向判断正负)
 
-*** 3D Cartesian Space[3D笛卡尔空间]
+*** 1.3 3D Cartesian Space[3D笛卡尔空间]
     *Plane*[平面],就是由两条不平行的线张成的空间.
     与2D坐标系不同,3D笛卡尔空间的x,y,z轴并没有标准的定义.
     在2D坐标系中,x轴正方向向右,y轴正方向向上.
@@ -37,7 +37,7 @@
     判断任意坐标系是左手还是右手时,将该坐标系旋转到标准坐标系,再根据z轴指向确定
     具体是左手还是右手坐标系.
         
-*** Odds and Ends[其他东西]
+*** 1.4 Odds and Ends[其他东西]
     *Summation Notation*[连加] -->  Σ
     *Product Notation*[连乘] -->  ∏
     *Interval Notation* [区间] -->  [a,b]   (a,b]   (a,b)
@@ -93,7 +93,7 @@
    在数学上,vector就是 *数的集合*[list of numbers].
    而在物理上,vector表示 _同时具有大小[magnitude]和方向[direction]的量[quantity]_.
 
-*** In Mathematical [在数学里]
+*** 2.1 Mathematical Definition of Vector[向量的数学定义]
     在讨论vector的时候,我们需要明白vector[向量]与 *scalar*[标量]的区别.
     The *dimension*[维度] of a vector tells how many numbers the vector contains.
     vector有几个维度就包括了几个量.
@@ -103,25 +103,25 @@
     - *column vector*[列向量] --->  [1]
       [2]
       [3]
-*** Geometric Definition of Vector [vector的几何定义]
+*** 2.2 Geometric Definition of Vector [vector的几何定义]
     vector表示 _同时具有大小[magnitude]和方向[direction]的线段[line segment]_.
     vector有 *头*[head] 和 *尾*[tail],头表示 *结束*[ends]的位置,尾表示 *开始*[starts]的位置.
-*** Vector as a Sequence of Displacements [vector-作为一系列的位移]
+*** 2.3 Vector as a Sequence of Displacements [vector-作为一系列的位移]
     *Displacements*[位移],表示物体的位置变化,定义为 _由初位置到末位置的有向线段_.
     由定义可知,位移是一个vector.
     而在3D向量中,我们通常把向量的位置分解成x,y,z三个位移量.分别表示该向量到三个
     轴的 *有符号距离*[signed distance].
-*** The Zero Vector [零向量]
+*** 2.4 The Zero Vector [零向量]
     定义:zero vector 是每个维度的值都为0的向量. --> [0,0,0]
     那么零向量到底有什么用?
     我们知道每个向量的值都表示了位移位置的变化,零向量则意味着 _没有发生位移_.
-*** Vectors VS Points
+*** 2.5 Vectors VS Points
     *向量*[vector] 表示物体的 *位移*[displacement],
     *点*[points]表示物体的位置.
 **** Relative Positions[相对位置]
      所谓 *相对位置*,就是说,一个物体的位置一定是以某个坐标为原点,通过计算原点和物体的距离
      来确定的.
-*** Unit Vectors [单位向量]
+*** 2.6 Unit Vectors [单位向量]
     Unit vector  <-->  normalized vector <--> normals[法线]
     因为有些时候我们只想要知道 _向量的方向_,而不管它的 _大小_,由此就产生了 *Unit Vector*.
     *Unit vector*,就是模为1的矢量.
@@ -139,7 +139,7 @@
     e.g
     [15 -3] / |[15 -3]| = [15 -3] / sqrt(15^2,-3^2) = [15 -3] / sqrt(225+9) = [15 -3] / sqrt(234)
 
-*** Vector Dot Product [向量点积]
+*** 2.7 Vector Dot Product [向量点积]
     在向量的乘法中,除了 *向量*[vector] 与 *标量*[scalar] 相乘,还有向量与向量的乘法.
     而向量乘法分为两种,一种叫做 *点积*[dot product] , 一种叫做 *叉积*[cross product].
     点积在游戏编程中的使用无处不在,从 *图形学*[graphics] 到 *模拟*[simulation],或者是
@@ -175,7 +175,7 @@
        product a . b also is equal to |a| |b| cosθ, where theta is the angle between
        the vectors.
      
-*** Vector Cross Product [向量叉积]
+*** 2.8 Vector Cross Product [向量叉积]
     向量叉积不同于点积,点积生成一个 *标量*[scalar],而叉积生成一个3D向量同时 _不满足交换律_.
     叉积最重要的作用在于生成一个垂直于平面的向量,生成三角形或者多边形.
 **** Geometric Interpretation [几何解释]
@@ -191,7 +191,7 @@
      - 2) 如果在右手坐标系中:
        a到b是顺时针,则a x b 生成的新向量会远离你.
        a到b是逆时针,则a x b 生成的新向量会靠近你.
-*** Norm of a Vector [范数]
+*** 2.9 Norm of a Vector [范数]
     范数[norm][fn:norm],是具有长度概念的 *函数*.在线性代数等相关数学领域,其含义为 _为向量空间内的_
     _所有向量赋予非0的正常度或者大小._
     范数的本质是 *距离*,它把 _不能比较的向量通过函数来转换为可以比较的实数_.
@@ -221,7 +221,7 @@
    4. 讨论 *嵌套坐标系*[nested coordinate spaces],主要用于 _3D对象的层级动画(animating 
    hierarchically segmented objects in 3D space)_
 
-*** Why bother with Multiple Coordinate Spaces?[为什么要使用多个坐标系?]
+*** 3.1 Why bother with Multiple Coordinate Spaces?[为什么要使用多个坐标系?]
     从直觉上来说,我们把所有的东西放在一个坐标系里,记录每个东西的位置,是理所当然的做法.
     通常我们把这个坐标系叫做 *世界坐标系*[world coordinate space].
     但是考虑一个问题,当我们把一个物体置入世界坐标系的时候,到底怎么样才能清晰直观的表现
@@ -230,7 +230,7 @@
     *大小*[scale],符合我们的直觉的同时也更简单.
     而在这种情况下,最理想的办法无疑是让自身的坐标系和世界坐标系并存,让物体从自身坐标系转换
     到世界坐标系.
-*** Some Useful Coordinate Spaces
+*** 3.2 Some Useful Coordinate Spaces
 **** World Space
      世界坐标系是用来表示 *绝对位置*[absolute position] 的,在游戏中, 意味着它表示的是在游
      戏范围内最大的坐标空间.
@@ -257,7 +257,7 @@
      为什么需要Upright Space?
      仔细想想,在世界坐标系中的物体的所有位置,都可以通过对该物体 *平移*[translation] 和
      *旋转*[rotation] 得到.
-*** Basis Vectors and Coordinate Space[基向量与坐标空间]
+*** 3.3 Basis Vectors and Coordinate Space[基向量与坐标空间]
     在实际的游戏编程中,我们常常会遇到一个问题:我知道某个物体在当前坐标的具体位置,但是
     它在另一个坐标系中应该如何表示?
     这个过程被叫做 *coordinate space translation*[坐标空间转换].
@@ -310,7 +310,7 @@
 
      1. _Scale an Object_
      当我们对一个物体进行缩放的时候,考虑到不是同时对x,y,z轴都进行缩放,所以往往缩放后的结果是原
-物体的基向量不再垂直或者具有相同的长度.
+     物体的基向量不再垂直或者具有相同的长度.
 
      2. _Texture Mapping/Bump Mapping_
      在 *表面*[surface]上建立一个轴(+z)平行于 *表面法线*[fn:surfacenormal]的本地坐标系通常会很有用.
@@ -340,126 +340,126 @@
      A set of basis vectors that are _mutually perpendicular_ is called an *orthogonal basis*.
      一组互相垂直的基向量被叫做 *正交基*.
      *orthonormal basis*[标准正交基],在正交基的基础上还具有 *单位长度*[unit length].
-**** Nested Coordinate Spaces[嵌套坐标空间]
+*** 3.4 Nested Coordinate Spaces[嵌套坐标空间]
      *Articulated model*[关节模型] --> 由嵌套坐标空间构成的模型.
      在物体的动画系统中,使用嵌套坐标空间能简单高效的描述各个部分的运动关系.
-**** In Defense of Upright Space[再次为upright space站台]
+*** 3.5 In Defense of Upright Space[再次为upright space站台]
      在程序代码里,一个数据类型如 *float3*,往往具有两个含义:
      1. 作为一个 *vector*
      2. 作为一个 *point*
      永远要记住,一个 *vector* 表示的是 _一段位移(同时具有大小和方向)_,而一个 *Point* 表示的是
-*位置*[Position].
+     *位置*[Position].
 ** Chapter 4 Introduction to Matrices[矩阵导论]
    *矩阵*[Matrices],主要用来描述两个坐标空间之间的关系.它计算从一个坐标空间到另一个坐标
-空间的 _向量变换_ .
-*** Mathematical Definition of Matrix[矩阵的数学定义]
+   空间的 _向量变换_ .
+*** 4.1 Mathematical Definition of Matrix[矩阵的数学定义]
     A vector is an _array of scalars_,and a matrix is an _array of vectors_.
 **** Matrix Dimensions and Notation[矩阵行列和符号]
-\begin{bmatrix}
-         4 & 0 & 12\\
-         -5 & \Sqrt{4} & 3\\
-         12 & -4/3 & -1\\
-         1/2 & 18 & 0 \\
-\end{bmatrix}
-    这是一个 4(row)x3(col)矩阵.表示矩阵由4 *行*[row] 3 *列*[column]组成.
-\begin{bmatrix}
-         m_{11} & m_{12} & m_{13}\\
-         m_{21} & m_{22} & m_{23}\\
-         m_{31} & m_{32} & m_{33}\\
-\end{bmatrix}
-    符号 $m_{ij}$ 表示在M中i行j列的元素的值.需要注意的是在很多编程语言中,数组下标是从0开始的,而矩阵下
-标则是从1开始的.在编程的时候使用矩阵时,一定要注意区别.
+     \begin{bmatrix}
+              4 & 0 & 12\\
+              -5 & \Sqrt{4} & 3\\
+              12 & -4/3 & -1\\
+              1/2 & 18 & 0 \\
+     \end{bmatrix}
+     这是一个 4(row)x3(col)矩阵.表示矩阵由4 *行*[row] 3 *列*[column]组成.
+     \begin{bmatrix}
+              m_{11} & m_{12} & m_{13}\\
+              m_{21} & m_{22} & m_{23}\\
+              m_{31} & m_{32} & m_{33}\\
+     \end{bmatrix}
+     符号 $m_{ij}$ 表示在M中i行j列的元素的值.需要注意的是在很多编程语言中,数组下标是从0开始的,而矩阵下
+     标则是从1开始的.在编程的时候使用矩阵时,一定要注意区别.
 **** Square Matrices[方阵]
      *方阵*[square matrices]就是 _行和列相等_ 的矩阵.
      *对角元素*[diagonal elements] 就是指 _行和列的下标相同_ 的 *方阵* 中的元素.
      如下:
-\begin{bmatrix}
-         \boldsymbol{m_{11}} & m_{12} & m_{13}\\
-         m_{21} & \boldsymbol{m_{22}} & m_{23}\\
-         m_{31} & m_{32} & \boldsymbol{m_{33}}\\
-\end{bmatrix}
+     \begin{bmatrix}
+              \boldsymbol{m_{11}} & m_{12} & m_{13}\\
+              m_{21} & \boldsymbol{m_{22}} & m_{23}\\
+              m_{31} & m_{32} & \boldsymbol{m_{33}}\\
+     \end{bmatrix}
 
      *对角矩阵*[diagonal matrix] 就是指 *非对角元素* 为0的矩阵.
      如下:
-\begin{bmatrix}
-         \boldsymbol{m_{11}} & 0 & 0\\
-         0 & \boldsymbol{m_{22}} & 0\\
-         0 & 0 & \boldsymbol{m_{33}}\\
-\end{bmatrix}
-    *单位矩阵*[identity matrix] 就是指对角元素都为1的 *对角矩阵*.
-    如下:
-\begin{equation}
-\boldsymbol{I_{3}} =
-\begin{bmatrix}
-         \boldsymbol{1} & 0 & 0\\
-         0 & \boldsymbol{1} & 0\\
-         0 & 0 & \boldsymbol{1}\\
-\end{bmatrix}
-\end{equation}
-    单位矩阵的特殊之处在于它是乘法恒等式.如果你让一个矩阵与单位矩阵做乘法,得到的是原矩阵.
-单位矩阵之于矩阵,就如同数字1之于标量.
+     \begin{bmatrix}
+              \boldsymbol{m_{11}} & 0 & 0\\
+              0 & \boldsymbol{m_{22}} & 0\\
+              0 & 0 & \boldsymbol{m_{33}}\\
+     \end{bmatrix}
+     *单位矩阵*[identity matrix] 就是指对角元素都为1的 *对角矩阵*.
+     如下:
+     \begin{equation}
+     \boldsymbol{I_{3}} =
+     \begin{bmatrix}
+              \boldsymbol{1} & 0 & 0\\
+              0 & \boldsymbol{1} & 0\\
+              0 & 0 & \boldsymbol{1}\\
+     \end{bmatrix}
+     \end{equation}
+     单位矩阵的特殊之处在于它是乘法恒等式.如果你让一个矩阵与单位矩阵做乘法,得到的是原矩阵.
+     单位矩阵之于矩阵,就如同数字1之于标量.
 **** Vectors as Matrices[向量作标量]
-    矩阵通常由n行n列组成(n>=1),而一个 *向量*[vector]可以被看成是 *一行*[$1 \times n$] 或者是 *一列*[$n \times 1$]
-的矩阵.
-    *行向量*[row vector] --> $1 \times n$ 矩阵
-    e.g
-    \begin{bmatrix}
-    1 & 2 & 3
-    \end{bmatrix}
-    *列向量*[column vector] --> $n \times 1$ 矩阵
-    e.g
-\begin{bmatrix}
-1 \\
-2 \\
-3
-\end{bmatrix}
+     矩阵通常由n行n列组成(n>=1),而一个 *向量*[vector]可以被看成是 *一行*[$1 \times n$] 或者是 *一列*[$n \times 1$]
+     的矩阵.
+     *行向量*[row vector] --> $1 \times n$ 矩阵
+     e.g
+     \begin{bmatrix}
+     1 & 2 & 3
+     \end{bmatrix}
+     *列向量*[column vector] --> $n \times 1$ 矩阵
+     e.g
+     \begin{bmatrix}
+     1 \\
+     2 \\
+     3
+     \end{bmatrix}
 **** Matrix Transposition[转置矩阵]
      假设有一个矩阵$\boldsymbol{M} (r \times c)$,则它的 *转置*[transpose] 矩阵为
      $\boldsymbol{M^T} (c \times r)$,有$\boldsymbol{M^T_{ij}} = \boldsymbol{M_{ji}}$.
      e.g
-\begin{equation}
-\begin{bmatrix}
-         1 & 2 & 3\\
-         4 & 5 & 6\\
-         7 & 8 & 9\\
-         10 & 11 & 12\\
-\end{bmatrix}
-^T =
-\begin{bmatrix}
-         1 & 4 & 7 & 10\\
-         2 & 5 & 8 & 11\\
-         3 & 6 & 9 & 12\\
-\end{bmatrix}
-\end{equation}
+     \begin{equation}
+     \begin{bmatrix}
+              1 & 2 & 3\\
+              4 & 5 & 6\\
+              7 & 8 & 9\\
+              10 & 11 & 12\\
+     \end{bmatrix}
+     ^T =
+     \begin{bmatrix}
+              1 & 4 & 7 & 10\\
+              2 & 5 & 8 & 11\\
+              3 & 6 & 9 & 12\\
+     \end{bmatrix}
+     \end{equation}
 
-\begin{equation}
-\begin{bmatrix}
-         a & b & c\\
-         d & e & f\\
-         g & h & i\\
-\end{bmatrix}
-^T =
-\begin{bmatrix}
-         a & d & g\\
-         b & e & h\\
-         c & f & i\\
-\end{bmatrix}
-\end{equation}
+     \begin{equation}
+     \begin{bmatrix}
+              a & b & c\\
+              d & e & f\\
+              g & h & i\\
+     \end{bmatrix}
+     ^T =
+     \begin{bmatrix}
+              a & d & g\\
+              b & e & h\\
+              c & f & i\\
+     \end{bmatrix}
+     \end{equation}
 
-\begin{equation}
-\begin{bmatrix}
-         x & y & z\\
-\end{bmatrix}
-^T =
-\begin{bmatrix}
-         x\\
-         y\\
-         z\\
-\end{bmatrix}
-\end{equation}
-    如下,有两个结论:
-    $(\boldsymbol{M}^T)^T = \boldsymbol{M}$
-    $\boldsymbol{D^T} = \boldsymbol{D} , D = (Diagonal Matrix)$
+     \begin{equation}
+     \begin{bmatrix}
+              x & y & z\\
+     \end{bmatrix}
+     ^T =
+     \begin{bmatrix}
+              x\\
+              y\\
+              z\\
+     \end{bmatrix}
+     \end{equation}
+     如下,有两个结论:
+     $(\boldsymbol{M}^T)^T = \boldsymbol{M}$
+     $\boldsymbol{D^T} = \boldsymbol{D} , D = (Diagonal Matrix)$
 **** Multiply a Matrix with Scalar[矩阵的标量乘法]
      与向量的标量乘法相同:
      \begin{equation}
@@ -486,146 +486,146 @@
      $c_{ij} = \sum_{k=1}^n a_{ik}b_{kj}$
      第一个矩阵的行向量与第二个矩阵的列向量做 *点乘*.
      e.g
-\begin{equation}
-\boldsymbol{AB} =
-\begin{bmatrix}
-a_{11} & a_{12} \\
-a_{21} & a_{22}
-\end{bmatrix}
-\begin{bmatrix}
-b_{11} & b_{12} \\
-b_{21} & b_{22}
-\end{bmatrix}
-=
-\begin{bmatrix}
-a_{11}b_{11} + a_{12}b_{21} & a_{11}b_{12} + a_{12}b_{22} \\
-a_{21}b_{11} + a_{22}b_{21} & a_{21}b_{12} + a_{22}b_{22} \\
-\end{bmatrix}
-\end{equation}
+     \begin{equation}
+     \boldsymbol{AB} =
+     \begin{bmatrix}
+     a_{11} & a_{12} \\
+     a_{21} & a_{22}
+     \end{bmatrix}
+     \begin{bmatrix}
+     b_{11} & b_{12} \\
+     b_{21} & b_{22}
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     a_{11}b_{11} + a_{12}b_{21} & a_{11}b_{12} + a_{12}b_{22} \\
+     a_{21}b_{11} + a_{22}b_{21} & a_{21}b_{12} + a_{22}b_{22} \\
+     \end{bmatrix}
+     \end{equation}
 
-\begin{equation*}
-\begin{flushleft}
-\boldsymbol{A} =
-\begin{bmatrix}
--3 & 0 \\
-5 & 1/2
-\end{bmatrix},
-\boldsymbol{B} =
-\begin{bmatrix}
--7 & 2 \\
-4 & 6 
-\end{bmatrix},
-\\
-\boldsymbol{AB} =
-\begin{bmatrix}
-(-3)(-7) + (0)(4) & (-3)(2) + (0)(6) \\
-(5)(-7) + (1/2)(4) & (5)(2) + (1/2)(6)\\
-\end{bmatrix}
-=
-\begin{bmatrix}
-21 & -6 \\
--33 & 13 
-\end{bmatrix}
-\end{flushleft}
-\end{equation*}
-下面是矩阵乘法的一些特点:
-    - M与方阵相乘,得到的矩阵大小和原矩阵相同.而M与单位矩阵相乘,结果是M自身.
-      $\boldsymbol{MI} = \boldsymbol{IM} = \boldsymbol{M}$
+     \begin{equation*}
+     \begin{flushleft}
+     \boldsymbol{A} =
+     \begin{bmatrix}
+     -3 & 0 \\
+     5 & 1/2
+     \end{bmatrix},
+     \boldsymbol{B} =
+     \begin{bmatrix}
+     -7 & 2 \\
+     4 & 6 
+     \end{bmatrix},
+     \\
+     \boldsymbol{AB} =
+     \begin{bmatrix}
+     (-3)(-7) + (0)(4) & (-3)(2) + (0)(6) \\
+     (5)(-7) + (1/2)(4) & (5)(2) + (1/2)(6)\\
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     21 & -6 \\
+     -33 & 13 
+     \end{bmatrix}
+     \end{flushleft}
+     \end{equation*}
+     下面是矩阵乘法的一些特点:
+     - M与方阵相乘,得到的矩阵大小和原矩阵相同.而M与单位矩阵相乘,结果是M自身.
+       $\boldsymbol{MI} = \boldsymbol{IM} = \boldsymbol{M}$
 
-    - 矩阵乘法不满足交换律
-      $\boldsymbol{AB} \neq  \boldsymbol{BA}$
+     - 矩阵乘法不满足交换律
+       $\boldsymbol{AB} \neq  \boldsymbol{BA}$
 
-    - 矩阵乘法满足结合律
-      $\boldsymbol{(AB)C} = \boldsymbol{A(BC)}$
+     - 矩阵乘法满足结合律
+       $\boldsymbol{(AB)C} = \boldsymbol{A(BC)}$
 
-    - 标量(或向量)与矩阵相乘满足结合律
-      $\boldsymbol{(kA)B} = \boldsymbol{k(AB)}$
-      $\boldsymbol{(\vec{v}A)B} = \boldsymbol{\vec{v}(AB)}$
+     - 标量(或向量)与矩阵相乘满足结合律
+       $\boldsymbol{(kA)B} = \boldsymbol{k(AB)}$
+       $\boldsymbol{(\vec{v}A)B} = \boldsymbol{\vec{v}(AB)}$
 
-    - 矩阵乘法的转置
-      $\boldsymbol{(AB)^T} = \boldsymbol{B^TA^T}$
+     - 矩阵乘法的转置
+       $\boldsymbol{(AB)^T} = \boldsymbol{B^TA^T}$
 **** Multiplying a Vector and a Matrix[矩阵的向量乘法]
-    首先要注意的是,向量与矩阵相乘或者矩阵与向量相乘的前提是,第一个参数的 *列* 必须要与第二个参数
-的 *行* 一致,否则不能进行乘法运算.
-\begin{equation*}
-\begin{flushleft}
-\begin{bmatrix}
-x & y & z
-\end{bmatrix}
-\begin{bmatrix}
-m_{11} & m_{12} & m_{13} \\
-m_{21} & m_{22} & m_{23} \\
-m_{31} & m_{32} & m_{33} \\
-\end{bmatrix}
-=
-\\
-\begin{bmatrix}
-xm_{11}+ym_{21}+zm_{31} & xm_{12}+ym_{22}+zm{32} & xm_{13}+ym_{23}+zm_{33}
-\end{bmatrix}
-\end{flushleft}
-\end{equation*}
+     首先要注意的是,向量与矩阵相乘或者矩阵与向量相乘的前提是,第一个参数的 *列* 必须要与第二个参数
+     的 *行* 一致,否则不能进行乘法运算.
+     \begin{equation*}
+     \begin{flushleft}
+     \begin{bmatrix}
+     x & y & z
+     \end{bmatrix}
+     \begin{bmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     \end{bmatrix}
+     =
+     \\
+     \begin{bmatrix}
+     xm_{11}+ym_{21}+zm_{31} & xm_{12}+ym_{22}+zm{32} & xm_{13}+ym_{23}+zm_{33}
+     \end{bmatrix}
+     \end{flushleft}
+     \end{equation*}
 
-\begin{equation*}
-\begin{flushleft}
-\begin{bmatrix}
-m_{11} & m_{12} & m_{13} \\
-m_{21} & m_{22} & m_{23} \\
-m_{31} & m_{32} & m_{33} \\
-\end{bmatrix}
-\begin{bmatrix}
-x \\
-y \\ z
-\end{bmatrix}
-=
-\\
-\begin{bmatrix}
-xm_{11}+ym_{12}+zm_{13} & xm_{21}+ym_{22}+zm{23} & xm_{31}+ym_{32}+zm_{33}
-\end{bmatrix}
-\end{flushleft}
-\end{equation*}
+     \begin{equation*}
+     \begin{flushleft}
+     \begin{bmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     \end{bmatrix}
+     \begin{bmatrix}
+     x \\
+     y \\ z
+     \end{bmatrix}
+     =
+     \\
+     \begin{bmatrix}
+     xm_{11}+ym_{12}+zm_{13} & xm_{21}+ym_{22}+zm{23} & xm_{31}+ym_{32}+zm_{33}
+     \end{bmatrix}
+     \end{flushleft}
+     \end{equation*}
 
-    向量与矩阵相乘满足分配律:
-    e.g
-    $(\vec{v}+\vec{w})\boldsymbol{M} = \vec{v}\boldsymbol{M} + \vec{w}\boldsymbol{M}$
-    Finally, and perhaps most important at all,the result of the multiplication is a _linear combination_
-_of the rows or columns of the matrix_.
+     向量与矩阵相乘满足分配律:
+     e.g
+     $(\vec{v}+\vec{w})\boldsymbol{M} = \vec{v}\boldsymbol{M} + \vec{w}\boldsymbol{M}$
+     Finally, and perhaps most important at all,the result of the multiplication is a _linear combination_
+     _of the rows or columns of the matrix_.
 **** Row versus Column Vectors[行向量和列向量]
-\begin{equation*}
-\begin{flushleft}
-\begin{bmatrix}
-x & y & z
-\end{bmatrix}
-\begin{bmatrix}
-m_{11} & m_{12} & m_{13} \\
-m_{21} & m_{22} & m_{23} \\
-m_{31} & m_{32} & m_{33} \\
-\end{bmatrix}
-=
-\\
-\begin{bmatrix}
-xm_{11}+ym_{21}+zm_{31} & xm_{12}+ym_{22}+zm{32} & xm_{13}+ym_{23}+zm_{33}
-\end{bmatrix}
-\end{flushleft}
-\end{equation*}
+     \begin{equation*}
+     \begin{flushleft}
+     \begin{bmatrix}
+     x & y & z
+     \end{bmatrix}
+     \begin{bmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     \end{bmatrix}
+     =
+     \\
+     \begin{bmatrix}
+     xm_{11}+ym_{21}+zm_{31} & xm_{12}+ym_{22}+zm{32} & xm_{13}+ym_{23}+zm_{33}
+     \end{bmatrix}
+     \end{flushleft}
+     \end{equation*}
 
-\begin{equation*}
-\begin{flushleft}
-\begin{bmatrix}
-m_{11} & m_{12} & m_{13} \\
-m_{21} & m_{22} & m_{23} \\
-m_{31} & m_{32} & m_{33} \\
-\end{bmatrix}
-\begin{bmatrix}
-x \\
-y \\ z
-\end{bmatrix}
-=
-\\
-\begin{bmatrix}
-xm_{11}+ym_{12}+zm_{13} & xm_{21}+ym_{22}+zm{23} & xm_{31}+ym_{32}+zm_{33}
-\end{bmatrix}
-\end{flushleft}
-\end{equation*}
+     \begin{equation*}
+     \begin{flushleft}
+     \begin{bmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     \end{bmatrix}
+     \begin{bmatrix}
+     x \\
+     y \\ z
+     \end{bmatrix}
+     =
+     \\
+     \begin{bmatrix}
+     xm_{11}+ym_{12}+zm_{13} & xm_{21}+ym_{22}+zm{23} & xm_{31}+ym_{32}+zm_{33}
+     \end{bmatrix}
+     \end{flushleft}
+     \end{equation*}
 
      从上面的矩阵与相同元素的行/列向量相乘我们可以发现,相乘的结果是不同的.
      先解释一下为什么会有这种区别,再给出建议使用 *行向量*[row vector]给出一些理由.
@@ -636,128 +636,128 @@ xm_{11}+ym_{12}+zm_{13} & xm_{21}+ym_{22}+zm{23} & xm_{31}+ym_{32}+zm_{33}
        $\boldsymbol{CBA} \vec{v}$ (col vector)
 
      - 尽管在实际生活中,使用列向量会让矩阵看起来更直观(特别是在维数增加的时候),但是在游戏编程里,
-代码的可读性往往比公式的可读性更重要.
+     代码的可读性往往比公式的可读性更重要.
 
-    在许多API里,DirectX使用的是行向量,而OpenGL使用的则是列向量,在实际编程中要注意区分.
-*** Geometric Interpretation of Matrix[矩阵的几何解释]
-     不管怎么样,一个 *方阵*[square matrix] 可以描述 _任何矩阵变换_.
-     一个 *线性变换* 可以 *伸展*[stretch] 坐标空间,但是却不能 *弯曲*[warp] 它.
-     常见的线性变换包括:
-     - *rotation*[旋转]
-     - *scale*[缩放]
-     - *orthographic projection*[正交投影]
-     - *shearing*[裁剪]
-     - *reflection*[反射]
+     在许多API里,DirectX使用的是行向量,而OpenGL使用的则是列向量,在实际编程中要注意区分.
+*** 4.2 Geometric Interpretation of Matrix[矩阵的几何解释]
+    不管怎么样,一个 *方阵*[square matrix] 可以描述 _任何矩阵变换_.
+    一个 *线性变换* 可以 *伸展*[stretch] 坐标空间,但是却不能 *弯曲*[warp] 它.
+    常见的线性变换包括:
+    - *rotation*[旋转]
+    - *scale*[缩放]
+    - *orthographic projection*[正交投影]
+    - *shearing*[裁剪]
+    - *reflection*[反射]
 
     已知 *基向量*[basis vectors] $\vec{i} = [1,0,0],\vec{j} = [0,1,0], \vec{k} = [0,0,1]$,与任意矩阵$\boldsymbol{M}$
-相乘结果如下:
-\begin{equation*}
-\boldsymbol{\vec{i}M} =
-\begin{bmatrix}
-1 & 0 & 0
-\end{bmatrix}
-\begin{bmatrix}
-m_{11} & m_{12} & m_{13} \\
-m_{21} & m_{22} & m_{23} \\
-m_{31} & m_{32} & m_{33} \\
-\end{bmatrix}
-=
-\begin{bmatrix}
-m_{11} & m_{12} & m_{13}
-\end{bmatrix}
-\end{equation*}
+    相乘结果如下:
+    \begin{equation*}
+    \boldsymbol{\vec{i}M} =
+    \begin{bmatrix}
+    1 & 0 & 0
+    \end{bmatrix}
+    \begin{bmatrix}
+    m_{11} & m_{12} & m_{13} \\
+    m_{21} & m_{22} & m_{23} \\
+    m_{31} & m_{32} & m_{33} \\
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    m_{11} & m_{12} & m_{13}
+    \end{bmatrix}
+    \end{equation*}
 
- \begin{equation*}
-\boldsymbol{\vec{i}M} =
-\begin{bmatrix}
-0 & 1 & 0
-\end{bmatrix}
-\begin{bmatrix}
-m_{11} & m_{12} & m_{13} \\
-m_{21} & m_{22} & m_{23} \\
-m_{31} & m_{32} & m_{33} \\
-\end{bmatrix}
-=
-\begin{bmatrix}
-m_{21} & m_{22} & m_{23}
-\end{bmatrix}
-\end{equation*}
-    
- \begin{equation*}
-\boldsymbol{\vec{i}M} =
-\begin{bmatrix}
-0 & 0 & 1
-\end{bmatrix}
-\begin{bmatrix}
-m_{11} & m_{12} & m_{13} \\
-m_{21} & m_{22} & m_{23} \\
-m_{31} & m_{32} & m_{33} \\
-\end{bmatrix}
-=
-\begin{bmatrix}
-m_{31} & m_{32} & m_{33}
-\end{bmatrix}
-\end{equation*}
+    \begin{equation*}
+   \boldsymbol{\vec{i}M} =
+   \begin{bmatrix}
+   0 & 1 & 0
+   \end{bmatrix}
+   \begin{bmatrix}
+   m_{11} & m_{12} & m_{13} \\
+   m_{21} & m_{22} & m_{23} \\
+   m_{31} & m_{32} & m_{33} \\
+   \end{bmatrix}
+   =
+   \begin{bmatrix}
+   m_{21} & m_{22} & m_{23}
+   \end{bmatrix}
+   \end{equation*}
 
-而我们之前已经知道任何向量都可以表示成基向量的 *线性组合*[linear combination],
-$\boldsymbol{\vec{v}} = v_{x} \boldsymbol{\vec{i}} + v_{y} \boldsymbol{\vec{j}} + v_{z} \boldsymbol{\vec{k}}$
-则向量与矩阵相乘可表示为:
-\begin{equation*}
-\begin{flushleft}
-\boldsymbol{\vec{v}M} = 
-(v_{x} \boldsymbol{\vec{i}} + v_{y} \boldsymbol{\vec{j}} + v_{z} \boldsymbol{\vec{k}}) \boldsymbol{M}
-\\=
-(v_{x} \boldsymbol{\vec{i}})\boldsymbol{M} + 
-(v_{y} \boldsymbol{\vec{j}})\boldsymbol{M} + 
-(v_{z} \boldsymbol{\vec{k}})\boldsymbol{M})
-\\=
-v_{x} (\boldsymbol{\vec{i}} \boldsymbol{M}) + 
-v_{y} (\boldsymbol{\vec{j}} \boldsymbol{M}) + 
-v_{z} (\boldsymbol{\vec{k}} \boldsymbol{M}))
-\\=
-v_{x}
-\begin{bmatrix}
-m_{11} & m_{12} & m_{13}
-\end{bmatrix}
-+v_{y}
-\begin{bmatrix}
-m_{21} & m_{22} & m_{23}
-\end{bmatrix}
-+v_{z}
-\begin{bmatrix}
-m_{31} & m_{32} & m_{33}
-\end{bmatrix}
-\end{flushleft}
-\end{equation*}
-等价于:
-\begin{equation*}
-\begin{flushleft}
-\boldsymbol{\vec{v}M} = 
-\begin{bmatrix}
-v_{x} & v_{y} & v_{z}
-\end{bmatrix}
-\begin{bmatrix}
-\boldsymbol{-p-}\\
-\boldsymbol{-q-}\\
-\boldsymbol{-r-}\\
-\end{bmatrix}
-=
-v_{x} \boldsymbol{\vec{p}} + v_{y} \boldsymbol{\vec{q}} + v_{z} \boldsymbol{\vec{r}}
-\end{flushleft}
-\end{equation*}
+    \begin{equation*}
+   \boldsymbol{\vec{i}M} =
+   \begin{bmatrix}
+   0 & 0 & 1
+   \end{bmatrix}
+   \begin{bmatrix}
+   m_{11} & m_{12} & m_{13} \\
+   m_{21} & m_{22} & m_{23} \\
+   m_{31} & m_{32} & m_{33} \\
+   \end{bmatrix}
+   =
+   \begin{bmatrix}
+   m_{31} & m_{32} & m_{33}
+   \end{bmatrix}
+   \end{equation*}
+
+    而我们之前已经知道任何向量都可以表示成基向量的 *线性组合*[linear combination],
+    $\boldsymbol{\vec{v}} = v_{x} \boldsymbol{\vec{i}} + v_{y} \boldsymbol{\vec{j}} + v_{z} \boldsymbol{\vec{k}}$
+    则向量与矩阵相乘可表示为:
+    \begin{equation*}
+    \begin{flushleft}
+    \boldsymbol{\vec{v}M} = 
+    (v_{x} \boldsymbol{\vec{i}} + v_{y} \boldsymbol{\vec{j}} + v_{z} \boldsymbol{\vec{k}}) \boldsymbol{M}
+    \\=
+    (v_{x} \boldsymbol{\vec{i}})\boldsymbol{M} + 
+    (v_{y} \boldsymbol{\vec{j}})\boldsymbol{M} + 
+    (v_{z} \boldsymbol{\vec{k}})\boldsymbol{M})
+    \\=
+    v_{x} (\boldsymbol{\vec{i}} \boldsymbol{M}) + 
+    v_{y} (\boldsymbol{\vec{j}} \boldsymbol{M}) + 
+    v_{z} (\boldsymbol{\vec{k}} \boldsymbol{M}))
+    \\=
+    v_{x}
+    \begin{bmatrix}
+    m_{11} & m_{12} & m_{13}
+    \end{bmatrix}
+    +v_{y}
+    \begin{bmatrix}
+    m_{21} & m_{22} & m_{23}
+    \end{bmatrix}
+    +v_{z}
+    \begin{bmatrix}
+    m_{31} & m_{32} & m_{33}
+    \end{bmatrix}
+    \end{flushleft}
+    \end{equation*}
+    等价于:
+    \begin{equation*}
+    \begin{flushleft}
+    \boldsymbol{\vec{v}M} = 
+    \begin{bmatrix}
+    v_{x} & v_{y} & v_{z}
+    \end{bmatrix}
+    \begin{bmatrix}
+    \boldsymbol{-p-}\\
+    \boldsymbol{-q-}\\
+    \boldsymbol{-r-}\\
+    \end{bmatrix}
+    =
+    v_{x} \boldsymbol{\vec{p}} + v_{y} \boldsymbol{\vec{q}} + v_{z} \boldsymbol{\vec{r}}
+    \end{flushleft}
+    \end{equation*}
 
     从上可知,矩阵的行其实可以看成是 _该坐标空间的基向量[basis vectors]_.
     e.g
-\begin{equation*}
-\boldsymbol{M}=
-\begin{bmatrix}
-2 & 3 \\
-1 & 2
-\end{bmatrix}
-\end{equation*}
+    \begin{equation*}
+    \boldsymbol{M}=
+    \begin{bmatrix}
+    2 & 3 \\
+    1 & 2
+    \end{bmatrix}
+    \end{equation*}
     在这里,可以看成是,基向量$\boldsymbol{p} = [2 , 3], \boldsymbol{q} = [1 , 2]$.
     把n维矩阵看成是n个基向量的集合,那么向量与矩阵的乘法,就可以看成是 _对每个矩阵中的基向量做线性_
-_组合_
+    _组合_
     *总结*
 
     - The rows of a *square matrix* can be interpreted as the basis vectors of a coordinate space.
@@ -768,33 +768,33 @@ _组合_
       向量与矩阵相乘的几何意义是:把向量从原坐标空间转换到新的坐标空间.
 
     - The transformation from the original coordinate space to the coordinate space defined by these
-basis vectors is a linear transformation. A linear transformation preserves straight lines,and parallel
-lines remain parallel. However, angles, lengths, areas, and volumes may be altered after transfor-
-mation.
-      由基向量定义的从原始坐标空间到新的坐标空间的转换是一个线性变换.线性变换的时候直线和平行线仍
-然保持平行.但是,角度,长度,面积,体积等都会受变换影响改变.
+    basis vectors is a linear transformation. A linear transformation preserves straight lines,and parallel
+    lines remain parallel. However, angles, lengths, areas, and volumes may be altered after transfor-
+    mation.
+    由基向量定义的从原始坐标空间到新的坐标空间的转换是一个线性变换.线性变换的时候直线和平行线仍
+    然保持平行.但是,角度,长度,面积,体积等都会受变换影响改变.
 
     - Multiplying the zero vector by any square matrix results in the zero vector.Therefor, the linear trans-
-formation represented by a square matrix has the same origin as the original coordinate space -->
-the transformation does not contain translation.
-      方阵与零向量相乘只会得到一个零向量.对方阵做线性变换不会改变原点坐标--> _变换不包括平移_.
+    formation represented by a square matrix has the same origin as the original coordinate space -->
+    the transformation does not contain translation.
+    方阵与零向量相乘只会得到一个零向量.对方阵做线性变换不会改变原点坐标--> _变换不包括平移_.
 
     - We can visualize a matrix by visualizing the basis vector of the coordinate space after transfor-
-mation.These basis vectors form an 'L' in 2D,and a tripod in 3D.Using a box or auxiliary object also
-helps in visualiation.
-      通过把矩阵的行当作基向量,我们可以把矩阵形象化.在2D中,基向量呈L型,在3D中就像一个三脚架.
-*** The Bigger Picture of Linear Algebra[关于更多:线性代数]
-     线性代数是用来操作和求解线性方程的.在游戏中,求解线性方程组最频繁的是 *物理引擎*[physics 
-engine].另外一些常见的应用是 *最小二乘方法*[least squares approximation] 和 *数据拟合*[data fitting].
-     虽然传统的线性代数和方程组在基础的游戏编程中不是必须的,但是在很多高级领域,它们确是必不可少的,
-来看下现在的某些技术:
-     *fluid*[流体], *cloth*[布料], *hair simulation(and rendering)*[头发模拟(和渲染)],
-     *procedural animation of characters*[角色程序动画], *real-time global illumination*[实施全局光照],
-     *machine vision*[机器视觉], *gesture recognition*[手势识别] ...
-     都需要用到线性代数.
+    mation.These basis vectors form an 'L' in 2D,and a tripod in 3D.Using a box or auxiliary object also
+    helps in visualiation.
+    通过把矩阵的行当作基向量,我们可以把矩阵形象化.在2D中,基向量呈L型,在3D中就像一个三脚架.
+*** 4.3 The Bigger Picture of Linear Algebra[关于更多:线性代数]
+    线性代数是用来操作和求解线性方程的.在游戏中,求解线性方程组最频繁的是 *物理引擎*[physics 
+    engine].另外一些常见的应用是 *最小二乘方法*[least squares approximation] 和 *数据拟合*[data fitting].
+    虽然传统的线性代数和方程组在基础的游戏编程中不是必须的,但是在很多高级领域,它们确是必不可少的,
+    来看下现在的某些技术:
+    *fluid*[流体], *cloth*[布料], *hair simulation(and rendering)*[头发模拟(和渲染)],
+    *procedural animation of characters*[角色程序动画], *real-time global illumination*[实施全局光照],
+    *machine vision*[机器视觉], *gesture recognition*[手势识别] ...
+    都需要用到线性代数.
 ** Chapter 5 Matrices and Linear Transformations[矩阵和线性变换]
    *仿射变换*[affline transformation] = *线性变换*[linear transformation] + *平移*[displacement]
-*** Rotation[旋转]
+*** 5.1 Rotation[旋转]
 **** Rotation in 2D[2D下的旋转]
      在2D坐标中,只有一种可能的旋转 -- 围绕 *点*[point]旋转.
      2D下的旋转公式如下:
@@ -845,7 +845,7 @@ engine].另外一些常见的应用是 *最小二乘方法*[least squares approx
      \end{equation*}
      围绕z轴旋转:
      \begin{equation*}
-     \boldsymbol{R}_{y}(\theta) =
+     \boldsymbol{R}_{z}(\theta) =
      \begin{bmatrix}
      -\boldsymbol{p'}- \\
      -\boldsymbol{q'}- \\
@@ -885,59 +885,59 @@ engine].另外一些常见的应用是 *最小二乘方法*[least squares approx
      $\vec{v'}_{\perp} = cos\theta\vec{v}_{\perp} + sin\theta\vec{w} = cos\theta(\vec{v}-(\vec{v} \cdot \hat{n})\hat{n}) + sin\theta(\hat{n} \times \vec{v}))$
      $\vec{v'} = \vec{v'}_{\perp} + \vec{v'}_{||} = cos\theta(\vec{v}-(\vec{v} \cdot \hat{n})\hat{n}) + sin\theta(\hat{n} \times \vec{v}) + (\vec{v} \cdot \hat{n})\hat{n}$
      
-\begin{equation*}
-p =
-\begin{bmatrix}
-1 & 0 & 0 \\
-\end{bmatrix},
-p' =
-\begin{bmatrix}
-n_{x^2}(1-cos\theta) + cos\theta \\
-n_{x}n_{y}(1-cos\theta) + n_{z}sin\theta \\
-n_{x}n_{z}(1-cos\theta) - n_{y}sin\theta
-\end{bmatrix}^T
-\end{equation*}
+     \begin{equation*}
+     p =
+     \begin{bmatrix}
+     1 & 0 & 0 \\
+     \end{bmatrix},
+     p' =
+     \begin{bmatrix}
+     n_{x^2}(1-cos\theta) + cos\theta \\
+     n_{x}n_{y}(1-cos\theta) + n_{z}sin\theta \\
+     n_{x}n_{z}(1-cos\theta) - n_{y}sin\theta
+     \end{bmatrix}^T
+     \end{equation*}
 
-\begin{equation*}
-q =
-\begin{bmatrix}
-0 & 1 & 0 \\
-\end{bmatrix},
-q' =
-\begin{bmatrix}
-n_{x}n_{y}(1-cos\theta) - n_{z}sin\theta \\
-n_{y^2}(1-cos\theta) + cos\theta \\
-n_{y}n_{z}(1-cos\theta) + n_{x}sin\theta
-\end{bmatrix}^T
-\end{equation*}
+     \begin{equation*}
+     q =
+     \begin{bmatrix}
+     0 & 1 & 0 \\
+     \end{bmatrix},
+     q' =
+     \begin{bmatrix}
+     n_{x}n_{y}(1-cos\theta) - n_{z}sin\theta \\
+     n_{y^2}(1-cos\theta) + cos\theta \\
+     n_{y}n_{z}(1-cos\theta) + n_{x}sin\theta
+     \end{bmatrix}^T
+     \end{equation*}
 
-\begin{equation*}
-r =
-\begin{bmatrix}
-0 & 0 & 1 \\
-\end{bmatrix},
-r' =
-\begin{bmatrix}
-n_{x}n_{z}(1-cos\theta) + n_{y}sin\theta \\
-n_{y}n_{z}(1-cos\theta) - n_{x}sin\theta \\
-n_{z^2}(1-cos\theta) + cos\theta \\
-\end{bmatrix}^T
-\end{equation*}
+     \begin{equation*}
+     r =
+     \begin{bmatrix}
+     0 & 0 & 1 \\
+     \end{bmatrix},
+     r' =
+     \begin{bmatrix}
+     n_{x}n_{z}(1-cos\theta) + n_{y}sin\theta \\
+     n_{y}n_{z}(1-cos\theta) - n_{x}sin\theta \\
+     n_{z^2}(1-cos\theta) + cos\theta \\
+     \end{bmatrix}^T
+     \end{equation*}
 
-\begin{equation*}
-\boldsymbol{R(\hat{n},\theta)} =
-\begin{bmatrix}
--p'- \\
--q'- \\
--r'- \\
-\end{bmatrix} =
-\begin{bmatrix}
-n_{x^2}(1-cos\theta) + cos\theta & n_{x}n_{y}(1-cos\theta) + n_{z}sin\theta & n_{x}n_{z}(1-cos\theta) - n_{y}sin\theta \\
-n_{x}n_{y}(1-cos\theta) - n_{z}sin\theta & n_{y^2}(1-cos\theta) + cos\theta & n_{y}n_{z}(1-cos\theta) + n_{x}sin\theta \\
-n_{x}n_{z}(1-cos\theta) + n_{y}sin\theta & n_{y}n_{z}(1-cos\theta) - n_{x}sin\theta & n_{z^2}(1-cos\theta) + cos\theta
-\end{bmatrix}
-\end{equation*}
-*** Scale[缩放]
+     \begin{equation*}
+     \boldsymbol{R(\hat{n},\theta)} =
+     \begin{bmatrix}
+     -p'- \\
+     -q'- \\
+     -r'- \\
+     \end{bmatrix} =
+     \begin{bmatrix}
+     n_{x^2}(1-cos\theta) + cos\theta & n_{x}n_{y}(1-cos\theta) + n_{z}sin\theta & n_{x}n_{z}(1-cos\theta) - n_{y}sin\theta \\
+     n_{x}n_{y}(1-cos\theta) - n_{z}sin\theta & n_{y^2}(1-cos\theta) + cos\theta & n_{y}n_{z}(1-cos\theta) + n_{x}sin\theta \\
+     n_{x}n_{z}(1-cos\theta) + n_{y}sin\theta & n_{y}n_{z}(1-cos\theta) - n_{x}sin\theta & n_{z^2}(1-cos\theta) + cos\theta
+     \end{bmatrix}
+     \end{equation*}
+*** 5.2 Scale[缩放]
     在缩放的时候,我们往往会考虑两种缩放的情况.
     一种是 *Uniform Scale*,即表示对整个物体以原点为中心,全体等比例缩放.
     如果缩放比例为k的话,则缩放长度为k,缩放面积为k^2,缩放体积为k^3.
@@ -1014,7 +1014,7 @@ n_{x}n_{z}(1-cos\theta) + n_{y}sin\theta & n_{y}n_{z}(1-cos\theta) - n_{x}sin\th
      \end{equation*}
 **** Scaling in an Arbitrary Direction[以任意方向缩放]
      对比按照任意轴进行旋转,按照任意方向缩放与它有共通之处.在此我们考虑,绕任意方向旋转,就是绕 _与_
-_该方向平行的 *基向量* 按一定 *长短* 缩放_,那么,这里就产生了两个参数: *基向量* 和 *长短*.
+     _该方向平行的 *基向量* 按一定 *长短* 缩放_,那么,这里就产生了两个参数: *基向量* 和 *长短*.
      在此,我们将问题表示为: $\boldsymbol{S}(\hat{n},k)$
      由此,参考绕任意轴旋转,我们可以得出以下方程:
      $\vec{v} = \vec{v}_{||} + \vec{v}_{\perp}$,
@@ -1023,315 +1023,315 @@ _该方向平行的 *基向量* 按一定 *长短* 缩放_,那么,这里就产�
      $\vec{v'}_{||} = k\vec{v}_{||} = k(\vec{v} \cdot \hat{n}) \hat{n}$,
      $\vec{v'} = \vec{v'}_{||} + \vec{v'}_{\perp} = k(\vec{v} \cdot \hat{n}) \hat{n} + \vec{v} - (\vec{v} \cdot \hat{n}) \hat{n} = \vec{v} + (k-1)(\vec{v}\cdot \hat{n}) \hat{n}$.
      由此,在基向量为$\vec{p}(1,0),\vec{q}(0,1)$ 的2D空间中, 可得:
-\begin{align*}
-\vec{p'} = \vec{p} + (k-1) (\vec{p}\cdot \hat{n}) \hat{n} =
-\begin{bmatrix}
-1 \\
-0 \\
-\end{bmatrix}
-+ 
-(k-1) (
-\begin{bmatrix}
-1 \\
-0 \\
-\end{bmatrix}
-\cdot 
-\begin{bmatrix}
-n_{x} \\
-n_{y} \\
-\end{bmatrix}
-) 
-\begin{bmatrix}
-n_{x} \\
-n_{y} \\
-\end{bmatrix}
-\\=
-\begin{bmatrix}
-1 \\
-0 \\
-\end{bmatrix}
-+ (k-1) 
-n_{x}
-\begin{bmatrix}
-n_{x} \\
-n_{y} \\
-\end{bmatrix}
-\\=
-\begin{bmatrix}
-1 \\
-0 \\
-\end{bmatrix}
-+
-\begin{bmatrix}
-(k-1)n_{x^2} \\
-(k-1)n_{x}n_{y} \\
-\end{bmatrix}
-\\=
-\begin{bmatrix}
-1+(k-1)n_{x^2} \\
-(k-1)n_{x}n_{y} \\
-\end{bmatrix}
-\end{align*}
+     \begin{align*}
+     \vec{p'} = \vec{p} + (k-1) (\vec{p}\cdot \hat{n}) \hat{n} =
+     \begin{bmatrix}
+     1 \\
+     0 \\
+     \end{bmatrix}
+     + 
+     (k-1) (
+     \begin{bmatrix}
+     1 \\
+     0 \\
+     \end{bmatrix}
+     \cdot 
+     \begin{bmatrix}
+     n_{x} \\
+     n_{y} \\
+     \end{bmatrix}
+     ) 
+     \begin{bmatrix}
+     n_{x} \\
+     n_{y} \\
+     \end{bmatrix}
+     \\=
+     \begin{bmatrix}
+     1 \\
+     0 \\
+     \end{bmatrix}
+     + (k-1) 
+     n_{x}
+     \begin{bmatrix}
+     n_{x} \\
+     n_{y} \\
+     \end{bmatrix}
+     \\=
+     \begin{bmatrix}
+     1 \\
+     0 \\
+     \end{bmatrix}
+     +
+     \begin{bmatrix}
+     (k-1)n_{x^2} \\
+     (k-1)n_{x}n_{y} \\
+     \end{bmatrix}
+     \\=
+     \begin{bmatrix}
+     1+(k-1)n_{x^2} \\
+     (k-1)n_{x}n_{y} \\
+     \end{bmatrix}
+     \end{align*}
 
-同理可得,
-\begin{equation*}
-\vec{q} = 
-\begin{bmatrix}
-0 & 1 \\
-\end{bmatrix},
-\vec{q'} = 
-\begin{bmatrix}
-(k-1)n_{x}n_{y} \\
-1+(k-1)n_{y}^2
-\end{bmatrix}
-\end{equation*}
-现在我们知道在2D空间中如何表示任意方向上k的缩放了:
-\begin{equation*}
-\boldsymbol{S}(\hat{n},k) = 
-\begin{bmatrix}
--\boldsymbol{p'}- \\
--\boldsymbol{q'}-
-\end{bmatrix} =
-\begin{bmatrix}
-1+(k-1)n_{x^2} & (k-1)n_{x}n_{y}\\
-(k-1)n_{x}n_{y} & 1+(k-1)n_{y^2}
-\end{bmatrix}
-\end{equation*}
-同理,在3D空间中则有:
-\begin{equation*}
-\boldsymbol{S}(\hat{n},k) = 
-\begin{bmatrix}
--\boldsymbol{p'}- \\
--\boldsymbol{q'}- \\
--\boldsymbol{r'}-
-\end{bmatrix} =
-\begin{bmatrix}
-1+(k-1)n_{x^2} & (k-1)n_{x}n_{y} & (k-1)n_{x}n_{z}\\
-(k-1)n_{x}n_{y} & 1+(k-1)n_{y^2} & (k-1)n_{y}n_{z}\\
-(k-1)n_{x}n_{z} & (k-1)n_{y}n_{z} & 1+(k-1)n_{z^2}\\
-\end{bmatrix}
-\end{equation*}
-*** Orthographic Projection[正交投影]
-     简而言之,所谓的 *投影*[projection] 就是一种 *降维操作*.从上一节缩放的知识我们可以推断,在某一个
-方向上将缩放的k值取0,就完成了投影的操作(在2D中被转换为平行的直线,在3D中被转换为一个平面).这种
-投影方式被称作 *正交投影*[orthographic projection],在后面还会学习另一种投影, *透视投影*[perspective
-projection].
+     同理可得,
+     \begin{equation*}
+     \vec{q} = 
+     \begin{bmatrix}
+     0 & 1 \\
+     \end{bmatrix},
+     \vec{q'} = 
+     \begin{bmatrix}
+     (k-1)n_{x}n_{y} \\
+     1+(k-1)n_{y}^2
+     \end{bmatrix}
+     \end{equation*}
+     现在我们知道在2D空间中如何表示任意方向上k的缩放了:
+     \begin{equation*}
+     \boldsymbol{S}(\hat{n},k) = 
+     \begin{bmatrix}
+     -\boldsymbol{p'}- \\
+     -\boldsymbol{q'}-
+     \end{bmatrix} =
+     \begin{bmatrix}
+     1+(k-1)n_{x^2} & (k-1)n_{x}n_{y}\\
+     (k-1)n_{x}n_{y} & 1+(k-1)n_{y^2}
+     \end{bmatrix}
+     \end{equation*}
+     同理,在3D空间中则有:
+     \begin{equation*}
+     \boldsymbol{S}(\hat{n},k) = 
+     \begin{bmatrix}
+     -\boldsymbol{p'}- \\
+     -\boldsymbol{q'}- \\
+     -\boldsymbol{r'}-
+     \end{bmatrix} =
+     \begin{bmatrix}
+     1+(k-1)n_{x^2} & (k-1)n_{x}n_{y} & (k-1)n_{x}n_{z}\\
+     (k-1)n_{x}n_{y} & 1+(k-1)n_{y^2} & (k-1)n_{y}n_{z}\\
+     (k-1)n_{x}n_{z} & (k-1)n_{y}n_{z} & 1+(k-1)n_{z^2}\\
+     \end{bmatrix}
+     \end{equation*}
+*** 5.3 Orthographic Projection[正交投影]
+    简而言之,所谓的 *投影*[projection] 就是一种 *降维操作*.从上一节缩放的知识我们可以推断,在某一个
+    方向上将缩放的k值取0,就完成了投影的操作(在2D中被转换为平行的直线,在3D中被转换为一个平面).这种
+    投影方式被称作 *正交投影*[orthographic projection],在后面还会学习另一种投影, *透视投影*[perspective
+    projection].
 ***** Projecting onto a Cardinal Axis or Plane[投影到坐标轴或者平面上]
       最简单的投影就是投影在 *坐标轴*[cardinal axis](2D) 和 *平面*[plane](3D).
       投影到坐标轴:
-\begin{equation*}
-\boldsymbol{P_{x}} = \boldsymbol{S}(
-\begin{bmatrix}
-0 & 1 \\
-\end{bmatrix}
-,0) =
-\begin{bmatrix}
-1 & 0 \\
-0 & 0 \\
-\end{bmatrix}
-\end{equation*}
+      \begin{equation*}
+      \boldsymbol{P_{x}} = \boldsymbol{S}(
+      \begin{bmatrix}
+      0 & 1 \\
+      \end{bmatrix}
+      ,0) =
+      \begin{bmatrix}
+      1 & 0 \\
+      0 & 0 \\
+      \end{bmatrix}
+      \end{equation*}
 
-\begin{equation*}
-\boldsymbol{P_{x}} = \boldsymbol{S}(
-\begin{bmatrix}
-1 & 0 \\
-\end{bmatrix}
-,0) =
-\begin{bmatrix}
-0 & 0 \\
-0 & 1 \\
-\end{bmatrix}
-\end{equation*}
+      \begin{equation*}
+      \boldsymbol{P_{x}} = \boldsymbol{S}(
+      \begin{bmatrix}
+      1 & 0 \\
+      \end{bmatrix}
+      ,0) =
+      \begin{bmatrix}
+      0 & 0 \\
+      0 & 1 \\
+      \end{bmatrix}
+      \end{equation*}
 
       投影到平面:
 
-\begin{equation*}
-\boldsymbol{P_{xy}} = \boldsymbol{S}(
-\begin{bmatrix}
-0 & 0 & 1\\
-\end{bmatrix}
-,0) =
-\begin{bmatrix}
-1 & 0 & 0\\
-0 & 1  & 0\\
-0 & 0 & 0\\
-\end{bmatrix}
-\end{equation*}
+      \begin{equation*}
+      \boldsymbol{P_{xy}} = \boldsymbol{S}(
+      \begin{bmatrix}
+      0 & 0 & 1\\
+      \end{bmatrix}
+      ,0) =
+      \begin{bmatrix}
+      1 & 0 & 0\\
+      0 & 1  & 0\\
+      0 & 0 & 0\\
+      \end{bmatrix}
+      \end{equation*}
 
-\begin{equation*}
-\boldsymbol{P_{xz}} = \boldsymbol{S}(
-\begin{bmatrix}
-0 & 1 & 0\\
-\end{bmatrix}
-,0) =
-\begin{bmatrix}
-1 & 0 & 0\\
-0 & 0  & 0\\
-0 & 0 & 1\\
-\end{bmatrix}
-\end{equation*}
+      \begin{equation*}
+      \boldsymbol{P_{xz}} = \boldsymbol{S}(
+      \begin{bmatrix}
+      0 & 1 & 0\\
+      \end{bmatrix}
+      ,0) =
+      \begin{bmatrix}
+      1 & 0 & 0\\
+      0 & 0  & 0\\
+      0 & 0 & 1\\
+      \end{bmatrix}
+      \end{equation*}
 
-\begin{equation*}
-\boldsymbol{P_{yz}} = \boldsymbol{S}(
-\begin{bmatrix}
-1 & 0 & 0\\
-\end{bmatrix}
-,0) =
-\begin{bmatrix}
-0 & 0 & 0\\
-0 & 1  & 0\\
-0 & 0 & 1\\
-\end{bmatrix}
-\end{equation*}
+      \begin{equation*}
+      \boldsymbol{P_{yz}} = \boldsymbol{S}(
+      \begin{bmatrix}
+      1 & 0 & 0\\
+      \end{bmatrix}
+      ,0) =
+      \begin{bmatrix}
+      0 & 0 & 0\\
+      0 & 1  & 0\\
+      0 & 0 & 1\\
+      \end{bmatrix}
+      \end{equation*}
 ***** Projecting onto an Arbitrary Line or Plane[投影到任意直线或平面]
       参考上一节的内容,只需要将$\hat{n},和k$ 代入即可.
       2D时,
-\begin{equation*}
-\boldsymbol{S}(\hat{n},0) = 
-\begin{bmatrix}
-1+(0-1)n_{x^2} & (0-1)n_{x}n_{y}\\
-(0-1)n_{x}n_{y} & 1+(0-1)n_{y^2}
-\end{bmatrix}=
-\begin{bmatrix}
-1-n_{x^2} & -n_{x}n_{y}\\
--n_{x}n_{y} & 1-n_{y^2}
-\end{bmatrix}
-\end{equation*}
+      \begin{equation*}
+      \boldsymbol{S}(\hat{n},0) = 
+      \begin{bmatrix}
+      1+(0-1)n_{x^2} & (0-1)n_{x}n_{y}\\
+      (0-1)n_{x}n_{y} & 1+(0-1)n_{y^2}
+      \end{bmatrix}=
+      \begin{bmatrix}
+      1-n_{x^2} & -n_{x}n_{y}\\
+      -n_{x}n_{y} & 1-n_{y^2}
+      \end{bmatrix}
+      \end{equation*}
 
       3D时,
-\begin{equation*}
-\boldsymbol{S}(\hat{n},k) = 
-\begin{bmatrix}
-1+(0-1)n_{x^2} & (0-1)n_{x}n_{y} & (0-1)n_{x}n_{z}\\
-(0-1)n_{x}n_{y} & 1+(0-1)n_{y^2} & (0-1)n_{y}n_{z}\\
-(0-1)n_{x}n_{z} & (0-1)n_{y}n_{z} & 1+(0-1)n_{z^2}\\
-\end{bmatrix}=
-\begin{bmatrix}
-1-n_{x^2} & -n_{x}n_{y} & -n_{x}n_{z}\\
--n_{x}n_{y} & 1-n_{y^2} & -n_{y}n_{z}\\
--n_{x}n_{z} & -n_{y}n_{z} & 1-n_{z^2}\\
-\end{bmatrix}
-\end{equation*}
-*** Reflection[反射]
-     *反射*[reflection],又叫 *镜像*[mirroring], 对象以某条线(2D)或者某个平面(3D)创造一个它的镜像.要完
-成镜像的操作也很简单,参考上一节,我们将 $k$ 的值代换为1就能得到物体的镜像了.
+      \begin{equation*}
+      \boldsymbol{S}(\hat{n},k) = 
+      \begin{bmatrix}
+      1+(0-1)n_{x^2} & (0-1)n_{x}n_{y} & (0-1)n_{x}n_{z}\\
+      (0-1)n_{x}n_{y} & 1+(0-1)n_{y^2} & (0-1)n_{y}n_{z}\\
+      (0-1)n_{x}n_{z} & (0-1)n_{y}n_{z} & 1+(0-1)n_{z^2}\\
+      \end{bmatrix}=
+      \begin{bmatrix}
+      1-n_{x^2} & -n_{x}n_{y} & -n_{x}n_{z}\\
+      -n_{x}n_{y} & 1-n_{y^2} & -n_{y}n_{z}\\
+      -n_{x}n_{z} & -n_{y}n_{z} & 1-n_{z^2}\\
+      \end{bmatrix}
+      \end{equation*}
+*** 5.4 Reflection[反射]
+    *反射*[reflection],又叫 *镜像*[mirroring], 对象以某条线(2D)或者某个平面(3D)创造一个它的镜像.要完
+    成镜像的操作也很简单,参考上一节,我们将 $k$ 的值代换为1就能得到物体的镜像了.
     2D的情况下:
- \begin{equation*}
-\boldsymbol{R}(\hat{n}) = 
-\boldsymbol{S}(\hat{n},-1) = 
-\begin{bmatrix}
-1+(-1-1)n_{x^2} & (-1-1)n_{x}n_{y}\\
-(-1-1)n_{x}n_{y} & 1+(-1-1)n_{y^2}
-\end{bmatrix}=
-\begin{bmatrix}
-1-2n_{x^2} & -2n_{x}n_{y}\\
--2n_{x}n_{y} & 1-2n_{y^2}
-\end{bmatrix}
-\end{equation*}
+    \begin{equation*}
+   \boldsymbol{R}(\hat{n}) = 
+   \boldsymbol{S}(\hat{n},-1) = 
+   \begin{bmatrix}
+   1+(-1-1)n_{x^2} & (-1-1)n_{x}n_{y}\\
+   (-1-1)n_{x}n_{y} & 1+(-1-1)n_{y^2}
+   \end{bmatrix}=
+   \begin{bmatrix}
+   1-2n_{x^2} & -2n_{x}n_{y}\\
+   -2n_{x}n_{y} & 1-2n_{y^2}
+   \end{bmatrix}
+   \end{equation*}
     3D的情况下:
-\begin{equation*}
-\boldsymbol{R}(\hat{n}) = 
-\boldsymbol{S}(\hat{n},-1) = 
-\begin{bmatrix}
-1+(-1-1)n_{x^2} & (-1-1)n_{x}n_{y} & (-1-1)n_{x}n_{z}\\
-(-1-1)n_{x}n_{y} & 1+(-1-1)n_{y^2} & (-1-1)n_{y}n_{z}\\
-(-1-1)n_{x}n_{z} & (-1-1)n_{y}n_{z} & 1+(-1-1)n_{z^2}\\
-\end{bmatrix}=
-\begin{bmatrix}
-1-2n_{x^2} & -2n_{x}n_{y} & -2n_{x}n_{z}\\
--2n_{x}n_{y} & 1-2n_{y^2} & -2n_{y}n_{z}\\
--2n_{x}n_{z} & -2n_{y}n_{z} & 1-2n_{z^2}\\
-\end{bmatrix}
-\end{equation*}
-*** Shearing[裁剪]
+    \begin{equation*}
+    \boldsymbol{R}(\hat{n}) = 
+    \boldsymbol{S}(\hat{n},-1) = 
+    \begin{bmatrix}
+    1+(-1-1)n_{x^2} & (-1-1)n_{x}n_{y} & (-1-1)n_{x}n_{z}\\
+    (-1-1)n_{x}n_{y} & 1+(-1-1)n_{y^2} & (-1-1)n_{y}n_{z}\\
+    (-1-1)n_{x}n_{z} & (-1-1)n_{y}n_{z} & 1+(-1-1)n_{z^2}\\
+    \end{bmatrix}=
+    \begin{bmatrix}
+    1-2n_{x^2} & -2n_{x}n_{y} & -2n_{x}n_{z}\\
+    -2n_{x}n_{y} & 1-2n_{y^2} & -2n_{y}n_{z}\\
+    -2n_{x}n_{z} & -2n_{y}n_{z} & 1-2n_{z^2}\\
+    \end{bmatrix}
+    \end{equation*}
+*** 5.5 Shearing[裁剪]
     *裁剪*[shearing]看起来像是在歪斜坐标空间.与缩放不同的是,裁剪 _不会改变_ 物体的 *面积*[area]和
-*体积*[volume],相同的在于两者都会改变物体的角度大小.
+    *体积*[volume],相同的在于两者都会改变物体的角度大小.
     裁剪变换并不经常被使用,它也被称作 *斜变换*[skew transformation].要注意的是,在同时混合了 *裁剪* 
-和 *缩放* 的变换中,由于两者变换的时候一个不成比例(裁剪),一个成比例(缩放),往往不太能分辨出来.
+    和 *缩放* 的变换中,由于两者变换的时候一个不成比例(裁剪),一个成比例(缩放),往往不太能分辨出来.
     在2D空间中,有矩阵如下:
-\begin{equation*}
-\boldsymbol{H}_{x}(s) = 
-\begin{bmatrix}
-1 & 0 \\
-s & 1 \\
-\end{bmatrix}
-\end{equation*}
-\begin{equation*}
-\boldsymbol{H}_{y}(s) = 
-\begin{bmatrix}
-1 & s \\
-0 & 1 \\
-\end{bmatrix}
-\end{equation*}
+    \begin{equation*}
+    \boldsymbol{H}_{x}(s) = 
+    \begin{bmatrix}
+    1 & 0 \\
+    s & 1 \\
+    \end{bmatrix}
+    \end{equation*}
+    \begin{equation*}
+    \boldsymbol{H}_{y}(s) = 
+    \begin{bmatrix}
+    1 & s \\
+    0 & 1 \\
+    \end{bmatrix}
+    \end{equation*}
 
     其中,x,y各自表示被固定的那个轴,s表示裁剪的大小.
     同理,在3D空间中,有:
-\begin{equation*}
-\boldsymbol{H}_{xy}(s,t) = 
-\begin{bmatrix}
-1 & 0 & 0\\
-0 & 1 & 0 \\
-s & t & 1
-\end{bmatrix}
-\end{equation*}
+    \begin{equation*}
+    \boldsymbol{H}_{xy}(s,t) = 
+    \begin{bmatrix}
+    1 & 0 & 0\\
+    0 & 1 & 0 \\
+    s & t & 1
+    \end{bmatrix}
+    \end{equation*}
 
-\begin{equation*}
-\boldsymbol{H}_{xz}(s,t) = 
-\begin{bmatrix}
-1 & 0 & 0\\
-s & 1 & t \\
-0 & 0 & 1
-\end{bmatrix}
-\end{equation*}
+    \begin{equation*}
+    \boldsymbol{H}_{xz}(s,t) = 
+    \begin{bmatrix}
+    1 & 0 & 0\\
+    s & 1 & t \\
+    0 & 0 & 1
+    \end{bmatrix}
+    \end{equation*}
 
-\begin{equation*}
-\boldsymbol{H}_{yz}(s,t) = 
-\begin{bmatrix}
-1 & s & t\\
-0 & 1 & 0 \\
-0 & 0 & 1
-\end{bmatrix}
-\end{equation*}
-*** Combining Transformations[组合变换]
+    \begin{equation*}
+    \boldsymbol{H}_{yz}(s,t) = 
+    \begin{bmatrix}
+    1 & s & t\\
+    0 & 1 & 0 \\
+    0 & 0 & 1
+    \end{bmatrix}
+    \end{equation*}
+*** 5.6 Combining Transformations[组合变换]
     本章节主要讲述的是如何将各种不同的变换(旋转/缩放/投影/反射/裁剪...)组合为一个单一的矩阵.
     组合变换的一个例子是 *渲染*[rendering].想象一下在世界坐标系中有一个任意位置和方向的物体,我们的
-目的是让它在一个给定的 *摄像机*[camera] 下渲染.
+    目的是让它在一个给定的 *摄像机*[camera] 下渲染.
     首先,我们要知道它的所有顶点坐标,并且将它们从 *本地空间*[local space] 转移到 *世界空间*[world 
-space],这个过程被叫作 *模型变换*[model transform],用 $\boldsymbol{M}_{wld\to cam}$ 表示.
+    space],这个过程被叫作 *模型变换*[model transform],用 $\boldsymbol{M}_{wld\to cam}$ 表示.
     然后,我们将变换到世界坐标系的物体的顶点转换到 *摄像机空间*[camera space],这个过程被叫作 *视角变换*[view
-transform],用 $\boldsymbol{M}_{wld \to cam}$ 表示.
+    transform],用 $\boldsymbol{M}_{wld \to cam}$ 表示.
     总结如下:
     $\boldsymbol{P}_{wld} = \boldsymbol{P}_{obj} \boldsymbol{M}_{obj \to wld}$,
     $\boldsymbol{P}_{cam} = \boldsymbol{P}_{wld} \boldsymbol{M}_{wld \to cam} = (\boldsymbol{P}_{obj} \boldsymbol{M}_{obj \to wld}) \boldsymbol{M}_{wld \to cam}$.
     $\boldsymbol{P}_{cam} = \boldsymbol{P}_{wld} \boldsymbol{M}_{wld \to cam} = \boldsymbol{P}_{obj} (\boldsymbol{M}_{obj \to wld} \boldsymbol{M}_{wld \to cam})$.
     $\boldsymbol{P}_{cam} = \boldsymbol{P}_{wld} \boldsymbol{M}_{wld \to cam} = \boldsymbol{P}_{obj} (\boldsymbol{M}_{obj \to cam})$.
     以上是从代数角度来描述矩阵乘法,下面我们从几何的方式来了解.
-\begin{equation*}
-\boldsymbol{A}=
-\begin{bmatrix}
--\boldsymbol{a}_{1}- \\
--\boldsymbol{a}_{2}- \\
--\boldsymbol{a}_{3}- \\
-\end{bmatrix},
-\boldsymbol{AB}=
-(
-\begin{bmatrix}
--\boldsymbol{a}_{1}- \\
--\boldsymbol{a}_{2}- \\
--\boldsymbol{a}_{3}- \\
-\end{bmatrix}
-\boldsymbol{B})
-=
-\begin{bmatrix}
--\boldsymbol{a}_{1} \boldsymbol{B}- \\
--\boldsymbol{a}_{2} \boldsymbol{B}- \\
--\boldsymbol{a}_{3} \boldsymbol{B}- \\
-\end{bmatrix}
-\end{equation*}
+    \begin{equation*}
+    \boldsymbol{A}=
+    \begin{bmatrix}
+    -\boldsymbol{a}_{1}- \\
+    -\boldsymbol{a}_{2}- \\
+    -\boldsymbol{a}_{3}- \\
+    \end{bmatrix},
+    \boldsymbol{AB}=
+    (
+    \begin{bmatrix}
+    -\boldsymbol{a}_{1}- \\
+    -\boldsymbol{a}_{2}- \\
+    -\boldsymbol{a}_{3}- \\
+    \end{bmatrix}
+    \boldsymbol{B})
+    =
+    \begin{bmatrix}
+    -\boldsymbol{a}_{1} \boldsymbol{B}- \\
+    -\boldsymbol{a}_{2} \boldsymbol{B}- \\
+    -\boldsymbol{a}_{3} \boldsymbol{B}- \\
+    \end{bmatrix}
+    \end{equation*}
     在几何方式上,我们将矩阵看成是基向量的集合,而矩阵与矩阵的乘法,就分解成了向量与矩阵的乘法.
-*** Classes of Transformations[变换的种类]
+*** 5.7 Classes of Transformations[变换的种类]
     当我们讨论 *变换*[transformation]的时候,几乎就等同于在讨论 *映射*[mapping] 或者 *函数*[function].
-简而言之,所谓的 *映射* 就是这样一个规则:接受一个输入,提供一个输出.一个映射可以表示为:
+    简而言之,所谓的 *映射* 就是这样一个规则:接受一个输入,提供一个输出.一个映射可以表示为:
     $F(a) = b$ (read "F of a euqals b")
     同样,变换也是接受一个矩阵,输出另一个矩阵.
 **** Linear Transformations[线性变换]
@@ -1340,41 +1340,41 @@ transform],用 $\boldsymbol{M}_{wld \to cam}$ 表示.
      $F(ka) = kF(a)$
      从矩阵的线性变换来看,可表示为:
      $F(a) = aM$
-      $F(a+b) = (a+b)M = aM + bM = F(a) + F(b)$ 
-      $F(ka) = (ka)M = k(aM) = kF(a)$
-      总结如下:
-      1. 任何可以用矩阵乘法实现的变换都是线性变换.
-      2. 线性变换 _不包括_ *位移*[translation].
-         If $F(0) = a, a \neq 0$  then not a linear translation
-      3. 一个线性变换可能会 a)使物体 *伸缩*[stretch],
-          但是, b)不会让直线 *变弯*,c) 平行线仍然 *平行*.
-          A linear translation may "stretch" things,but straight lines are not "warped" and parallel lines
-remain parallel.
+     $F(a+b) = (a+b)M = aM + bM = F(a) + F(b)$ 
+     $F(ka) = (ka)M = k(aM) = kF(a)$
+     总结如下:
+     1. 任何可以用矩阵乘法实现的变换都是线性变换.
+     2. 线性变换 _不包括_ *位移*[translation].
+        If $F(0) = a, a \neq 0$  then not a linear translation
+     3. 一个线性变换可能会 a)使物体 *伸缩*[stretch],
+        但是, b)不会让直线 *变弯*,c) 平行线仍然 *平行*.
+        A linear translation may "stretch" things,but straight lines are not "warped" and parallel lines
+     remain parallel.
 **** Affline Transformations[仿射变换]
      *仿射变换*[affline transformation] = *线性变换*[linear transformation] + *平移*[translation]
      线性变换是仿射变换的 *子集*[subset].每个线性变换都是仿射变换,但是每个仿射变换却不一定是线性变
-换,仿射变换有如下公式:
-    $\vec{v'} = \vec{v}M +b$
+     换,仿射变换有如下公式:
+     $\vec{v'} = \vec{v}M +b$
 **** Invertible Transformations[可逆变换]
      *可逆变换*[invertible transformation],类似于对已有的变换做 *撤销*[undo]操作.
      $F^{-1}(F(a)) = F(F^{-1}(a)) = a$ 
      如果对所有的a都能满足上述等式,就说明F(a)是一个可逆变换.现在我们要考虑的是, *仿射变换*[affline 
-transformation] 是否是可逆的?
-    我们知道 *仿射变换* = *线性变换* + *位移*,很明显,位移的撤销操作就是取负,那么现在问题就被简化为:
-_线性变换是否可逆_?
-    从直觉上来说, *旋转* / *缩放* / *反射* / *裁剪* ,我们都可以进行撤销操作,唯独 *投影*,我们不知道怎么
-怎么搞.
-    从前面章节可以知道,所有的线性变换都可以被表达成与矩阵相乘的结果,那么找线性变换的 *逆*[inverse]
-实际上就是找到矩阵的 *逆*.
-   如果一个矩阵 _没有逆_,那么它就是一个 *奇异矩阵*[singular matrix].一个 *可逆矩阵* 的 *行列式*[det]
-是 _非零_ 的.
-    在一个 *非奇异矩阵* 中,零向量的输入输出是 *一一对应* 的,即输入零向量必然输出零向量,而输入其他向
-量则输出其它非零向量.
-    在一个 *奇异矩阵*[singular matrix] 中,零向量的输入输出是 *多对一* 的,即存在多个向量它们的输出结
-果是一个零向量,而这些向量被称作矩阵的 *零空间*[null space].
-    一个 *奇异矩阵* 的基向量肯定是 *线性相关*[linearly correlation]的(因为映射是多对一的).我们知道如果
-基向量是 *线性无关*[linearly independent]的,那它是 *满秩*[full rank]的,并且空间中给定的任意向量都是唯
-一确定的.
+     transformation] 是否是可逆的?
+     我们知道 *仿射变换* = *线性变换* + *位移*,很明显,位移的撤销操作就是取负,那么现在问题就被简化为:
+     _线性变换是否可逆_?
+     从直觉上来说, *旋转* / *缩放* / *反射* / *裁剪* ,我们都可以进行撤销操作,唯独 *投影*,我们不知道怎么
+     怎么搞.
+     从前面章节可以知道,所有的线性变换都可以被表达成与矩阵相乘的结果,那么找线性变换的 *逆*[inverse]
+     实际上就是找到矩阵的 *逆*.
+     如果一个矩阵 _没有逆_,那么它就是一个 *奇异矩阵*[singular matrix].一个 *可逆矩阵* 的 *行列式*[det]
+     是 _非零_ 的.
+     在一个 *非奇异矩阵* 中,零向量的输入输出是 *一一对应* 的,即输入零向量必然输出零向量,而输入其他向
+     量则输出其它非零向量.
+     在一个 *奇异矩阵*[singular matrix] 中,零向量的输入输出是 *多对一* 的,即存在多个向量它们的输出结
+     果是一个零向量,而这些向量被称作矩阵的 *零空间*[null space].
+     一个 *奇异矩阵* 的基向量肯定是 *线性相关*[linearly correlation]的(因为映射是多对一的).我们知道如果
+     基向量是 *线性无关*[linearly independent]的,那它是 *满秩*[full rank]的,并且空间中给定的任意向量都是唯
+     一确定的.
 **** Angle-Preserving Transformations
      如果一个角在转换后它的大小和方向仍然保持不变,我们就把这个变换叫做 *angle-preserving*.
 
@@ -1389,14 +1389,401 @@ _线性变换是否可逆_?
      符合 *正交变换* 的有:
      *平移*[translation], *旋转*[rotation], *反射*[reflection].
      所有的 *正交变换* 都是 *仿射变换* 并且 *可逆*. 正交变换能保证 _不改变_ 变换后的 *角度大小*, *面积*
-, *体积*,但是却不能保证它们的正负.
+     , *体积*,但是却不能保证它们的正负.
 **** Rigid Body Transformations[刚体变换]
      *刚体变换*[rigid body transformation] 是一种改变物体 *位置*[position], *方向*[orientation] 但是不改
-变物体 *形状*[shape] 的变换.
+     变物体 *形状*[shape] 的变换.
      这就意味着, *刚体变换* 不会改变 *角度*, *长度*, *面积* 和 *体积*.同样也意味着, *刚体变换* 满足
-*正交*[orthogonal], *angle-preserving*, *可逆*[invertible] 和 *仿射*[affline].
+     *正交*[orthogonal], *angle-preserving*, *可逆*[invertible] 和 *仿射*[affline].
      从上面的说明可以感受到, *刚体变换* 是限制最多的变换,但是,在实际的游戏开发中,运用的却最多.
+** Chapter 6 More On Matrices[更多关于矩阵]
+*** 6.1 Determinant of a Matrix[矩阵行列式]
+    对 *方阵*[square matrix]而言,这里有一个关于矩阵的特殊 *标量*[scalar] ,被叫做 *行列式*[determinant].行列式在
+    线性代数中有很多有用的属性,同时它也有自己的 *几何解释*[geometric interpretations].
+**** Determinant of 2 x 2 and 3 x 3 matrices[2x2和3x3矩阵的行列式]
+     *方阵* M的行列式表示为 $|\boldsymbol{M}|$ ,或者也被叫做 'det M'.
+     一个2 x 2 的方阵的行列式为:
+     \begin{equation*}
+     |\boldsymbol{M}| =
+     \begin{vmatrix}
+     m_{11} & m_{12} \\
+     m_{21} & m_{22} 
+     \end{vmatrix}
+     = m_{11}m_{22} -m_{12}m_{21}
+     \end{equation*}
 
+     一个3 x 3 的方阵的行列式为:
+     \begin{equation*}
+     |\boldsymbol{M}| =
+     \begin{vmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     \end{vmatrix} 
+     =
+     m_{11}m_{22}m_{33} + m_{12}m_{23}m_{31} + m_{13}m_{21}m_{32} -
+     m_{13}m_{22}m_{31} - m_{12}m_{21}_m_{33} - m_{11}m_{23}m_{32}
+     =
+     m_{11}(m_{22}m_{33} - m_{23}m_{32}) - m_{12}(m_{23}m_{31} - m_{21}m_{33}) + m_{13}(m_{21}m_{32} - m_{22}m_{31})
+     \end{equation*}
+
+     如果我们把这个3 x 3 的矩阵的行解释成三个向量,则可以表示成:
+
+     \begin{equation*}
+    |\boldsymbol{M}| =
+    \begin{vmatrix}
+    a_{x} & a_{y} & a_{z} \\
+    b_{x} & b_{y} & b_{z} \\
+    c_{x} & c_{y} & c_{z} \\
+    \end{vmatrix} 
+    =
+    c_{z} (a_{x}b_{y} - a_{y}b_{x}) + c_{y} (a_{z}b_{x} - a_{x}b_{z}) + c_{x} (a_{y}b_{z} - a_{z}b_{y})
+    =
+    (\vec{a} \times \vec{b})\cdot \vec{c}
+    \end{equation*}
+**** Minors and Cofactors[余子式和代数余子式]
+     假设M是一个r(ow)行c(olumn)列的矩阵.现在考虑从M中减去第i行和第j列,那么剩下的矩阵还有r-1行和c-1
+     列.这个 *子矩阵*[submatrix]的 *行列式*[determinant] 被表示为 $M^{\{ij\}}$ ,也被叫做M的 *余子式*[minor].
+     e.g
+     \begin{equation*}
+     \boldsymbol{M}=
+     \begin{bmatrix}
+     -4 & -3 & 3 \\
+     0 & 2 & -2 \\
+     1 & 4 & -1 \\
+     \end{bmatrix}
+     \Longrightarrow
+     M^{\{12\}} =
+     \begin{vmatrix}
+     0 & -2 \\
+     1 & -1 \\
+     \end{vmatrix} =
+     2
+     \end{equation*}
+
+     方阵M的 *代数余子式*[cofactor] 除了正负号不确定外,其他与M的 *余子式*[minor] 相同.
+     $C^{\{ij\}} = (-1)^{i+j} M^{\{ij\}}$. (注意,结果是一个 *标量*[scalar])
+**** Determinants of Arbitrary n x n Matrices[任意方阵的行列式]
+     在这里我们使用 *代数余子式*[Cofactors]来定义 *行列式*[determinant].从前面我们知道, *代数余子式*
+     [cofactor]是带符号的 *余子式*[minor].而 *行列式*[determinant]是递归的,因为行列式的结果等于任意一行
+     或者一列的元素分别与对应的 *代数余子式* 相乘的结果.
+     *方阵* -> M, *标量* -> (*行列式*[determinant] , *余子式*[minor] , *代数余子式*[cofactor]).
+     注意,矩阵的行列式不仅是一个标量,而且它在几何上可以看成是 _矩阵向量所组成的空间的 *体积*_.
+     假设选定任意 *行/列* i,则有公式如下:
+     $|\boldsymbol{M}| = \sum _{j=1}^{n}m_{ij} C^{\{ij\}} = \sum _{j=1}^{n}m_{ij} (-1)^{i+j} M^{\{ij\}}$
+     则3 x 3 矩阵可表示为:
+     \begin{equation*}
+     \begin{vmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     \end{vmatrix} =
+     m_{11}
+     \begin{vmatrix}
+     m_{22} & m_{23} \\
+     m_{32} & m_{33} \\
+     \end{vmatrix} -
+     m_{12}
+     \begin{vmatrix}
+     m_{21} & m_{23} \\
+     m_{31} & m_{33} \\
+     \end{vmatrix} +
+     m_{13}
+     \begin{vmatrix}
+     m_{21} & m_{22} \\
+     m_{31} & m_{32} \\
+     \end{vmatrix}
+     \end{equation*}
+     4 x 4 矩阵可表示为:
+     \begin{equation*}
+     \begin{vmatrix}
+     m_{11} & m_{12} & m_{13} & m_{14}\\
+     m_{21} & m_{22} & m_{23} & m_{24}\\
+     m_{31} & m_{32} & m_{33} & m_{34}\\
+     m_{41} & m_{42} & m_{43} & m_{44}\\
+     \end{vmatrix} =
+     m_{11}
+     \begin{vmatrix}
+     m_{22} & m_{23} & m_{24}\\
+     m_{32} & m_{33} & m_{34}\\
+     m_{42} & m_{43} & m_{44}\\
+     \end{vmatrix} -
+     m_{12}
+     \begin{vmatrix}
+     m_{23} & m_{24} & m_{21}\\
+     m_{33} & m_{34} & m_{31}\\
+     m_{43} & m_{44} & m_{41}\\
+     \end{vmatrix} +
+     m_{13}
+     \begin{vmatrix}
+     m_{24} & m_{21} & m_{22}\\
+     m_{34} & m_{31} & m_{32}\\
+     m_{44} & m_{41} & m_{42}\\
+     \end{vmatrix} -
+     m_{14}
+     \begin{vmatrix}
+     m_{21} & m_{22} & m_{23}\\
+     m_{31} & m_{32} & m_{33}\\
+     m_{41} & m_{42} & m_{43}\\
+     \end{vmatrix}
+     \end{equation*}
+     展开后,可以得到:
+     \begin{equation*}
+     \begin{align}
+     m_{11}
+     [
+     m_{22}(m_{33}m_{44} - m_{34}m_{43}) + 
+     m_{23}(m_{34}m_{42} - m_{32}m_{44}) +
+     m_{24}(m_{32}m_{43} - m_{33}m_{42})
+     ]
+     \\-
+     m_{12}
+     [
+     m_{23}(m_{34}m_{41} - m_{31}m_{44}) + 
+     m_{24}(m_{31}m_{43} - m_{33}m_{41}) +
+     m_{21}(m_{33}m_{44} - m_{34}m_{43})
+     ]
+     \\+
+     m_{13}
+     [
+     m_{24}(m_{31}m_{42} - m_{32}m_{41}) + 
+     m_{21}(m_{32}m_{44} - m_{34}m_{42}) +
+     m_{22}(m_{34}m_{41} - m_{31}m_{44})
+     ]
+     \\-
+     m_{14}
+     [
+     m_{21}(m_{32}m_{43} - m_{33}m_{42}) + 
+     m_{22}(m_{33}m_{41} - m_{31}m_{43}) +
+     m_{23}(m_{31}m_{42} - m_{32}m_{41})
+     ]
+     \end{align}
+     \end{equation*}
+
+     由此,我们简要说明一些行列式的相关特性: (从行列式的 _几何解释_ 来理解)
+     - *单位矩阵*[identity matrix]的行列式等于1.
+       $|\boldsymbol{I}| = 1$
+
+     - 矩阵乘积的行列式等于各个矩阵行列式相乘.
+       $\boldsymbol{|A||B| = |A||B|}$
+       $\boldsymbol{|M_{1} M_{2} ... M_{n}| = |M_{1}| |M_{2}| ... |M_{n}|}$
+
+     - 转置矩阵与原矩阵的行列式相等.
+       $\boldsymbol{|M^T| } = \boldsymbol{|M|}$
+
+     - 只要矩阵内有 _任何一行或者一列_ 为0,则矩阵的行列式结果为0.
+     \begin{equation*}
+     \begin{vmatrix}
+     ? & ? & ? & ? \\
+     0 & 0 & 0 & 0 \\
+     ? & ? & ? & ? \\
+     ? & ? & ? & ? \\
+     \end{vmatrix}
+     =
+     \begin{vmatrix}
+     ? & ? & 0 & ? \\
+     ? & ? & 0 & ? \\
+     ? & ? & 0 & ? \\
+     ? & ? & 0 & ? \\
+     \end{vmatrix}
+     = 0
+     \end{equation*}
+
+     - *互换*[exchanging] 矩阵中的某行或某列会改变行列式的正负.
+     \begin{equation*}
+     \begin{vmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     \end{vmatrix}
+     = -
+     \begin{vmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{31} & m_{32} & m_{33} \\
+     m_{21} & m_{22} & m_{23} \\
+     \end{vmatrix}
+     \end{equation*}
+
+     - 把k倍大小的行(或列)添加到另一个矩阵的行(或列)中,并不会改变行列式的值.
+     \begin{equation*}
+     \begin{vmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     \end{vmatrix}
+     =
+     \begin{vmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{31}+km_{21} & m_{32}+km_{22} & m_{33}+km_{22}\\
+     m_{21} & m_{22} & m_{23} \\
+     \end{vmatrix}
+     \end{equation*}
+**** Geometric Interpretation of Determinant[行列式的几何解释]
+     矩阵行列式有一个有趣的几何解释.
+     在2D中,矩阵行列式等于 _向量围成的平行四边形的带符号面积_.(如果行列式结果为负,表示围成的平行四
+     边形相对于原点 *翻转*[flipped]了).
+     在3D中,矩阵行列式等于 _向量围成的平行六面体的体积_.(如果行列式结果为负,表示围成的是 *反射*
+     [reflected] 后的平行四边形,同样也是 *翻转*[turned inside out]了.
+     行列式与矩阵变换的大小变化有关.行列式的绝对值表示的是矩阵变换后的 *面积*[area](2D) 或者 *体积*
+     [volume](3D).而带的符号(正负)则表明了该矩阵中是否包含了 *反射* 或者 *投影*.
+     因而我们可以通过观察矩阵行列式来判断该矩阵的类型.
+*** 6.2 Inverse of a Matrix[矩阵的逆]
+     除了矩阵的 *行列式*[determinant] 要求矩阵必须是 *方阵*[square matrix] 外,矩阵的 *逆*[inverse]也有
+     同样的要求.
+     假设存在方阵 $\boldsymbol{M}$,则方阵的逆为$\boldsymbol{M^{-1}}$,则存在关系:
+     $\boldsymbol{MM^{-1}} = \boldsymbol{M^{-1}M} = \boldsymbol{I}$
+     并不是所有的矩阵都有 *逆*.一个明显的例子是一行或者一列全是0的矩阵无论与其他什么矩阵相乘,相关
+     行或列的结果都只能是0.
+     一个 _存在逆矩阵_ 的矩阵被叫做 *invertible*[可逆矩阵] 或者 *nonsingular*[非奇异矩阵].
+     det != 0 --> 可逆矩阵 --> 非奇异矩阵 --> 线性无关
+     一个 _不存在逆矩阵_ 的矩阵被叫做 *noneinvertible*[不可逆矩阵] 或者 *singular*.
+     det ==0 --> 不可逆矩阵 ---> 奇异矩阵 --> 线性相关
+
+     对任何 *可逆矩阵* 来说,存在 $\vec{v}M = 0$ 的原因只可能是 $\vec{v} = 0$.
+     进一步来说, *可逆矩阵* 的行或者列之间必然是 *线性无关*[linearly independent]的.
+**** The Classical Adjoint[伴随矩阵]
+     矩阵的 *逆*[inverse] 是通过 *伴随矩阵*[classical adjoint]来计算的.矩阵M的伴随矩阵写做 $adj \boldsymbol{M}$,被定
+义为由 _M的余子式组成的矩阵的转置_ (the transpose of the matrix of cofactors of M).
+     假设有一 3 x 3 矩阵如下:
+\begin{equation*}
+\boldsymbol{M} =
+\begin{bmatrix}
+-4 & -3 & 3 \\
+0 & 2 & -2 \\
+1 & 4 & -1
+\end{bmatrix}
+\end{equation*}
+
+     1) 计算M的 *余子式*[cofactors],
+        $C^{\{11\}} = + 6 = 6$, ... , ... , 
+        $C^{\{33\}} = +(-8) = -8$
+     2) 转置矩阵 $adj \boldsymbol{M}$ 就表达为:
+     \begin{equation*}
+     adj \boldsymbol{M} =
+     \begin{vmatrix}
+     C^{\{11\}} & C^{\{12\}} & C^{\{13\}}\\
+     C^{\{21\}} & C^{\{22\}} & C^{\{23\}}\\
+     C^{\{31\}} & C^{\{32\}} & C^{\{33\}}\\
+     \end{vmatrix}^T
+     \\=
+     \begin{vmatrix}
+     6 & -2 & -2 \\
+     9 & 1 & 13 \\
+     0 & -8 & -8
+     \end{vmatrix}^T
+     \\=
+     \begin{vmatrix}
+     6 & 9 & 0 \\
+     -2 & 1 & -8 \\
+     -2 & 13 & -8
+     \end{vmatrix}
+     \end{equation*}.
+**** Matrix Inverse - Official Linear Algebra Rules[可逆矩阵在线性代数中的规则]
+     计算矩阵的逆的公式如下:
+     $\boldsymbol{M}^{-1} = \frac{adj \boldsymbol{M}} {\boldsymbol{|M|}}$.
+     从公式可以看出来,$\boldsymbol{|M|}$ 是不能为0的.这就是我们为什么说行列式为0的矩阵时不可逆矩阵的原因.
+     还有其他计算矩阵的逆的方法,一个典型的方法是 *高斯消元法*[Gaussian elimination].
+     现在我们来总结一下矩阵的逆的相关信息:
+     - 矩阵的逆的逆就是原矩阵.
+       $(\boldsymbol{M^{-1}})^{-1} = \boldsymbol{M}$
+     - 单位矩阵的逆就是它自己.
+       $\boldsymbol{I^{-1}} = \boldsymbol{I}$
+     - 转置矩阵的逆等于逆矩阵的转置.
+       $(\boldsymbol{M^{T}})^{-1} = (\boldsymbol{M^{-1}})^{T}$
+     - 矩阵积的逆等于反向的矩阵的逆的积
+       $\boldsymbol{(AB)^{-1}} = \boldsymbol{B^{-1}A^{-1}}$,
+       也即是:
+       $\boldsymbol{(M_{1}M_{2}...M_{n})^{-1}} = \boldsymbol{M_{n}^{-1} M_{n-1}^{-1} ... M_{1}^{-1}}$
+     - 矩阵的逆的行列式值等于原矩阵行列式的倒数.
+       $\boldsymbol{|M^{-1}| = 1 / |M|}$
+**** Matrix Inverse - Geometric Interpretation[可逆矩阵的几何解释]
+     可逆矩阵的几何解释,直观上来看很容易理解,根据公式:
+     $\boldsymbol{(vM)M^{-1} = v(MM^{-1}) = vI = v}$.
+     可知,可逆矩阵其实是在对矩阵的变换做一个 *撤销*[undo]操作.
+*** 6.3 Orthogonal Matrices[正交矩阵]
+**** Orthogonal Matrices - Official Linear Algebra Rules[正交矩阵在线性代数中的规则]
+     定义如下: _当且仅当_ *方阵* 与其 *转置矩阵*[transpose] 之 *积*[product] 是 *标准矩阵*[identity matrix]
+时,我们才说该矩阵是 *正交矩阵*[orthogonal matrix].注意这里的符号 $\Longleftrightarrow$ 表示两者是可以互相推导的.
+     $\boldsymbol{M(orthogonal)} \Longleftrightarrow  \boldsymbol{MM^{T} = I}$
+     同时,由上一节得到的公式 $\boldsymbol{MM^{-1} = I}$,可得:
+     $\boldsymbol{M(orthogonal)} \Longleftrightarrow  \boldsymbol{M^{T} = M^{-1}}$
+     *注意*,这是一个 _超级有用_ 的公式,因为 *矩阵的逆*[inverse of a matrix] 会经常被用到,而 *正交矩阵*
+[orthogonal matrices]在3D图形中出现的非常频繁.一个典型的例子就是 *旋转* 和 *反射* 变换的矩阵都是正
+交的.如果我们知道一个矩阵是正交的,那么我们就可以使用矩阵的 *转置* 而不是矩阵的 *逆* 来做计算(因为
+矩阵的逆需要进行更多的运算).
+**** Orghogonal Matrices - Geometric Interpretation[正交矩阵的几何解释]
+     在很多情况下,我们是先知道矩阵会做什么变换,进而使用该矩阵做出变换的操作.但是,如果我们事先不知道
+这是个进行什么变换的矩阵,比如只是告诉你有一个正交矩阵,会出现什么情况呢?
+     现在,假设存在一个 3 x 3 的矩阵M,根据前面的公式,可推出如下结果:
+     $\boldsymbol{MM^{T} = I}$,
+     \begin{equation*}
+     \begin{bmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     m_{21} & m_{22} & m_{23} \\
+     m_{31} & m_{32} & m_{33} \\
+     \end{bmatrix}
+     \begin{bmatrix}
+     m_{11} & m_{21} & m_{31} \\
+     m_{12} & m_{22} & m_{32} \\
+     m_{13} & m_{23} & m_{33} \\
+     \end{bmatrix} =
+     \begin{bmatrix}
+     1 & 0 & 0 \\
+     0 & 1 & 0 \\
+     0 & 0 & 1 \\
+    \end{bmatrix}
+     \end{equation*}
+     用向量 $r_{1},r_{2},r_{3}$ 分别表示M的行,则有:
+     \begin{equation*}
+     r_{1} =
+     \begin{bmatrix}
+     m_{11} & m_{12} & m_{13} \\
+     \end{bmatrix}
+     r_{2} =
+     \begin{bmatrix}
+     m_{21} & m_{22} & m_{23} \\
+     \end{bmatrix}
+     r_{3} =
+     \begin{bmatrix}
+     m_{31} & m_{32} & m_{33} \\
+     \end{bmatrix}
+     \end{equation*}
+     \begin{equation*}
+     \boldsymbol{M} =
+     \begin{bmatrix}
+     \boldsymbol{-r1-} \\
+     \boldsymbol{-r2-} \\
+     \boldsymbol{-r3-} \\
+     \end{bmatrix}
+     \end{equation*}
+     根据以上条件,则有:
+     $r_{1} \cdot r_{1} = 1$, $r_{1} \cdot r_{2} = 0$, $r_{1} \cdot r_{3} = 0$,
+     $r_{2} \cdot r_{1} = 0$, $r_{2} \cdot r_{2} = 1$, $r_{2} \cdot r_{3} = 0$,
+     $r_{3} \cdot r_{1} = 0$, $r_{3} \cdot r_{2} = 0$, $r_{3} \cdot r_{3} = 1$.
+     从上面我们可以得出如下结论:
+     - 只有 *单位向量*[unit vector]与自己的点积结果才可能等于1.
+     - 如果两个向量的点积结果为0,原因只能是这两个向量互相 *垂直*[perpendicular].
+
+     所以,如果一个矩阵是 *正交矩阵*,那么:
+     - 矩阵的每行(列)都是 *单位向量*.
+     - 矩阵的行(列)向量必然互相 *垂直*.
+     之前我们就说过 *正交基*[orthogonal basis]在3D图形学中极其有用,而现在我们又了解了它的另一特性,
+即 _正交矩阵的转置与它的逆相等_.
+     由于点积符合 *交换律*[commutative],所以上面的9个等式实际上可以简化为6个.
+     $r_{1} \cdot r_{1} = 1$, $r_{1} \cdot r_{2} = 0$, $r_{1} \cdot r_{3} = 0$,
+     $r_{2} \cdot r_{2} = 1$, $r_{2} \cdot r_{3} = 0$,
+     $r_{3} \cdot r_{3} = 1$.
+     通常情况下,在考虑计算矩阵的 *逆* 时,最好的情况是提前知道该矩阵是否是 *正交矩阵*.如果在不知道是
+否正交的情况下先判断正交会浪费很多时间,就算判断成功,再转置该矩阵的情况下与直接计算矩阵的逆效率
+上也差不了多少了.而如果失败,那么我们用来判断正交的时间就浪费了.
+
+     *注意*,这里详细的解释一些术语.
+     如果一组 *基向量*[basis vecotrs] 是互相 *垂直*[perpendicular]的,我们就说它们是 *正交*[orthogonal]
+的,更进一步,如果基向量还是 *单位向量*[unit vector],这组向量就叫做 *标准正交基*[orthonormal basis].
+由此,一个 *正交矩阵*[orthogonal matrix]的行或者列都是 *标准正交基向量*[orthonormal basis vectors].但是
+反过来看,一组 *正交基向量* 并不保证能构成一个 *正交矩阵* (除非基向量是 *标准正交基*).
+     *orthonormal* --> *标准正交*,
+     *orthogonal* --> *正交*.
 * Footnotes
 [fn:surfacenormal] 三维平面的法线是 _垂直_ 于该平面的 *三维向量*.法线是与多边形的曲面垂直的理论线.
 
