@@ -544,7 +544,7 @@
 
      - 矩阵乘法的转置
        $\boldsymbol{(AB)^T} = \boldsymbol{B^TA^T}$
-**** Multiplying a Vector and a Matrix[矩阵的向量乘法]
+**** Multiplying a Vector and a Matrix[矩阵与向量相乘]
      首先要注意的是,向量与矩阵相乘或者矩阵与向量相乘的前提是,第一个参数的 *列* 必须要与第二个参数
      的 *行* 一致,否则不能进行乘法运算.
      \begin{equation*}
@@ -1784,6 +1784,272 @@
 反过来看,一组 *正交基向量* 并不保证能构成一个 *正交矩阵* (除非基向量是 *标准正交基*).
      *orthonormal* --> *标准正交*,
      *orthogonal* --> *正交*.
+**** Orthogonalizing a Matrix[矩阵正交化]
+     构建 *正交基向量*[orthogonal basis vectors]的标准算法叫做 *Gram-Schimidt orthogonalization*.基
+本的想法是按顺序浏览基向量.
+     For each basis vector, we subtract off the portion of that vector that is parallel to the proceeding
+basis vectors,which must result in a perpendicular vector.
+     对每个基向量而言,我们减去它平行于下一个基向量的那部分,就一定会得到一个垂直的向量.
+     假设存在一个$3 \times 3$ 的矩阵$\boldsymbol{M}$ ,它的行向量分别用 $r_{1},r_{2},r_{3}$ 表示,那么这一组
+正交的行向量可以被表示为:
+     $\boldsymbol{r^{'}_{1} \Leftarrow r_{1}}$,
+     $\boldsymbol{r^{'}_{2} \Leftarrow r_{2} - \frac{r_{2} \cdot r^{'}_{1}} {r^{'}_{1} \cdot r^{'}_{1}} r^{'}_{1}}$,
+     $\boldsymbol{r^{'}_{3} \Leftarrow r_{3} - \frac{r_{3} \cdot r^{'}_{1}} {r^{'}_{1} \cdot r^{'}_{1}} r^{'}_{1} - \frac{r_{3} \cdot r^{'}_{2}} {r^{'}_{2} \cdot r^{'}_{2}} r^{'}_{2}}$
+     在应用这些步骤后,会得到互相垂直的向量 $r_{1},r_{2},r_{3}$,从而形成一组 *正交基*,虽然它们不一定是 *单位向量*.
+而因为我们需要一组 *标准正交基*[orthonormal basis]来构造 *正交矩阵*[orthogonal matrix],所以我们必须
+要 *标准化*[normalize] 这些向量.
+     而在3D空间中,我们还能使用一个特殊的技巧-*叉积*[cross product]来初始化第三个基向量.
+     $\boldsymbol{r^{'}_{3} \Leftarrow r^{'}_{1} \times r^{'}_{2}}$
+*** 6.4 4 x 4 Homogeneous Matrices[齐次矩阵]
+    在前面的章节里我们只涉及了2D和3D向量,现在我们将介绍4D向量,也被叫做 *齐次空间*[homogeneous 
+coordinate].
+    首先,我们要知道 *齐次*[homogeneous]是什么意思,其实 *齐次坐标*,也叫 *投影坐标*,是指一个用于投影几
+何的坐标系统.
+    使用齐次矩阵的原因很简单,在3D空间的变换中需要频繁使用 *位移*[translation],但是3D矩阵无法实现
+*仿射变换*[affline transformation],而在4x4的齐次矩阵中,则能满足 *仿射变换* (位移 + 线性变换).
+**** 4D Homogeneous Space[4D齐次空间] 
+     4D向量由四部分组成(x,y,z,w),其中w通常被叫做 *齐次坐标*[homogeneous coordinate].
+     为了理解标准的物理3D空间是怎么被扩展成4D空间的,我们先来理解2D空间中的齐次坐标,在此我们把它表
+示为$(x,y,w)$.我们把一个标准的2D平面放在一个3D空间中,假设平面$w=1$,就像2D的点$(x,y)$ 在齐
+次坐标空间中就是$(x,y,1)$.
+     而对于那些不在 *平面*[plane] $w =1$ 的点,则可以通过除以 $w$ 来投影到相关的2D坐标上.所以齐次坐标
+$(x,y,w)$ 就被映射成了2D的点 $(x/w,y/w)$.
+     对任何2D中给定的点$(x,y)$,在齐次坐标空间中都有无数相关的点,所有的格式$(kx,ky,k)$,都证明$k \neq 0$.
+     这些点穿过齐次坐标,构成了一条线.
+     当$w=0$,除法是未定义的并且不能在其中找到相关的点.但是可以把$(x,y,0)$解释成一个 _无限远的点_,它
+被定义为 *方向*[orientation] 而不是 *位置*[location].
+     当我们想从概念上区别 *点*[points]和 *向量*[vector]时, 记住 $w \neq 0$ 时,代表的是 *点*[points],而
+$w=0$ 时,代表的是 *向量*[vector].
+**** 4 x 4 Translation Matrices[位移矩阵]
+     由于3 x 3 的矩阵只能表示 *线性变换*[linear transformation],而 *位移*[translation]又是在实际应用里
+频繁遇到的情况,所以为了包含这两种变换,我们需要能满足 *仿射变换*[affline transformation]的矩阵.而为
+了满足这个要求,我们需要将3 x 3的矩阵扩展成 4 x 4 的矩阵.
+     假设 $w = 1$,那么一个3D向量$[x,y,z]$,在4D中就可以被表示为$[x,y,z,1]$,而一个矩阵则转换如下:
+\begin{equation*}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} \\
+m_{21} & m_{22} & m_{23} \\
+m_{31} & m_{32} & m_{33} \\
+\end{bmatrix}
+\Rightarrow
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13}  & 0\\
+m_{21} & m_{22} & m_{23} & 0\\
+m_{31} & m_{32} & m_{33} & 0\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{equation*}
+    当我们让向量与矩阵相乘时,有如下结果:
+\begin{equation*}
+\begin{bmatrix}
+x & y & z\\
+\end{bmatrix}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} \\
+m_{21} & m_{22} & m_{23} \\
+m_{31} & m_{32} & m_{33} \\
+\end{bmatrix} 
+=
+\begin{bmatrix}
+xm_{11}+ym_{21}+zm_{31} &
+xm_{12}+ym_{22}+zm_{32} &
+xm_{13}+ym_{23}+zm_{33}
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+\begin{bmatrix}
+x & y & z & 1\\
+\end{bmatrix}
+\begin{bmatrix}
+m_{11} & m_{12} & m_{13} & 0\\
+m_{21} & m_{22} & m_{23} & 0\\
+m_{31} & m_{32} & m_{33} & 0\\
+0 & 0 & 0 & 1\\
+\end{bmatrix} 
+=
+\begin{bmatrix}
+xm_{11}+ym_{21}+zm_{31} &
+xm_{12}+ym_{22}+zm_{32} &
+xm_{13}+ym_{23}+zm_{33} &
+1
+\end{bmatrix}
+\end{equation*}
+    有趣的地方来了,从上面的矩阵来看,我们可以在第四行上加入 *平移*[translation].而方法是将 *平移* 当作
+矩阵加法.
+\begin{equation*}
+\begin{bmatrix}
+x & y & z & 1\\
+\end{bmatrix}
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+\Delta x & \Delta y & \Delta z & 1
+\end{bmatrix} 
+=
+\begin{bmatrix}
+x+\Delta x & y+\Delta y & z+\Delta z & 1
+\end{bmatrix}
+\end{equation*}
+    这个矩阵加法依然是 *线性变换*[linear transformation].在4D中,矩阵加法并不能代替 *位移*[translation],
+并且4D的零向量总会变换回零向量.而之所能成功的原因是我们实际上在 *裁剪*[shearing] 4D空间,想想之前
+我们看过的裁剪矩阵,在4D中做 *裁剪*,展现在3D空间的效果就是 *位移*.(想想3D空间中裁剪,2D空间的表现)
+    现在考虑如何完成旋转和平移.令矩阵 $\boldsymbol{R}$ 为 *旋转矩阵*,矩阵 $\boldsymbol{T}$ 为 *位移矩阵*,则有等式如下:
+\begin{equation*}
+\boldsymbol{R} =
+\begin{bmatrix}
+r_{11} & r_{12} & r_{13} & 0 \\
+r_{21} & r_{22} & r_{23} & 0 \\
+r_{31} & r_{32} & r_{33} & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix},
+\boldsymbol{T} =
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+\Delta x & \Delta y & \Delta z & 1 \\
+\end{bmatrix}.
+\end{equation*}
+    现在我们让向量 $\vec{v}$ 来进行 *旋转* + *平移* 变换,有等式:
+    $\vec{v}^{'} = \vec{v} \boldsymbol{RT} = \vec{v} \boldsymbol{(RT)} = \vec{v} \boldsymbol{M}$
+    可得 $\boldsymbol{M}$ 如下:
+    \begin{equation*}
+    \boldsymbol{M=RT=}
+    \begin{bmatrix}
+     r_{11} & r_{12} & r_{13} & 0 \\
+     r_{21} & r_{22} & r_{23} & 0 \\
+     r_{31} & r_{32} & r_{33} & 0 \\
+     \Delta x & \Delta y & \Delta z & 1\\
+    \end{bmatrix}
+    \end{equation*}
+
+    仔细观察,其实矩阵 $\boldsymbol{M}$ 由三部分组成, *旋转矩阵*, *平移矩阵*,以及最右边的向量.那么,我们
+就可以将其化简为:
+\begin{equation*}
+\boldsymbol{M=}
+\begin{bmatrix}
+R & 0 \\
+T & 1 \\
+\end{bmatrix}
+\end{equation*}
+    让我们先考虑 *无穷远点*[points at infinity]的情况$(x,y,z,w)$,其中 $w=0$.
+    \begin{euqation*}
+    \begin{bmatrix}
+    x & y & z & 0 \\
+    \end{bmatrix}
+     \begin{bmatrix}
+     r_{11} & r_{12} & r_{13} & 0 \\
+     r_{21} & r_{22} & r_{23} & 0 \\
+     r_{31} & r_{32} & r_{33} & 0 \\
+     0 & 0 & 0 & 1\\
+    \end{bmatrix}
+    =
+     \begin{bmatrix}
+     xr_{11} + yr_{21} + zr_{31} & xr_{12} + yr_{22} + zr_{32} & xr_{13} + yr_{23} + zr_{33} & 0\\
+    \end{bmatrix}
+    \end{euqation*}
+    从上面的线性变换结果可以看出,向量$(w=0)$ 与矩阵相乘,最终得到的是形如 $[x^{'},y^{'},z^{'},0]$ 的结果.
+    如果我们再加入 *位移变换*,结果如下:
+     \begin{euqation*}
+    \begin{bmatrix}
+    x & y & z & 0 \\
+    \end{bmatrix}
+     \begin{bmatrix}
+     r_{11} & r_{12} & r_{13} & 0 \\
+     r_{21} & r_{22} & r_{23} & 0 \\
+     r_{31} & r_{32} & r_{33} & 0 \\
+     \Delta x & \Delta y & \Delta z & 1\\
+    \end{bmatrix}
+    =
+     \begin{bmatrix}
+     xr_{11} + yr_{21} + zr_{31} & xr_{12} + yr_{22} + zr_{32} & xr_{13} + yr_{23} + zr_{33} & 0\\
+    \end{bmatrix}
+    \end{euqation*}
+    可见,在$w=0$ 的情况下, *位移* 变换是无效的.所以,这里的 $w$ 的值就成了一个左右 *位移* 的参数.这在实
+际应用中非常的频繁,因为 *位移* 的是一些表示 *位置* 的向量,而一些仅仅表示 *方向* 的向量(如 *法线*
+[surface normal]),是不应该被移动的.
+    总结一下就是,
+    第一种情况,在 $w=1$ 的时候,是作为 *点*[points],表示 *位置*[location]信息,进行位移.
+    第二种情况,在 $w=0$ 的时候,是作为 *向量*[vector],表示 *方向*,不进行位移.
+    虽然说最右边的 $[0,0,0,1]^T$ 没有什么实际意义,因为一个$4 \times 3$ 的矩阵就能完成 *线性变换* + *平移*.
+但是,由于矩阵的运算和方阵的性质更方便计算,采用 $4 \times 4$ 矩阵是更优的选择.
+**** General Affine Transformations[仿射变换]
+    第五章介绍了 *线性变换*[linear transformation] 中的几种基本变换,而没有考虑 *位移*[translation].主
+要原因在于 $3 \times 3$ 的矩阵只能表示 *线性变换*.现在我们的装备已经升级了:),通过 $4 \times 4$ 矩阵,我们现在已经
+能完成 *仿射变换*[affine transformation]了.
+     比如:
+      - rotation about an axis that does not pass through the origin.
+      - scale about a plane that does not pass through the origin.
+      - reflection about a plane that doest not pass through the origin.
+      - otrhographic projection onto a plane that does not pass through the origin.
+     基本的做法是,先位移到原点,进行线性变换,再撤销位移.假设位移到原点的变换矩阵为 $T$ ,旋转矩阵为$R$,
+再位移回之前的位置就是 $T^{-1}$.
+     那么,我们有矩阵如下:
+\begin{equation*}
+\begin{align*}
+\boldsymbol{T}=
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+-p_{x} & -p_{y} & -p_{z} & 1
+\end{bmatrix} =
+\begin{bmatrix}
+\boldsymbol{I} & 0 \\
+\boldsymbol{-p} & 1 \\
+\end{bmatrix}
+\\
+\boldsymbol{R}=
+\begin{bmatrix}
+r_{11} & r_{12} & r_{13} & 0 \\
+r_{21} & r_{22} & r_{23} & 0 \\
+r_{31} & r_{32} & r_{33} & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix} =
+\begin{bmatrix}
+\boldsymbol{R_{3 \times 3}} & 0 \\
+0 & 1
+\end{bmatrix}
+\\
+\boldsymbol{T^{-1}=}
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+p_{x} & p_{y} & p_{z} & 1
+\end{bmatrix} =
+\begin{bmatrix}
+\boldsymbol{I} & 0 \\
+\boldsymbol{p} & 1 \\
+\end{bmatrix}
+\end{align*}
+\end{equation*}
+    化简后,可得:
+    \begin{equation*}
+    \boldsymbol{TRT^{-1}} =
+    \begin{bmatrix}
+    \boldsymbol{I} & 0 \\
+    \boldsymbol{-p} & 1 \\
+    \end{bmatrix}
+    \begin{bmatrix}
+    \boldsymbol{R_{3 \times 3}} & 0 \\
+    0 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+    \boldsymbol{I} & 0 \\
+    \boldsymbol{p} & 1 \\
+    \end{bmatrix}=
+    \begin{bmatrix}
+    \boldsymbol{R_{3 \times 3}} & 0 \\
+    \boldsymbol{-p(R_{3 \times 3})+p} & 1
+    \end{bmatrix}.
+    \end{equation*}
+    从等式可以看出, 只有 *位移矩阵* 发生了变化.
+    现在 "*齐次空间*" 的作用仅仅体现在实现 *仿射变换*.之所以我们要在这里加引号,是因为$w$的值总是取1(
+或者0),在下一节将讨论更多的 $w$ 的取值所展现的意义.
+*** 6.5 4 x 4 Matrices and Perspective Projection[矩阵和透视投影]
 * Footnotes
 [fn:surfacenormal] 三维平面的法线是 _垂直_ 于该平面的 *三维向量*.法线是与多边形的曲面垂直的理论线.
 
