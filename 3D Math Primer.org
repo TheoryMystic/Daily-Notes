@@ -2050,7 +2050,105 @@ p_{x} & p_{y} & p_{z} & 1
     现在 "*齐次空间*" 的作用仅仅体现在实现 *仿射变换*.之所以我们要在这里加引号,是因为$w$的值总是取1(
 或者0),在下一节将讨论更多的 $w$ 的取值所展现的意义.
 *** 6.5 4 x 4 Matrices and Perspective Projection[矩阵和透视投影]
+    当我们在讨论投影时,通常讨论的是两种情况: 
+    *透视投影*[perspective projection] 和 *正交投影*[orthographic projection].
+    *正交投影* 也叫 *平行投影*[parallel projection],原因就在于物体投影前后是平行的.
+    *projection plane*[投影平面],物体投射到的平面.
+    *projector* -> 代指从原物体的点到对应的投影平面上的点 _连成的直线_.
+    *平行投影* 使用平行的 *projectors*.
+    *透视投影* 中, *projectors* 形成的直线交于一点,改点被叫做 *投影中心*[center of projection].
+    两者真正的区别在不同的距离上,在 *正交投影* 中,由于 *projector* 是平行的,所以距离的远近不改变投影
+的大小,而在 *透视投影* 中, *投影中心* 点的位置不同,将会对投影大小产生重大的影响,这种视觉差异被叫做
+*透视收缩*[foreshortening].
+**** A Pinhole Camera[针孔相机]
+     *透视投影* 在3D中之所以如此重要,是因为和我们人眼的机制一致.实际上人眼更为复杂,因为每只眼睛的投
+影表面(视网膜)都不是平坦的.
+     *针孔相机*[pinhole camera]的成像原理与我们视网膜的成像原理是一致的.对任意一点 $p$,存在对应的投影
+     平面中的点 $p^{'}$,其中$p$ 是穿过了 *针孔*[pinhole] 再投影到投影平面的.假设 *针孔* 到投影平面的距离为 $d$,
+平面为$z$ ,显然可得: $z = -d$.
+     又因为相似三角形的边对应成比例,因而有:
+     \begin{equation*}
+     \frac{-p_{y}^{'}}{d} = \frac {p_{y}}{z} \Rightarrow p_{y}^{'} = \frac{-dp_{y}} {z}.
+     \end{equation*}
+     同理,有 $p^{'}_{x} = \frac{-dp_{x}}{z}$.
+     由此可得:
+     \begin{equation*}
+     \boldsymbol{p} =
+     \begin{bmatrix}
+     x & y  & z \\
+     \end{bmatrix}
+     \Rightarrow
+     \boldsymbol{p^{'}} = 
+     \begin{bmatrix}
+     -dx/z & -dy/z  & -d \\
+     \end{bmatrix}
+     \end{equation*}
+     在另一种情况下 $(z = d)$,即 _投影平面在投影中心之前_,那么我们的距离 $d$ 就不再为负,则有:
+      \begin{equation*}
+     \boldsymbol{p} =
+     \begin{bmatrix}
+     x & y  & z \\
+     \end{bmatrix}
+     \Rightarrow
+     \boldsymbol{p^{'}} = 
+     \begin{bmatrix}
+     dx/z & dy/z  & d \\
+     \end{bmatrix}
+     \end{equation*}
+**** Perspective Projection Matrices[透视投影矩阵]
+     我们知道4D齐次矩阵转换到3D需要用到除法.我们可以在一个 $4 \times 4$ 的矩阵中构造 *透视投影*.在4D齐次
+矩阵中,向量表示为 $[x,y,z,w]$ ,假设 $w=1$ ,根据上一节公式:
+     \begin{equation*}
+     \boldsymbol{p} =
+     \begin{bmatrix}
+     x & y  & z \\
+     \end{bmatrix}
+     \Rightarrow
+     \boldsymbol{p^{'}} = 
+     \begin{bmatrix}
+     dx/z & dy/z  & d \\
+     \end{bmatrix} = 
+     \begin{bmatrix}
+     dx & dy  & dz \\
+     \end{bmatrix}     
+     =
+     \frac 
+     {
+     \begin{bmatrix}
+     x & y  & z \\
+     \end{bmatrix}     }
+     {z/d}
+     \end{equation*}
+     则有4D向量$[x,y,z,z/d]$,考虑到 $\vec{v}^{'} = \vec{v}M$,则有:
+     \begin{equation*}
+     \begin{bmatrix}
+     x & y & z & 1
+     \end{bmatrix}
+     M=
+      \begin{bmatrix}
+     x & y & z & z/d
+     \end{bmatrix},
+     M = 
+      \begin{bmatrix}
+      1 & 0 & 0 & 0 \\
+      0 & 1 & 0 & 0 \\
+      0 & 0 & 0 & 1/d \\
+      0 & 0 & 0 & 0
+     \end{bmatrix}.
+     \end{equation*}
+     矩阵$M$ 即是 *透视投影矩阵*.
+     总结如下:
+     - 与 *透视投影矩阵* 相乘并不能真正表示 *透视变换*.它只是在为w计算适当的分母.
+     - w可以取很多值,不同的值有不同的意义.
+     - 尽管$4 \times 4$ 的齐次矩阵很复杂,但是却能满足在一个矩阵里同时进行 *线性变换* 和 *位移*.同时,投影到
+非坐标轴相关的平面也成为了可能.
+     - *投影矩阵* 在实际的渲染管线中做的工作不只是把z复制进w.
+       a. 在很多图形系统中,把w=1当作 *depth buffring*[深度缓存]中最远的平面.通常w的范围在[0,1].
+       b. 摄像机的 *FOV* (field of view)通常通过 *投影矩阵* 缩放 $x,y$ 值来调整.
+
 * Footnotes
+
+[fn:real_number] 
 [fn:surfacenormal] 三维平面的法线是 _垂直_ 于该平面的 *三维向量*.法线是与多边形的曲面垂直的理论线.
 
 [fn:worldspace] 在南方人/北方人指路的时候,北方人往往告诉你,往北面/南面走,而南方人则是沿着这儿到
