@@ -2183,7 +2183,7 @@ system].之所以要介绍它,是因为在游戏开发中,某些模块(AI,摄像
      棘手的是从笛卡尔坐标转换到极坐标.
      首先考虑 $r$ 的转换,通过勾股定理,可得:
      $r = \sqrt{x^{2}+y^{2}}$.
-     很明显这里 $r \ge 0$,不需要再考虑对 $r$ 进行 *标准化*[canonical]了.
+     很明显这里 $r \ge 0$,不需要再考虑对 $r$ 进行 *正则*[canonical]了.
      其次考虑 $\theta$ 的转换,很明显有:
      $\frac{y}{x} = \frac{sin\theta}{cos\theta} = tan\theta, \theta = arctan(y/x)$.
      这里有两个问题,一是 $x \neq 0$ ,二是存在 $arctan\theta,\theta \in [-90^{\circ},+90^{\circ}]$.
@@ -2228,20 +2228,20 @@ $atan2$ 在原点 $(0,0)$ 是未定义的.但是在本书中,我们定义 $atan2
 参考之前2D的转换,再加上在z轴的表示上,两者是相同的,因而很简单.
 **** Spherical Coordinates[球型坐标]
      相较于圆柱型坐标,球型坐标更为常见.同样的,我们来考虑如何构建一个球型坐标系.
-     1.) 想象自己站在原点,面对水平方向上的极坐标轴,垂直方向上的极坐标轴是从你的脚指向你的头.
-     再将你的右手臂打直,和水平方向的轴保持同一方向.
+     1.) 想象自己站在原点,面对水平方向上的极坐标轴,垂直方向上的极坐标轴是从你的脚到你的头的方向.
+     再将你的右手臂指向天空,与垂直方向的轴平行.
      2.) 逆/顺时针旋转 $\theta$.
-     3.) 将你的右手臂上下旋转 $\phi$.
+     3.) 将你的右手臂向下旋转 $\phi$.
      4.) 从原点沿着方向移动距离$r$.
-     水平方向上的角 $\theta$ 被叫做 *方位角*[azimuth], $\phi$ 被叫做 *天顶角*[zenith].
+     水平方向上的角 $\theta$ 被叫做 *定向角*[azimuth], $\phi$ 被叫做 *天顶角*[zenith].
 **** Some Polar Conventions Useful in 3D Virtual Worlds[虚拟3D世界中一些有用的极坐标设定]
      前面提到的球型坐标系是传统的右手坐标系统.在此系统下笛卡尔坐标系与球型坐标系的转换非常的简洁.然
 而,对真正在游戏行业工作的人来说,这个系统带来的麻烦远大于给予的好处:
-     - 默认的水平方向 $\theta = 0$ 指向的是 $+x$ .因为在大多数人的眼中,  *默认* 水平方向并不会让人联想到 *右手*
-或者 *东*.
-     - 从某些方面来看,使用 $\phi$ 并不合适.从2D扩展到3D时第一个要考虑的就是新增的 $\phi$ 的初始值问题,而让人
-尴尬的是令 $\phi = 0$ 将导致一个问题 - *Gimbal lock*[万向节死锁].相反,我们让这个点在2D平面中表示为
-$(r,\theta,90^{\circ})$.
+     - 默认的水平方向 $\theta = 0$ 指向的是 $+x$ .因为在大多数人的眼中,  *默认* 水平方向并不会让人联想
+到 *右手*或者 *东*.
+     - 从某些方面来看,使用 $\phi$ 并不合适.从2D扩展到3D时第一个要考虑的就是新增的 $\phi$ 的初始值问
+题,而让人尴尬的是令 $\phi = 0$ 将导致一个问题 - *Gimbal lock*[万向节死锁].相反,我们让这个点在2D平面
+中表示为$(r,\theta,90^{\circ})$.
      - $\theta$ 和$\phi$ 需要一定的时间去适应.$r$ 还有,至少能直观的让人知道表示 *半径*[radius].
      - 如果 *球型坐标* 的前两个角能和 *欧拉角*[Euler angless]一样的话就爽了. *欧拉角* 主要用来表示3D中
 的方向.(第八章就知道欧拉角是什么了:))
@@ -2270,7 +2270,7 @@ $(r,\theta,90^{\circ})$.
        $(h,p)$ 可以被表示为 $(h \pm 180^{\circ}, 180^{\circ} - p)$.
      - *奇点* 出现在 *pitch* 等于 $\pm 90^{\circ}$ 的时候.这种情况被叫做 *Gimbal lock*[万向节死锁],方向总是完全垂
 直并且 *heading* 角已经 *不相关*[irrelevant].(但是这个问题我们还是等到第八章再说:)).
-     在2D极坐标的时候我们就定义了一个 *标准球型坐标*[canonical spherical coordinates].在3D球型坐标中,
+     在2D极坐标的时候我们就定义了一个 *正则球型坐标*[canonical spherical coordinates].在3D球型坐标中,
 $r,h$ 还是同之前定义一样,而 *pitch* 则添加了两个限制条件.
      第一是 *pitch* 的值限定在 $[-90^{\circ},+90^{\circ}]$.
      第二是当出现 *Gimbal lock* 的时候, 由于 *pitch* 取到了极值, *heading* 值将变得 *不相关*,所以这种
@@ -2290,8 +2290,9 @@ $r,h$ 还是同之前定义一样,而 *pitch* 则添加了两个限制条件.
      6. if $h \le -180^{\circ}$,then add $360^{\circ}$ to $h$ until $h > -180^{\circ}$ .
      7. if $h > 180^{\circ}$,then subtract $360^{\circ}$ from $h$ until $h \le 180^{\circ}$ .
 **** Converting between Spherical and Cartesian Coordinates[球型坐标与笛卡尔坐标的相互转换]
-     从 _球形坐标系转换到笛卡尔坐标系_,先讨论传统意义上的使用 *右手坐标系* 的情况.
-     我们首先要考虑的是已知的参数:$(r,\theta,\phi)$.一个是长度,两个是角度.
+1.   从 _球形坐标系转换到笛卡尔坐标系_,
+     先讨论传统意义上的使用 *右手坐标系* 的情况.
+     我们首先要考虑的是 _已知参数:$(r,\theta,\phi)$_.一个是长度,两个是角度.
      而真正的问题在于如何表示 $(x,y,z)$.三个参数都是长度.
      根据勾股定理,一个很明显的公式是 $\sqrt{x^{2}+y^{2}+z^{2}} = r$,在此考虑将水平平面上的值 $\sqrt{x^{2}+y^{2}$ 
 用 $d$ 表示,则有 $d = \sqrt{x^{2}+y^{2}}$.
@@ -2302,14 +2303,15 @@ $r,h$ 还是同之前定义一样,而 *pitch* 则添加了两个限制条件.
      $x^{'} = rcos\theta,y^{'} = rsin\theta$.
 
      根据相似三角形的性质,有 $x/x^{'} = y/y^{'} = d/r$,而同时 $d/r = sin\phi$ .由此可得:
-     $x = rsin \phi cos \theta, y = rsin \phi sin\theta, z = rcos \phi$.
-     而由于这个是 *右手坐标系* 下的情况,我们将其带换为对应的 *左手坐标系*:
-     $x = r cos(p) sin(h), y = -rsin(p), z = rcos(p)cos(h)$.
+     *右手坐标系* 下, $(r,\theta,\phi)$
+     $\boldsymbol{x = rsin \phi cos \theta, y = rsin \phi sin\theta, z = rcos \phi}$.
 
+     *左手坐标系* 下,
+     $\boldsymbol{x = r cos(p) sin(h), y = -rsin(p), z = rcos(p)cos(h)}$.
      _于是,当从球形坐标系转换到笛卡尔坐标系时,有:_
-     $(x,y,z) \Rightarrow x = r cos(p) sin(h), y = -rsin(p), z = rcos(p)cos(h)$
+     $\boldsymbol{(x,y,z) \Rightarrow x = r cos(p) sin(h), y = -rsin(p), z = rcos(p)cos(h)}$
 
-     由于 *混叠* 的原因,从 _笛卡尔坐标到球型坐标_ 的转换更为复杂.
+2.  从 _笛卡尔坐标到球型坐标系_,
      在2D极坐标系中,$r = \sqrt{x^{2}+y^{2}+z^{2}}$.
      在 $r=0$ 时,奇点位于原点,算是一种特殊情况.
      至于 $h$,使用atan2可以直接得出:
@@ -2318,7 +2320,7 @@ $r,h$ 还是同之前定义一样,而 *pitch* 则添加了两个限制条件.
      $y = -rsin(p),-y/r = sin(p),p = arcsin(-y/r)$.
 
      _于是,当从笛卡尔坐标转换到球型坐标时,有:_
-     $(r,h,p) \Rightarrow r = \sqrt{x^{2}+y^{2}+z^{2}}, h = atan2(x,z),p = arcsin(-y/r)$.
+     $\boldsymbol{(r,h,p) \Rightarrow r = \sqrt{x^{2}+y^{2}+z^{2}}, h = atan2(x,z),p = arcsin(-y/r)}$.
 *** 7.4 Using Polar Coordinates to Specify Vectors[使用极坐标系来确定向量]
     我们已经知道了如何在极坐标系中描述一个 *点*,也知道怎么在笛卡尔坐标系中描述一个 *向量*.同样,我
 们也可以在极坐标系中描述一个向量.极坐标具有的两种类型的参数, *方向* 和 *长度*,原本就是向量自身的
@@ -2327,6 +2329,188 @@ $r,h$ 还是同之前定义一样,而 *pitch* 则添加了两个限制条件.
 量.当我们讨论如何使用极坐标时,实际生活中不知道已经使用了多少次."在你的右前方5米的地方",诸如此类.
     同样我们也已经知道如何在数学上完成向量在笛卡尔坐标和极坐标的转换.因为转换 *点* 的技巧可以原封
 不动用在 *向量* 身上.
+** Chapter 8 Rotation in Three Dimensions[三维下的旋转]
+   本章的主题是 _如何在3D空间中描述物体 *定向*[orientation]_,顺便也会讨论下3D空间中的 *旋转*[rotation]
+和 *角位移*[angular displacement].
+   讨论的核心在于 1.) *矩阵*[matrix] 2.) *欧拉角*[Euler angle] 3.) *四元数*[quaternion],另有两种少见的形
+式, 1.) *轴角*[axis-angle] 2.) *指数映射*[exponential map].
+   对每个方法我们都会准确的定义它的具体表现,并且讨论各自的特色,优点和缺点.
+   *注意*,本章将频繁的涉及到概念 *object space* 和 *upright space*.
+*** 8.1 What Exactly is "Orientation"[什么是定向?]
+    在开始讨论如何描述3D中的 *定向*[Orientation] 之前,我们先要给它一个准确的定义.相较于以下几个术语:
+    - *定向*[direction]
+    - *角位移*[angular displacement]
+    - *旋转*[rotation]
+    直观上讲,一个物体的 *定向* 就是告诉我们物体所面对的 *方向*.然而, *定向* 和 *方向* 并不能划等号.
+    举例来说,一个向量有 *定向*,却没有 *定向*.区别在于当向量指向一个方向时,你 *扭转*[twist]它,它不会
+发生任何改变.因为它没有 *厚度*[thickness] 或者是 *宽度*[dimension].
+    相反的是, 假设一个实际物体,比如 *喷气式飞机*[jet],面对一个方向.如果你 *扭转*[twist] 一个喷气式飞机,
+它的 *定向* 就会发生改变.
+    最基本的区别在于确定一个 *方向* 可以只用 _两个参数_ (想想上一章的 *球型坐标*),而 *定向* 却需要 
+_至少三个参数_,其中一个参数就是 *欧拉角*[Euler angle].
+    在前面我们就知道了用绝对坐标来描述物体位置是不可能的,只有在有参考系时才能确定物体位置.
+    如同我们描述某个
+    *位置*[position],
+    实质上是在描述从某个给定参考点(比如原点)到已知点的 *位移*[translation].
+    *定向*[orientation],
+    其实就是已知定向(通常被叫做 *单位定向*[identity orientation] 或者 *源定向*[home orientation])的
+*旋转* 来描述的.
+    而 _旋转的量_ 被叫做 *角位移*[angular translation].换句话说,数学上描述 *定向* 就是在描述 *角位移*.
+    在本书中,我们对 *定向*, *角位移*, *旋转* 会做细微的区分.把 *角位移* 当作一个函数(接受一个输入,提
+供一个输出)来看是很有用的.比如说, 通过 *角位移* 从旧定向到新定向,或从 *upright space* 到 *object space*.
+    _一个关于角位移的例子_,"绕z轴旋转90°".
+    然而,我们经常遇到不适合用 *角位移* 的 _输入/输出_ 这种形式,反而是 _父/子_ 关系更容易描述的情况,在
+这个时候我们就倾向于使用 *定向* 来描述.
+    _一个关于定向的例子_,"站直,然后面向东方".
+    *定向* 和 *角位移* 的区别就像是点和向量的区别,两个术语都是在数学上等价而概念上不同.在这两个例子
+中, *定向* 和 *点*,都是在描述 _静态结果_,而 *角位移* 和 *向量*,却是在描述 _动态过程_.
+*** 8.2 Matrix Form[矩阵形式]
+    一个描述3D坐标空间的 *定向*[orientation1] 的方法是说明坐标系中基向量(+x,+y,+z轴).但事实上我们不
+必计算这些基向量,因为通过定义,无论坐标空间处于什么 *定向*,它的基向量都是$[1,0,0],[0,1,0],[0,0,1]$.
+所以需要通过其他坐标空间来表示基向量.由此,我们建立了两个坐标空间的 *相对定向*[relative orientation].
+
+    当这些基向量用来生成一个 $3 \times 3$ 矩阵的时候, *定向* 可以通过 *矩阵形式*[matrix form]表示.另一种说
+法是我们可以通过一个 _将一个向量从一坐标系转到另一坐标系_ 的 *旋转矩阵*[rotation matrix]来表示两个
+坐标系的 *相对定向*.
+**** Which Matrix?[什么矩阵?]
+     我们知道怎么使用矩阵来将点从一个坐标系转换到另一个坐标系.
+
+[[file:Image/Figure 8.3.png]]
+     观察上图,右上角的矩阵表明了从喷气式飞机的 *object space* 到 *upright space* 的旋转.指定的每个行
+向量表示的是在 *upright space* 中的 *object axes*[对象轴]的位置.
+     同时这又是个旋转矩阵,意味着我们可以让 *object space* 中向量的坐标转换成 *upright space* 的坐标
+表示.
+     问题在于,为什么包含 *body axes* 的矩阵使用 *upright space* 来表示,而不是让 *upright axes* 在 
+*object-space coordinates* 中表示?或者说,为什么我们选择一个将向量从 *object space* 转换到 *upright-*
+*space* 的旋转矩阵,而不选择从 *upright space* 到 *object space* 的旋转矩阵.
+     从数学上来说这个问题有点可笑,因为旋转矩阵是 *正交*[otrhogonal]的,所以它的 *转置*[transpose] 和它
+的 *逆*[inverse]是一回事.所以说,这两者的区别根本无关紧要.
+     但实际在我们看来,这却很重要.目前的问题是你能否第一次就写出一些直观可读同时还能够运行的代码,还
+是这段代码需要大量的时间来辨认,抑或一些大家不言自明的常识而你却一无所知.在此说一句关于 *upright-*
+*space* 的题外话,考虑到实际中从数学到具体代码(关于坐标空间转换),同时考虑到我们作为程序员对旋转矩
+阵的认知,我们并不期望每个人都能同意我们的断言,但是希望每个读者至少在考虑这些问题时能感受到它们的
+价值.
+     对每一个有矩阵的数学库而言($3 \times 3$ 矩阵就能表示任意变换,$4 \times 4$ 矩阵可以额外做投影,$4 \times 3$ 矩阵可以
+额外做平移),这些运算天生就是在 _输入坐标空间,输出坐标空间_.在矩阵乘法中就暗示了这点.如果你想要反过
+来从输出到输入,就必须要掌握矩阵的 *逆* 运算.
+     从程序员的角度来看,使用 *通用变换矩阵类*[generic transform class]来描述某个物体的定向可以说是
+常识,毕竟旋转只是变换的一种. *接口*[interface]仍然表达的是 _输入源空间,输出目标空间_.但是在我们的经
+验中,用的最多的却是以下两种矩阵运算:
+     - 让一个 *object-space* 中的向量在 *upright coordinates* 中表示.
+     - 让一个 *upright-space* 中的向量在 *object coordinates* 中表示.
+     从我们的经验来看,不存在两个里哪个使用明显更频繁的情况,所以两种情况我们都需要同时考虑.但是无论
+怎么样,作为一个程序员,我们在考虑的运算其实都是 *object space* 和 *upright space* 的转换,而不是 *source-*
+*space*[源空间]和 *destination space*[目标空间].
+     现在再来看看 *orientation*[定向] 和 *angular displacement*[角位移]的区别.当你的目标是创造一个表示
+角位移的矩阵(比如"绕x轴旋转30°"),那你想的多半和上面的两个矩阵运算不一样,并且使用隐含了方向变换的
+*通用变换矩阵* 完全没问题.所以在这个问题上,没有讨论必要.现在我们关注的是一些物体中作为状态变量的
+*定向*.
+     现在假设我们采用普遍的方案---使用 *通用变换矩阵* 来保存 *定向*.现在我们就来看看这种普遍方案是怎
+么影响我们的:
+     - _Rotate some vector rom object space to upright space_ is translated into code as multiplication by
+       the matrix.
+     - _Rotate a vector from upright space to object space_ is translated into code as multiplication by the
+       inverse(or transpose) of the matrix.
+     对高阶程序员来说当然不成问题,但是从我们的经验来看,记忆上述运算简直要了初级程序员的老命.这其实
+反映的是接口的设计问题,如果我们设计一个专用的 $3 \times 3$ 旋转矩阵来保存 *定向* 会好很多.因为采用了更高
+一层的抽象来表示旋转简化了问题,唯一要考虑的只是确定一个命名规范来让大家产生共识.事实上,在实际编程
+中, *multiply a vector* 或者 *invert this matrix* 这些操作并没有那么有用(因为更多的程序员不需要了解这
+些数学细节),你需要告诉他们的更应该是 *objectToUpright* 或者 *uprightToObject* 这种运算.
+**** Direction Cosines Matrix[方向余弦矩阵]
+     *direction cosines matrix*[方向余弦矩阵] 和 *rotation matrix*[旋转矩阵]是一回事.这只是一种特殊的解
+释(或者构造)矩阵的方法,只是很有趣和教育意义,我们让我们来看看嘿嘿:).
+     旋转矩阵的每个元素都等于某个空间的轴和另一轴空间的轴的点乘.
+     更为普遍的是,现在假设某个坐标空间有正交的单位向量$\boldsymbol{p,q,r}$ ,同时另一个坐标空间也有(不相等的)正交
+的单位向量$\boldsymbol{p^{'},q^{'},r^{'}}$.
+     旋转矩阵通过构造成对的基向量的角的余弦值来完成行向量从第一个坐标空间到第二个坐标空间的旋转.当
+然每个单位向量的点乘是等于它们角的余弦值的.所以有:
+\begin{euqation*}
+v
+\begin{bmatrix}
+p \cdot p^{'} & q \cdot p^{'} & r \cdot p^{'} \\
+p \cdot q^{'} & q \cdot q^{'} & r \cdot q^{'} \\
+p \cdot r^{'} & q \cdot r^{'} & r \cdot r^{'} \\
+\end{bmatrix}
+= v^{'}.
+\end{euqation*}
+     不要忘了$p,q,r,p^{'},q^{'},r^{'}$ 都是 *单位向量*[unit vector],同时还有点乘的几何意义:
+     $a \cdot b = |a||b|cos\theta$,在这里由于是单位向量,则有: $a \cdot b = |a||b|cos\theta = cos\theta$.
+     假设我们的轴用第一个坐标空间的基向量来描述,则$p,q,r$ 分别被表示为 $[1,0,0],[0,1,0],[0,0,1]$.而
+第二个坐标空间的基向量$p^{'},q^{'},r^{'}$ 则是任意坐标.当我们将其代入之前的等式,则有:
+ \begin{euqation*}
+\begin{bmatrix}
+[1,0,0] \cdot p^{'} & [0,1,0] \cdot p^{'} & [0,0,1] \cdot p^{'} \\
+[1,0,0] \cdot q^{'} & [0,1,0] \cdot q^{'} & [0,0,1] \cdot q^{'} \\
+[1,0,0] \cdot r^{'} & [0,1,0] \cdot r^{'} & [0,0,1] \cdot r^{'} \\
+\end{bmatrix}=
+\begin{bmatrix}
+p_{x}^{'} & p_{y}^{'} & p_{z}^{'} \\
+q_{x}^{'} & q_{y}^{'} & q_{z}^{'} \\
+r_{x}^{'} & r_{y}^{'} & r_{z}^{'} \\
+\end{bmatrix}=
+\begin{bmatrix}
+-p^{'}- \\
+-q^{'}- \\
+-r^{'}- \\
+\end{bmatrix}
+\end{euqation*}
+    换句话说, _通过使用输入坐标空间的坐标,旋转矩阵的行向量就是输出坐标空间的基向量_.这个事实不仅
+对旋转矩阵有效,对所有的变换矩阵都有效.这就是所有的变换矩阵都能工作的核心原因.
+    现在我们来考虑另一种状况,即使用第二个坐标空间(输出空间).这个时候,$p,q,r$ 是任意的.
+\begin{euqation*}
+\begin{bmatrix}
+[1,0,0] \cdot p & [0,1,0] \cdot p & [0,0,1] \cdot p \\
+[1,0,0] \cdot q & [0,1,0] \cdot q & [0,0,1] \cdot q \\
+[1,0,0] \cdot r & [0,1,0] \cdot r & [0,0,1] \cdot r \\
+\end{bmatrix}=
+\begin{bmatrix}
+p_{x} & q_{x} & r_{x} \\
+p_{y} & q_{y} & r_{y} \\
+p_{z} & q_{z} & r_{z} \\
+\end{bmatrix}=
+\begin{bmatrix}
+| & | & | \\
+p^{T}& q^{T} & r^{T} \\
+| & | & | \\
+\end{bmatrix}
+\end{euqation*}
+   这说明了, _通过使用输出坐标空间的坐标,旋转矩阵的列向量就是输入坐标空间的基向量_.当然这个事实不
+是对所有的矩阵变换都有用,而是只有 *正交矩阵* 才满足.
+**** Advantages of Matrix Form[矩阵形式的优点]
+     矩阵以一种非常直接的形式来描述 *定向*,这种直接带来了如下优点:
+     - _可以立即进行向量旋转_.
+       Rotation of vectors is immediately available.
+     - _矩阵的形式被图形API调用_.
+       Format used by graphics APIs.
+     - _多个角位移拼接_.
+       Concatenation of multiple angular displacements.
+     - _矩阵的逆_.
+       Matrix inversion.
+**** Disadvantages of Matrix Form[矩阵形式的缺点]
+     使用矩阵来表示定向的缺点在于太浪费内存.一个矩阵使用9个数来表示一个定向.而实际上一个定向只需要
+3个数字就能确定.
+      - _矩阵占用更多内存_.
+        Matrices take more memory.
+      - _矩阵对人而言难于使用_.
+        Dificult for humans to use.
+      - _矩阵可能是病态的_.
+        Matrices can be ill-formed.
+        由于浮点数的精度限制,大量矩阵乘法最终可能导致病态矩阵,这种现象被叫做 *矩阵蠕变*[matrix creep].
+**** Summary of Matrix Form[总结]
+     - 矩阵是表达 *定向*[orientation]的强力方法:我们能明确的把当前空间的基向量在其他坐标空间表述出来.
+     - 术语 *direction cosines matrix*[方向余弦矩阵]暗示了旋转矩阵中的每个元素都等于输入空间的基向量
+与输出空间的基向量的 *点积*.
+       对所有矩阵变换来说,矩阵的 *行*[row] 向量是 _输入空间的基向量在输出空间的坐标_.
+       而旋转矩阵的 *列*[column]向量是 _输出空间的基向量在输入空间的坐标_,这种情况只有在旋转矩阵是
+*正交* 时才满足.
+     - 矩阵形式表达 *定向* 的主要用处在于,它允许我们在不同的坐标空间之间旋转向量.
+     - 现代图形API使用矩阵来描述 *定向*.
+     - 我们可以使用矩阵乘法嵌套多个矩阵来得到一个单一矩阵.
+     - 矩阵的 *逆* 提供了一种得到"相反"的角位移的机制.
+     - 矩阵对比其他方法,会多占用2到3倍的内存.这样造成的资源浪费是一个问题.
+     - 矩阵对人类来说不够直观.
+     - 并非所有的矩阵都能描述方位.有些可能包含 *mirroring* 或者 *skew*.从外部数据源得到坏数据或者
+*矩阵蠕变*[matrix creep]都会导致 *病态矩阵*[ill-formed matrix].
 * Footnotes
 
 [fn:singularity] 在数学中,表示 _数学物件中无法处理的点_.
