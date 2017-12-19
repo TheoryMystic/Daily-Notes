@@ -810,7 +810,7 @@
      -sin\theta & cos\theta
     \end{bmatrix}
     \end{equation*}
-**** 3D Rotation about Cardinal Axes[围绕坐标轴的3D旋转]
+**** 3D Rotation about Cardinal Axes[围绕主轴的3D旋转]
     在3D场景下,围绕 *轴*[axis] 的旋转比围绕点的旋转更为普遍.
     3D场景下绕坐标轴旋转的公式如下:
     围绕x轴旋转:
@@ -946,7 +946,7 @@
     由于缩放的大小取决于缩放方向,所以k的大小会造成不同的影响:
     $|k| <1$ -> 物体在该方向上会变得更短,$|k| > 1$ -> 物体在该方向上会变得更长.
     $k = 0$ -> 物体 *投影*[projection] 在该方向上, $k < 0$  -> 造成物体的 *反射*[reflection].
-**** Scaling along the Cardinal Axes[以坐标轴缩放]
+**** Scaling along the Cardinal Axes[以主轴缩放]
     先考虑2D的情况,其实在2D的情况下很简单,我们只需要将基向量乘以k就行了.
     \begin{equation*}
     \boldsymbol{p'} = k_{x} \boldsymbol{p} = k_{x}
@@ -1116,8 +1116,8 @@
     方向上将缩放的k值取0,就完成了投影的操作(在2D中被转换为平行的直线,在3D中被转换为一个平面).这种
     投影方式被称作 *正交投影*[orthographic projection],在后面还会学习另一种投影, *透视投影*[perspective
     projection].
-***** Projecting onto a Cardinal Axis or Plane[投影到坐标轴或者平面上]
-     最简单的投影就是投影在 *坐标轴*[cardinal axis](2D) 和 *平面*[plane](3D).
+***** Projecting onto a Cardinal Axis or Plane[投影到主轴或者平面上]
+     最简单的投影就是投影在 *主轴*[cardinal axis](2D) 和 *平面*[plane](3D).
      投影到坐标轴:
      \begin{equation*}
      \boldsymbol{P_{x}} = \boldsymbol{S}(
@@ -1131,7 +1131,7 @@
      \end{bmatrix}
      \end{equation*}
 
-     \begin{equation*}
+          \begin{equation*}
      \boldsymbol{P_{x}} = \boldsymbol{S}(
      \begin{bmatrix}
      1 & 0 \\
@@ -1935,7 +1935,7 @@ T & 1 \\
 \end{bmatrix}
 \end{equation*}
     让我们先考虑 *无穷远点*[points at infinity]的情况$(x,y,z,w)$,其中 $w=0$.
-    \begin{euqation*}
+    \begin{equation*}
     \begin{bmatrix}
     x & y & z & 0 \\
     \end{bmatrix}
@@ -1949,10 +1949,10 @@ T & 1 \\
     \begin{bmatrix}
     xr_{11} + yr_{21} + zr_{31} & xr_{12} + yr_{22} + zr_{32} & xr_{13} + yr_{23} + zr_{33} & 0\\
     \end{bmatrix}
-    \end{euqation*}
+    \end{equation*}
     从上面的线性变换结果可以看出,向量$(w=0)$ 与矩阵相乘,最终得到的是形如 $[x^{'},y^{'},z^{'},0]$ 的结果.
     如果我们再加入 *位移变换*,结果如下:
-    \begin{euqation*}
+    \begin{equation*}
     \begin{bmatrix}
     x & y & z & 0 \\
     \end{bmatrix}
@@ -1966,7 +1966,7 @@ T & 1 \\
     \begin{bmatrix}
     xr_{11} + yr_{21} + zr_{31} & xr_{12} + yr_{22} + zr_{32} & xr_{13} + yr_{23} + zr_{33} & 0\\
     \end{bmatrix}
-    \end{euqation*}
+    \end{equation*}
     可见,在$w=0$ 的情况下, *位移* 变换是无效的.所以,这里的 $w$ 的值就成了一个左右 *位移* 的参数.这在实
 际应用中非常的频繁,因为 *位移* 的是一些表示 *位置* 的向量,而一些仅仅表示 *方向* 的向量(如 *法线*
 [surface normal]),是不应该被移动的.
@@ -2424,7 +2424,7 @@ _至少三个参数_,其中一个参数就是 *欧拉角*[Euler angle].
 的单位向量$\boldsymbol{p^{'},q^{'},r^{'}}$.
     旋转矩阵通过构造成对的基向量的角的余弦值来完成行向量从第一个坐标空间到第二个坐标空间的旋转.当
 然每个单位向量的点乘是等于它们角的余弦值的.所以有:
-\begin{euqation*}
+\begin{equation*}
 v
 \begin{bmatrix}
 p \cdot p^{'} & q \cdot p^{'} & r \cdot p^{'} \\
@@ -2432,12 +2432,12 @@ p \cdot q^{'} & q \cdot q^{'} & r \cdot q^{'} \\
 p \cdot r^{'} & q \cdot r^{'} & r \cdot r^{'} \\
 \end{bmatrix}
 = v^{'}.
-\end{euqation*}
+\end{equation*}
     不要忘了$p,q,r,p^{'},q^{'},r^{'}$ 都是 *单位向量*[unit vector],同时还有点乘的几何意义:
     $a \cdot b = |a||b|cos\theta$,在这里由于是单位向量,则有: $a \cdot b = |a||b|cos\theta = cos\theta$.
     假设我们的轴用第一个坐标空间的基向量来描述,则$p,q,r$ 分别被表示为 $[1,0,0],[0,1,0],[0,0,1]$.而
 第二个坐标空间的基向量$p^{'},q^{'},r^{'}$ 则是任意坐标.当我们将其代入之前的等式,则有:
- \begin{euqation*}
+ \begin{equation*}
 \begin{bmatrix}
 [1,0,0] \cdot p^{'} & [0,1,0] \cdot p^{'} & [0,0,1] \cdot p^{'} \\
 [1,0,0] \cdot q^{'} & [0,1,0] \cdot q^{'} & [0,0,1] \cdot q^{'} \\
@@ -2453,11 +2453,11 @@ r_{x}^{'} & r_{y}^{'} & r_{z}^{'} \\
 -q^{'}- \\
 -r^{'}- \\
 \end{bmatrix}
-\end{euqation*}
+\end{equation*}
     换句话说, _通过使用输入坐标空间的坐标,旋转矩阵的行向量就是输出坐标空间的基向量_.这个事实不仅
 对旋转矩阵有效,对所有的变换矩阵都有效.这就是所有的变换矩阵都能工作的核心原因.
     现在我们来考虑另一种状况,即使用第二个坐标空间(输出空间).这个时候,$p,q,r$ 是任意的.
-\begin{euqation*}
+\begin{equation*}
 \begin{bmatrix}
 [1,0,0] \cdot p & [0,1,0] \cdot p & [0,0,1] \cdot p \\
 [1,0,0] \cdot q & [0,1,0] \cdot q & [0,0,1] \cdot q \\
@@ -2473,7 +2473,7 @@ p_{z} & q_{z} & r_{z} \\
 p^{T}& q^{T} & r^{T} \\
 | & | & | \\
 \end{bmatrix}
-\end{euqation*}
+\end{equation*}
    这说明了, _通过使用输出坐标空间的坐标,旋转矩阵的列向量就是输入坐标空间的基向量_.当然这个事实不
 是对所有的矩阵变换都有用,而是只有 *正交矩阵* 才满足.
 **** Advantages of Matrix Form[矩阵形式的优点]
@@ -2512,7 +2512,7 @@ p^{T}& q^{T} & r^{T} \\
     - 并非所有的矩阵都能描述方位.有些可能包含 *mirroring* 或者 *skew*.从外部数据源得到坏数据或者
 *矩阵蠕变*[matrix creep]都会导致 *病态矩阵*[ill-formed matrix].
 *** 8.3 Euler Angles[欧拉角]
-**** 8.3.1 What Are Euler Angles?[欧拉角是什么]
+**** What Are Euler Angles?[欧拉角是什么]
     *欧拉角* 的基本思想是将 *角位移* 看作是分别绕三个互相垂直的轴旋转所组成的序列.听起来可能很拗口,
 但实际上很直观.(事实上它的主要优势就在于人类更容易理解).
     所以现在来看, *欧拉角* 将 *定向* 描述为 _分别绕三个互相垂直的轴作旋转的序列_.具体是以什么顺序绕
@@ -2533,7 +2533,7 @@ p^{T}& q^{T} & r^{T} \\
     4.)执行完 *pitch* 后,再执行 *bank* 旋转,绕z轴旋转,同样是 *object space* 的z轴,从z轴的正方向看过来,
 正向依然是顺时针.
     [[file:image/Figure 8.7.png]]
-**** 8.3.2 Other Euler Angle Conventions[其他关于欧拉角的约定]
+**** Other Euler Angle Conventions[其他关于欧拉角的约定]
     前面所说的 *heading-pitch-bank* 并不是唯一能表示欧拉角的系统,它们中的区别有些纯粹是命名不同,有
 些确实有区别.
     首先,存在一个命名问题.在航空航天领域最常见的命名是 *yaw-pitch-roll* 方法. *roll* 和 *bank* 是完全
@@ -2561,7 +2561,7 @@ p^{T}& q^{T} & r^{T} \\
     [[file:image/Figure 8.8.png]]
     无论怎么样定义你的轴,都要记住第一个旋转的总是垂直的那个轴,第二个则是物体侧轴,最后才是物体纵轴.
 (偏航 -> 俯仰 -> 倾斜).
-**** 8.3.3 Advantages of Euler Angles[欧拉角的优点]
+**** Advantages of Euler Angles[欧拉角的优点]
     欧拉角只用3个参数就能确定 *定向*,而且这些参数还是角度.
     - _欧拉角易于使用_.
       Euler angles are easy for humans to use.
@@ -2569,7 +2569,7 @@ p^{T}& q^{T} & r^{T} \\
       Euler angles use the smallest possible representation.
     - _任意三个数都是合法的_.
       Any set of three numbers is valid.
-**** 8.3.4 Disadvantages of Euler Angles[欧拉角的缺点]
+**** Disadvantages of Euler Angles[欧拉角的缺点]
     欧拉角的缺点主要有:
     - _定向的表达方式不唯一_.
       The representation for a given orientation is not unique.
@@ -2626,7 +2626,7 @@ $h_{0} = -170^{\circ},h_{1} = 170^{\circ}$.注意这些都是规范后的heading
 和 *wrapPi* 能解决问题.然而 *万向锁*[Gimbal lock]却是个底层问题.任何一个用三个参数表达 *定向* 的方
 法都无法绕过这个问题,这是它的固有缺陷.
     于是,我们引入了新的工具, *四元数*[quaternions].
-**** 8.3.5 Summary of Euler Angles[小结]
+**** Summary of Euler Angles[小结]
     - 欧拉角使用三个角来保存 *定向*[orientation].这三个角是分别围绕三个 *object-space* 的轴有序旋转的
 旋转量.
     - 最常见的欧拉角系统是 *heading-pitch-bank*[偏航-俯仰-倾斜]系统.
@@ -2653,16 +2653,842 @@ $h_{0} = -170^{\circ},h_{1} = 170^{\circ}$.注意这些都是规范后的heading
     欧拉旋转定理给了我们两个方法来描述 *定向*.假设我们选择了一个旋转角 $\theta$ 和一个 _经过原点_ 且与单位
 向量 $\hat{n}$ _平行_ 的旋转轴.
     有了 $\hat{n}$ 和 $\theta$ 这两个值,我们就可以以 *轴-角*[axis-angle]形态来描述 *角位移*[angular displacement].或
-者说由于 $\hat{n}$ 是单位向量,我们让它与 $\theta$ 相乘而不丢失信息,得到一个向量 $e = \theta\hat{n}$.这个描绘旋转的技巧有一个
-不明觉厉的名字- *exponential map*[指数映射].旋转角可以通过 $e$ 的长度推断出来,换句话来说, $\theta = ||e||$
-,而轴则可以通过 *标准化*[normalizing] $e$ 得到. *指数映射* 不仅比 *轴角* 更紧凑(三个参数),在优雅的避开
-了某些奇点的同时还有更好的插值和微分能力.
+者说由于 $\hat{n}$ 是单位向量,我们让它与 $\theta$ 相乘而不丢失信息,得到一个向量 $\vec{e} = \theta\hat{n}$.这个描绘旋转的技巧有一个
+不明觉厉的名字- *exponential map*[指数映射].
+    指数映射中,
+    1.) 角 $\theta$ 可以通过 $e$ 的长度推断出来, $\theta = ||e||$;
+    2.) 轴 $\hat{n}$ 则可以通过 *标准化*[normalizing] $\vec{e}$ 得到,$\hat{n} = \hat{e} = \frac{\vec{e}}{||e||}$.
+    *指数映射* 不仅比 *轴角* 更紧凑(三个参数),在优雅的避开了某些奇点的同时还有更好的插值和微分能力.
+    在此解释一下,在 *轴-角* 中描述角位移需要 $(\theta,\hat{n})$,其中$\hat{n}$ 作为一个向量其实可分解为 $(n_{x},n_{y},n_{z})$,所
+以 _在 *轴-角* 中描述一个角位移需要4个数_. 而在 *指数映射* 中,有$\vec{e} = \theta\hat{n}$,由于单位向量不损失信息,所
+以我们可以仅用 $\vec{e}$ 来描述 *角位移*,所以说 _在 *指数映射* 中描述一个角位移只需要3个数_.
     *指数映射*[exponential map]比 *轴角*[axis-angle]常用的多.首先, *指数映射* 插值比 *欧拉角* 更好.虽
 然它有 *奇点*[singularities],却没有欧拉角的问题那么麻烦.通常当人们想到旋转的插值时,立刻想到的都是四
 元数,然而在一些应用上,如存储动画数据, *指数映射* 是一个强有力的替代项.但是 *指数映射* 最常见的应用
 不仅是在存储 *角位移* 上,更是在存储 *角速度*[angular velocity]上.原因在于 *指数映射* 的微分效果很好,
 同时用来表示多重旋转也很简单.
-    
+    和 *欧拉角* 一样, *轴-角* 和 *指数映射* 也存在 *别名*[aliasing] 和 *奇点*[singularities],虽然限制没那
+么严重. 
+    *奇点* -> 在 $\theta = 0$ 时,任何轴都可能被使用.然而对 *指数映射* 而言,在 $\theta = 0$ 时,可知 $\vec{e} = \theta\hat{n}$,在这个
+时候 $\vec{e}$ 将消失,所以不管 $\hat{n}$ 怎么取都没意义了.
+    *别名* -> 在 *轴-角* 中,对 $\theta , \hat{n}$ 同时 _取负_ 将导致 *别名* 问题,而 *指数映射* 完美回避了这个问题,因
+为在 $\vec{e} = \theta\hat{n}$ 中 $\theta,\hat{n}$ 同时取负值不变.
+    其他 *别名* 问题就没怎么容易打发了.已知让 $\theta + 360^{\circ}k$ 得到的 *定向* 是相等的,这在 *轴-角* 和 *指数
+映射* 中仍然存在.但这却不一定总是缺点,因为在描述 *角旋转*[angular velocity]时,能表示旋转了多少次是
+非常有用的,所以我们才说, *指数映射* 的真正舞台在 *角旋转*.
+    从上面的描述你已经可以感受到 *指数映射* 的牛逼了吧,好好学:).
+*** 8.5 Quaternions[四元数]
+    *四元数*[quaternion]在3D数学中是一个时髦的术语.它带有一定的神秘感--委婉的告诉了大家四元数复杂
+又让人困惑.我们希望能用一些不同的方法来减轻四元数带来的神秘感.
+    对于为什么只使用三个数的欧拉角在三维空间中表示一个 *定向* 会带来如 *万向锁* 这样的问题,有一个数
+学上的解释.这涉及到一些相当高级的数学主题,如 *流形*[manifolds].四元数用四个数来表示一个 *定向* 以
+避免 *万向锁* 的问题.
+    本节将讲述如何使用四元数来定义一个 *角位移*[angular displacement].为了区别于传统意义上解释四元
+数的方法(将四元数解释成数字),我们将主要从几何角度来看待四元数.
+**** Quaternion Notation[四元数记法]
+    一个四元数由两部分组成,1.) *标量*[scalar] 和 2.) *3D向量*.我们通常将标量部分用 $w$ 表示,向量部分用
+$\vec{v}$ 或者 $(x,y,z)$ 表示.具体如下:
+\begin{equation*}
+\begin{bmatrix}
+w & \vec{v}
+\end{bmatrix},
+\begin{bmatrix}
+w & 
+\begin{pmatrix}
+x & y & z
+\end{pmatrix}
+\end{bmatrix}.
+\end{equation*}
+    同样我们也可以将四元数垂直表示:
+ \begin{equation*}
+\begin{bmatrix}
+w \\
+\begin{pmatrix}
+x \\
+y \\
+z
+\end{pmatrix}
+\end{bmatrix}.
+\end{equation*}
+    不同于普通向量,四元数的 *行向量* 和 *列向量* 没有区别.
+**** What Do Those Four Numbers Mean?[这四个数的含义是]
+    四元数的格式和 *轴-角*, *指数映射* 非常接近.简要回顾下, *单位向量*[unit vector] $\hat{n}$ 定义了旋转的轴,
+而标量 $\theta$ 则是围绕这个轴做旋转的 *量*.所以,$(\theta,\hat{n})$ 定义了 *轴-角* 系统下的 *角位移*[angular displace
+ment].
+    一个四元数也包含一个轴和角,但是 $\hat{n}$ 和 $\theta$ 不像 *轴-角* 一样,直接保存四元数的四个数字.相反,用了一个
+初看很奇怪但实践证明高度实用的方法.下面的等式表现出了四元数的值与 $\theta$ 和 $\hat{n}$ 的关系.
+\begin{equation*}
+\begin{bmatrix}
+w & \vec{v}
+\end{bmatirx} =
+\begin{bmatrix}
+cos(\theta/2) & sin(\theta/2)\hat{n}
+\end{bmatrix}
+\end{equation*}
+\begin{equation*}
+\begin{bmatrix}
+w &
+\begin{pmatrix}
+x & y & z
+\end{pmatrix}
+\end{bmatrix} =
+\begin{bmatrix}
+cos(\theta/2) & 
+\begin{pmatrix}
+sin(\theta/2)n_{x} & sin(\theta/2)n_{y} & sin(\theta/2)n_{z}\\
+\end{pmatrix}
+\end{bmatrix}.
+\end{equation*}
+    记住 $w$ 与 $\theta$ 相关,但它们不是同一个东西,$\vec{v}$ 和 $\hat{n}$ 也是如此.下面的小节将会分别从算数和几何的角度来讨
+论四元数的运算.
+**** Quaternion Negation[四元数的负数形式]
+     四元数可以取负.比如:
+     \begin{equation*}
+     -\vec{q} = -
+     \begin{bmatrix}
+     w &
+     \begin{pmatrix}
+     x & y & z
+     \end{pmatrix}
+     \end{bmatrix} =
+     \begin{bmatrix}
+     -w &
+     \begin{pmatrix}
+     -x & -y & -z
+     \end{pmatrix}
+     \end{bmatrix}= -
+      \begin{bmatrix}
+     w & -\vec{v}
+     \end{bmatrix}=
+      \begin{bmatrix}
+     -w & -\vec{v}
+     \end{bmatrix}    
+
+     \end{equation*}
+     最神奇的地方在于将一个四元数取负不会有任何变化,至少在 *角位移* 方面.
+     四元数 $\vec{q},-\vec{q}$ 描述同一个 *角位移*.任何角位移在3D里都能用两个四元数来表示,并且它们互为负数.
+     发现这个原理其实并不难,如果我们让 $\theta$ 增加 $360^{\circ}$ ,它不会改变 $\vec{q}$ 的角位移,但是它会让 $\vec{q}$ 的四个元素都
+取负.(因为 $w = cos(\theta/2) , \vec{v} = sin(\theta/2)\hat{n}$)
+**** Identity Quaternions[单位四元数]
+     从几何上来看,这里有两个 *单位四元数* 能表示 _没有角位移_.它们是:
+     $[1 \ \vec{0}]$ 和 $[-1 \ \vec{0}]$.
+     当 $\theta$ 是 $360^{\circ}$ 的 *偶数*[even]倍,有 $cos(\theta/2) = 1$;
+     当 $\theta$ 是 $360^{\circ}$ 的 *奇数*[odd]倍,有 $cos(\theta/2) = -1$.
+     在两种情况下,$sin(\theta/2) = 0$,所以说与 $\hat{n}$ 值无关.于是我们可以说,如果绕轴旋转的角度都是完整的周期,
+那么在这种旋转下物体的 *定向* 不会有任何改变.
+     在代数上来看,只有一个 *单位四元数*:$[1 \ \vec{0}]$.让任意向量 $\vec{q}$ 与单位四元数相乘,结果都是 $\vec{q}$.当我们让 $\vec{q}$ 与
+$[-1 \ \vec{0}]$ 相乘,我们得到 $-\vec{q}$,几何上来看它们相等,但在数学上,两者不等,所以说在代数上,$[-1 \ \vec{0}]$ 不是"真正"的
+*单位四元数*.
+**** Quaternion Magnitude[四元数的模]
+     求四元数的 *模*[magnitude] 很简单,方法如下:
+     $||\vec{q}|| = || [w \ (x \ y \ z)] || = \sqrt{w^{2}+x^{2}+y^{2}+z^{2}} = || [w \ \vec{v}] || = \sqrt{w^{2} + ||v||^{2}}$.
+     让我们看看 *旋转四元数*[rotation quaternion]的几何意义:
+     \begin{equation*}
+     \begin{align}
+     ||q||  &= ||[w \ \vec{v}]|| = \sqrt{w^{2} + ||v||^{2}}
+     \\&=
+      \sqrt{cos^{2}(\theta/2) + (sin(\theta/2)||\hat{n}|| )^{2}}
+     \\&=
+      \sqrt{cos^{2}(\theta/2) + sin^{2}(\theta/2) ||\hat{n}||^{2}}
+     \\&=
+      \sqrt{cos^{2}(\theta/2) + sin^{2}(\theta/2)(1)}
+     \\&=
+ \sqrt{1}
+     \\&= 1
+     \end{align}
+     \end{equation*}
+     对使用四元数来表示 *定向* 而言,所有的四元数都被叫做 *单位四元数*[unit quaternions],并且它们的模
+都为1.
+**** Quaternion Conjugate and Inverse[四元数的共轭和逆]
+     四元数的 *共轭*[conjugate],记作 $\vec{q}^{*}$ ,通过让四元数的向量部分取负得到:
+     $\vec{q}^{*} = [w \ \vec{v}]^{*} = [w \ -\vec{v}] = [w \ (x \ y \ z)]^{*} = [w \ (-x \ -y \ -z)]$.
+     术语 *共轭*[conjugate] 来自对四元数作为 *复数*[complex]的解释.
+     四元数的 *逆*[inverse],记作 $q^{-1}$,由以下等式得到:
+     $\vec{q}^{-1} = \frac{\vec{q}^{*}}{||\vec{q}||}$.
+     我们知道在 *实数*[real number]中,$a \cdot a^{-1} = 1$,而四元数与其逆相乘,得到的结果是 *单位四元数*:$[1 \ \vec{0}]$.
+     上面的等式是四元数的逆的标准定义.但是如果你只是对用四元数表示旋转感兴趣,就像我们在本书中的内容
+一样,本书中涉及的四元数都是 *单位四元数*,这就意味着四元数的 *逆* 和它的 *共轭* 是相等的.
+      *共轭* (*逆*)有意思的地方在于 $\vec{q}$ 和 $\vec{q}^{*}$ 的角位移正好相反,因为我们知道共轭的操作是对四元数 $\vec{q}$ 里的
+向量 $\vec{v}$ 取负,也就导致了单位向量 $\hat{n}$ 也取负,这种情况下由于 $\hat{n}$ 和 $-\hat{n}$ 是平行的,所以结果只是导致 $\vec{q}$ 和 $\vec{-q}$
+方向相反,也即是两者的角位移相反.
+     其实为了 *共轭* 也可以只让 $w$ 为负,那样会得到一个更符合直觉的解释,但是考虑到术语 *共轭*[conjugate]
+具有 *复数*[complex numbers]的含义,在此让 $\vec{v}$ 取负更符合原意.
+**** Quaternion Multiplication[四元数乘法]
+     四元数可以相乘.结果和向量的 *叉积*[cross product]相同,将会产生一个新的四元数(而不是标量),并且不
+符合 *交换律*[commutative].区别在于所用的符号不同,我们在进行四元数的乘法时只需要把两个四元数并排
+放在一起.现在让我们来看看具体的例子:
+\begin{equation*}
+\begin{align*}
+\vec{q}_{1} \vec{q}_{2} &=
+[w_{1} \ (x_{1} \ y_{1} \ z_{1})]
+[w_{2} \ (x_{2} \ y_{2} \ z_{2})]
+\\&=
+\begin{bmatrix}
+w_{1}w_{2} - x_{1}x_{2} - y_{1}y_{2} - z_{1}z_{2} \\
+\begin{pmatrix}
+w_{1}x_{2} + x_{1}w_{2} + y_{1}z_{2} - z_{1}y_{2} \\
+w_{1}y_{2} + y_{1}w_{2} + y_{1}x_{2} - x_{1}z_{2} \\
+w_{1}z_{2} + z_{1}w_{2} + x_{1}y_{2} - y_{1}x_{2} \\
+\end{pmatrix}
+\end{bmatrix}
+\\&=
+[w_{1} \ \vec{v}_{1}]
+[w_{2} \ \vec{v}_{2}]
+\\&=
+[w_{1}w_{2} - \vec{v}_{1} \cdot \vec{v}_{2} \ w_{1}\vec{v}_{2}+w_{2}\vec{v}_{1} + \vec{v}_{1} \times \vec{v}_{1}]
+\end{align*}
+\end{equation*}
+    四元数乘法也被叫做 *Hamilton product*[汉密尔顿乘法],在后面我们再详细阐述.
+    现在我们先来看看四元数乘法的 _三个性质_:
+    _第一_,四元数乘法满足 *结合律*[associative],但不满足 *交换律*[commutative].
+    $(\vec{a}\vec{b})\vec{c} =\vec{a}(\vec{b}\vec{c})$
+    $\vec{a}\vec{b} \ne \vec{b}\vec{a}$.
+    _第二_,四元数积的模等于四元数模的积:
+    $||\vec{q}_{1}\vec{q}_{2}|| =||\vec{q}_{1}|| \ ||\vec{q}_{2}||$
+    _第三_,四元数积的逆等于四元数逆的积:
+    $(\vec{a}\vec{b})^{-1} = \vec{b}^{-1}\vec{a}^{-1}$
+    $(\vec{q}_{1}\vec{q}_{2} \cdots \vec{q}_{n-1}\vec{q}_{n})^{-1} = \vec{q}_{n}^{-1}\vec{q}_{n-1}^{-1} \cdots \vec{q}_{2}^{-1}\vec{q}_{1}^{-1}$
+    现在我们已经知道了四元数乘法的三个性质,接下来说说为什么这三个性质很有用.让我们将一个标准3D点
+$(x,y,z)$ 扩展到 *四元数空间*[quaternion space],得到:
+    $\vec{p} = [0,(x,y,z)]$.在这里$\vec{p}$ 不是一个有效的四元数,因为它的大小可以是任意的.
+    让 $\vec{q}$ 作为一个 *旋转四元数*[rotation quaternion] ,记作$[cos(\theta/2),\hat{n}sin(\theta/2)]$.
+    最让人惊讶的事情出现了,我们可以通过以下四元数乘法让点 $\vec{p}$ 围绕 $\hat{n}$ 旋转:
+    (由于书写格式的美观问题,以后相关情况用黑体 $\boldsymbol{p}$ 代替 $\vec{p}$)
+    $\boldsymbol{p}^{'} = \boldsymbol{q}\boldsymbol{p}\boldsymbol{q}^{-1}$.
+    这就是大多数文献里的四元数了.你可以想象一下一个人上来就给你看这个表达式时你内心的心情:).在后面
+我们将不使用 $\boldsymbol{q}\boldsymbol{p}\boldsymbol{q}^{-1}$ ,而仅仅通过几何旋转的方式来实现从四元数到矩阵的转换.
+    现在我们要用四元数 $\boldsymbol{a}$ 来旋转向量 $\boldsymbol{p}$,然后再用 $\boldsymbol{b}$ 来旋转得到的结果:
+    $\boldsymbol{p^{'}} = \boldsymbol{b(apa^{-1})b^{-1}} = \boldsymbol{(ba)p(a^{-1}b^{-1}) = (ba)p(ba)^{-1}}$
+    可以发现,先绕 $\boldsymbol{a}$ 旋转再绕 $\boldsymbol{b}$ 旋转 _等价于_ 一个复合的绕 $\boldsymbol{ba}$ 的旋转,这是关键.(四元数乘法可以用于表示
+旋转的复合,类似于矩阵乘法).
+    另外要注意的是,对四元数乘法的复合形式, _一定要以 *从里到外* 的顺序 *从右向左* 读_.
+**** Quaternion "Difference"[四元数"差"]
+     通过四元数乘法和它的逆,我们可以计算出两个四元数的差,这里的"差"被定义为一个 *定向* 到另一个 *定向*
+的 *角位移*.也就是说,给定两个 *定向* $\vec{a},\vec{b}$,我们可以计算出从$\vec{a}$ 到 $\vec{b}$ 位移的量 $\vec{d}$.可以被表示为:
+     $\boldsymbol{da = b}$.
+     (记住四元数乘法的旋转顺序是从右到左的).
+     现在来求 $\vec{d}$.如果等式中的变量为 *标量*[scalar],那么直接除 $\vec{a}$ 就行了,但是四元数不能做除法.我们只能
+乘它.现在要考虑的就是如何消掉左边的$\vec{a}$,要想消掉四元数,就需要考虑得到它的单位四元数,于是我们就能想
+到要对 $\vec{a}$ 取逆,注意四元数乘法不满足交换律,有:
+     $\boldsymbol{(da)a^{-1} = ba^{-1}}$,
+     $\boldsymbol{d(aa^{-1}) = ba^{-1}}$,
+     $\boldsymbol{d[1 \ \vec{0}] = ba^{-1}}$,
+     $\boldsymbol{d = ba^{-1}}$..
+     现在我们有了一个能 _用四元数来求一个方位到另一个方位的 *位移* 的方法_.
+     在数学上,两个四元数的 *差* 更类似于 *除*,而不是真正的 *差* (减).(想想 $\boldsymbol{da = b}$ )
+**** Quaternion Dot Product[四元数的点积]
+     四元数的点积是定义了的.符号和定义都和向量的点积相似:
+     $\vec{q}_{1} \cdot \vec{q}_{2} = [w_{1} \ \vec{v}_{1}] \cdot [w_{2} \ \vec{v}_{2}]$
+                 $= w_{1}w_{2} + \vec{v}_{1} \cdot \vec{v}_{1}$
+                 $= [w_{1} (x_{1} \ y_{1} \ z_{1})] \cdot [w_{2} (x_{2} \ y_{2} \ z_{2})]$
+                 $= w_{1}w_{2} + x_{1}x_{2} + y_{1}y_{2} + z_{1}z_{2}$.
+     和向量点积一样,四元数点积的结果也是 *标量*[scalar].对 *单位四元数*[unit quaternions] $\hat{a},\hat{b}$ 来说,有
+$-1 \le \boldsymbol{a \cdot b} \le 1$.
+    虽然在游戏编程中,四元数点积的使用不太频繁,但是它却有一个有意思的几何解释.在前面关于四元数 *差*
+的章节中,我们知道了四元数差 $\boldsymbol{d = ba^{*}}$.(假定是单位四元数,四元数的共轭和逆一样).如果我们扩展乘法并
+且检查 $\vec{d}$ 的内容,会发现一个震惊的结果: $w = \boldsymbol{a \cdot b}$.
+    在几何上这意味着什么?想一想 *欧拉旋转定理*[Euler's rotation theorem]:通过选择一个特定的轴,我们可
+以只用旋转一次就让定向 $\vec{a}$ 旋转到定向 $\vec{b}$.这个唯一确定的轴和角度的信息就被塞到了 $\vec{d}$ 里.通过 $w$ 和 $\theta$ 的
+关系我们还可以知道: $\boldsymbol{a \cdot b} = cos(\theta/2)$.其中的 $\theta$ 表示的是从定向 $\vec{a}$ 到定向 $\vec{b}$ 所走过的角度.
+    虽然在游戏编程中点积不怎么常用,但它却是后面我们对 *slerp function* 进行分析的第一步.
+**** Quaternion log, exp, and Multiplication by a Scalar[四元数的对数,指数和标量乘法运算]
+     下面介绍四元数的三种运算, *对数*[logarithm], *指数*[exponential] 和 *标量乘法*.
+     首先,让我们通过 $\alpha$ 来重定义一个四元数:
+     $\alpha = \theta/2, \vec{q} = [cos\alpha \ \hat{n}sin\alpha]$.
+     则 $\vec{q}$ 的对数为:
+     $log \ \vec{q} = log([cos\alpha \ \hat{n}sin\alpha]) \equiv [0 \ \alpha\hat{n}]$.
+     这里的 $\equiv$ 表示恒等于.总之 $log\vec{q}$ 不是一个 *单位四元数*.
+     注意四元数取对数的运算与 *指数映射*[exponential map]的相似之处.
+
+     而指数函数却是用相反的方式来定义的.首先,我们定义一个四元数 $\vec{p}$,其中 $(\vec{p},\vec{p} = [0,\alpha\hat{n}],||\hat{n}|| = 1)$.
+     则指数函数被定义为:
+     $exp \ \vec{p} = exp ([0 \ \alpha\hat{n}]) \equiv [cos\alpha \ \hat{n}sin\alpha]$.
+     注意,根据定义,$exp \ \vec{p}$ 总是返回一个 *单位四元数*.
+     对任意标量a,存在:
+     $e^{lna} = a$.
+     同样,四元数的指数函数其实是被定义为四元数对数函数的 *逆*.有:
+     $exp(log \ \vec{q}) = \vec{q}$.
+     
+     最后,四元数与向量乘法,很简单,定义如下;
+     $k\vec{q} = k[w \ \vec{v}] = [kw \ k\vec{v}]$.     
+**** Quaternion Exponentiation[四元数的幂]
+     四元数可以 *求幂*[exponentiated],记作 $\boldsymbol{q^{t}}$,不要将其与 *指数函数*[exponential function] $exp \ \vec{q}$ 混淆.
+*指数函数*[exponential function]只接受一个参数:一个四元数.而四元数的 *幂*[exponentiation]有两个参数:
+四元数$\vec{q}$ 和一个标量 $t$.
+     四元数的幂和实数的幂表示的意义是相同的.对任何标量 $a$来说,除了 $a=0$,都满足 $a^{0}=1,a^{1}=a$.
+对指数 $t,t \in [0,1]$ 而言,$a^{t}$ 的值范围为 $[1,a]$.当$t$ 从0到1时,四元数的幂 $\boldsymbol{q}^{t}$ 值从 $[1,\vec{0}]$ 变到 $\boldsymbol{q}$.
+     四元数的幂的作用在于 _能让我们提取角位移的某个部分出来_.在大部分时候,幂不处于$[0,1]$ 时也能保持正
+常,除了一个问题.
+     举个例子,如果 $\boldsymbol{q}$ 表示绕x轴顺时针旋转30°,那么 $\boldsymbol{q}^{2}$ 就表示绕x轴顺时针旋转60°,$\boldsymbol{q}^{-1/3}$ 表示绕x轴顺时针
+旋转10°.值得注意的是它的逆 $\boldsymbol{q}^{-1}$ 仍然有效:表示绕x轴逆时针旋转30°.
+     真正的问题在于:四元数在表示 *角位移* 时使用的是最短的那条弧,这就意味着,当我们的目的时进行多次周
+期旋转时,四元数无法表示出来.比如按之前 $\boldsymbol{q}$ 的定义,$\boldsymbol{q}^{8}$ 应该表示的是绕x轴顺时针旋转240度,然而在四元数
+里结果却是绕逆时针绕x轴旋转120°.本质原因在于,四元数表示的只是旋转后的结果.总之要注意,在代数中成立的运算,
+比如 $(a^{s})^{t} = a^{st}$ ,在四元数中并不能成立.
+     而在某些情况下(最重要的一个例子是 *角速度* 的计算),我们确实需要将具体绕的圈数表示出来,这个时候
+四元数就无法满足要求了.在这种情况下,还是应该考虑之前我们讲的 *指数映射*[exponential map].
+     现在我们来看看四元数的幂是如何定义的:
+     $\boldsymbol{q}^{t} = exp (t \, log \, \boldsymbol{q})$.
+     想想标量的幂定义:
+     $a^{t} = e^{t \, ln \, a}$.
+     不难理解为什么当t从0变到1时 $\boldsymbol{q}^{t}$ 从 *单位四元数* $[1,\vec{0}]$ 变到 $\vec{q}$.注意, *对数运算*[log]本质上是将四元数
+转换成 *指数映射*.然后再与指数t进行标量乘法,结果是$t\theta$,最后, *指数运算*[exp] 撤销了 *对数运算*[log]的
+操作,从$t\theta$ 和 $\hat{n}$ 重新计算了 $w$ 和 $\vec{v}$.
+**** Quaternion Interpolation,a.k.a. Slerp[四元数插值-Slerp]
+     *slerp* 的完整含义是 *球面线性插值*[Spherical Linear interpolation],slerp的作用在于让我们能在两个
+定向之间进行平滑的过渡(插值),并且它避免了欧拉角插值所遇到的所有问题.
+     slerp 是一个 *三元运算符*[ternary operator],这意味着它接受三个 *操作数*[operands].前两个参数是我
+们希望进行插值的四元数,假设开始和结束的两个 *定向* 分别为 $\boldsymbol{q}_{0},\boldsymbol{q}_{1}$,第三个参数则设为变量$t,t \in [0,1]$.
+则slerp可表示为,$slerp(\boldsymbol{q}_{0},\boldsymbol{q}_{1},t)$,返回值是一个 *定向*,是两者之间的某个插值.
+     来看看我们能否根据当前的工具得到slerp的公式.先从最简单的插值公式开始:
+     $\triangle a = a_{1} - a_{0}$,
+     $lerp(a_{0},a_{1},t) = a_{0}+t \triangle a$.
+     标准的线性插值公式有三个步骤:
+     1.) 计算两个值之差.
+     2.) 取差的一部分.
+     3.) 在初始值上加上步骤 2).
+     我们可以在计算 *定向* 的插值上采用同样的方案.(但是要记住四元数乘法是从右向左读的).
+     1.) 计算两个值的差.
+        $\boldsymbol{\triangle q = q_{1}q_{0}^{-1}}$ (注意,是从$q_{0}$ 到 $q_{1}$).
+     2.) 取差的一部分.
+        $\boldsymbol{(\triangle q)^{t}}$.
+     3.) 在初始值上加上步骤 2).
+        $\boldsymbol{(\triangle q)^{t}q_{0}}$. (注意,从右到左读)
+     这样我们就得出了slerp(理论上的表达式):
+     $slerp(\boldsymbol{q_{0},q_{1},t}) = \boldsymbol{(q_{1}q_{0}^{-1})^{t} q_{0}}$.
+     在实际的编程中,我们用了一个等价但是效率却更高的公式.为了推导出这个替代公式,我们先将这些四元数
+放在了4D的 *欧几里得空间*[Euclidian space].由于我们感兴趣的四元数都是单位四元数,所以它们都"生活"
+在一个4D的 *超球面*[hypersphere]的平面上.(还记得slerp的名字吗: *spherical* linear interpolation).
+     我们可以将这个平面可视化(如下图).假设由两个2D的单位向量,$(\vec{v}_{0},\vec{v}_{1})$,我们希望计算两者的插值 $\vec{v}_{t}$,而
+$\omega$ 则是从 $\vec{v}_{0}$ 到 $\vec{v}_{1}$ 的弧所截的角.则 $\vec{v}_{t}$ 就是从 $\vec{v}_{0}$ 开始沿弧旋转角度 $t\omega$ 所得的结果.
+      [[file:image/Figure 8.11.png]]t 
+     我们可以将 $\vec{v}_{t}$ 看成是 $\vec{v}_{0}$ 和 $\vec{v}_{1}$ 的 *线性组合*[linear combination].换句话说,存在$k_{0},k_{1}$ 使得:
+      $\vec{v}_{t} = k_{0}\vec{v}_{0} + k_{1}\vec{v}_{1}$.
+     下图演示了具体操作.
+      [[file:image/Figure 8.12.png]]
+     观察上图,注意我们要求的量是 $k_{0},k_{1}$.
+      $sin\omega = \frac{sin t\omega}{k_{1}\vec{v}_{1}} = \frac{sin t\omega}{k_{1}}$
+      $k_{1} = \frac{sin t\omega}{sin \omega}$
+      $k_{0} = \frac{sin (1-t)\omega}{sin \omega}$
+     这样,$\vec{v}_{t}$ 可以被表示为:
+      $\vec{v}_{t} = k_{0}\vec{v}_{0} + k_{1}\vec{v}_{1} = \frac{sin (1-t)\omega}{sin \omega} \vec{v}_{0} + \frac{sin t\omega}{sin \omega}\vec{v}_{1}$.
+     现在我们可以得到slerp:
+      $slerp(\vec{q}_{0},\vec{q}_{1},t) = \frac{sin (1-t)\omega}{sin \omega} \vec{q}_{0} + \frac{sin t\omega}{sin \omega}\vec{q}_{1}$
+     这里的 $\omega$ 是两个四元数之间的角度,我们可以将四元数的 *点积* 看成是返回 $cos\omega$ .
+     这里还是有两个复杂的地方.
+     首先,虽然 $\vec{q},\vec{-q}$ 表示相同的 *定向*,但是作为slerp的参数时却可能计算出不同的结果,在2D和3D中不会出
+现这种状况,但是在4D的 *超球面*[hypersphere]中的 *拓扑学*[topology]却不同于传统的 *欧几里得空间*
+[Euclidian space].方法就是让 $\vec{q_{0}},\vec{q_{1}}$ 都取正,这样点积的结果就不会为负.
+     其次,就是当 $\omega$ 非常小的时候,会导致 $sin\omega$ 的值接近于0,这样在计算机进行除法的时候可能会造成错误.
+所以在这种情况下,我们选择改用普通的 *线性插值*[linear interpolation].
+**** Advantages and Disadvantages of Quaternions[四元数的优缺点]
+     四元数的优点:
+     - *平滑插值*.
+       Smooth interpolation.
+     - *快速连接和角位移求逆*.
+       Fast concatenation and inversion of angular displacements.
+     - *四元素/矩阵的互相转换非常迅速*.
+       Fast onversion to and from matrix form.
+     - *只包含四个数*.
+       Only four numbers.
+       
+       四元数的缺点:
+     - *略大于欧拉角*.
+       Slightly bigger than Euler angles.
+     - *存在无效值*.
+       Can become invalid.
+     - *对人来说不直观*.
+       Diffult for humans to work with.
+**** Quaternions as Complex Numbers[将四元数看作复数]
+     关于四元数,我们在这儿才开始讨论通常在其他书里最开始就会讨论的内容: _将四元数看作复数_.
+     如果你仅仅使用四元数来做旋转,完全可以跳过这个段落.如果你希望更进一步了解四元数,这个章节会很有
+意思.这节将会阐释四元数的两个特性:
+     1. 为什么是 $\theta/2$ 而不是 $\theta$.
+     2. 关于 $\boldsymbol{qvq^{-1}}$.
+     现在我们先来看一个有意思的东西,我们先将任意实数集嵌入一个 $2 \times 2$ 的矩阵,如下:
+     \begin{equation*}
+     a \equiv
+     \begin{bmatrix}
+     a & 0 \\
+     0 & a
+     \end{bmatrix}.
+     \end{equation*}
+
+     我们选择了一个 $2 \times 2$ 矩阵的子集并且建立了一个让这个矩阵与实数一一对应的映射.之所以建立这种映
+射是因为它保留了所有的代数定律:加法,减法,乘法:交换律,分配律,0的性质等(除法等价于乘法的逆).比如:
+\begin{equation*}
+\begin{align}
+\begin{bmatrix}
+a & 0 \\
+0 & a \\
+\end{bmatrix}+
+\begin{bmatrix}
+b & 0 \\
+0 & b \\
+\end{bmatrix}=
+\begin{bmatrix}
+a+b & 0 \\
+0 & a+b \\
+\end{bmatrix},
+\\
+\begin{bmatrix}
+a & 0 \\
+0 & a \\
+\end{bmatrix}-
+\begin{bmatrix}
+b & 0 \\
+0 & b \\
+\end{bmatrix}=
+\begin{bmatrix}
+a-b & 0 \\
+0 & a-b \\
+\end{bmatrix},
+\\
+\begin{bmatrix}
+a & 0 \\
+0 & a \\
+\end{bmatrix}
+\begin{bmatrix}
+b & 0 \\
+0 & b \\
+\end{bmatrix}=
+\begin{bmatrix}
+ab & 0 \\
+0 & ab \\
+\end{bmatrix}.
+\end{align}
+\end{equation*}
+     现在让我们看看能否建立一个关于复数的简单映射.如果你对复数有一点了解就会知道,复数对 $(a,b)$ 定义
+了数 $a+bi$,其中 $i$ 满足 $i^{2} = -1$.这里的 $i$ 的意思是 *imaginary*,表示这是一个 _想象中才存在的数字_.
+     关于复数的运算,我们只需要记住将所有 $i^{2}$ 都代换成 $-1$ 就行,比如:
+     $(a+bi) + (c+di) = (a+c)+(b+d)i$,
+     $(a+bi) - (c+di) = (a-c)+(b-d)i$,
+     $(a+bi)(c+di) = ac+adi+bci-bd =(ac-bd) + (ad+bc)i$.
+     现在,让我们来看看将复数加入进 $2 \times 2$ 矩阵后的效果:
+     \begin{equation*}
+     a+bi \equiv
+     \begin{bmatrix}
+     a & -b \\
+     b & a
+     \end{bmatrix}.
+     \end{equation*}
+
+     现在再来看看加入了复数后,矩阵运算是否仍然满足基本的定律:
+      \begin{equation*}
+     (a+bi) + (c+di)
+     \equiv
+     \begin{bmatrix}
+     a & -b \\
+     b & a
+     \end{bmatrix}
+     \begin{bmatrix}
+     c & -d \\
+     d & c
+     \end{bmatrix}=
+      \begin{bmatrix}
+     a+c & -(b+d) \\
+     b+d & a+c
+     \end{bmatrix}
+     \equiv
+     (a+c)+(b+d)i
+     \end{equation*}
+
+     \begin{equation*}
+     (a+bi) - (c+di)
+     \equiv
+     \begin{bmatrix}
+     a & -b \\
+     b & a
+     \end{bmatrix}
+     \begin{bmatrix}
+     c & -d \\
+     d & c
+     \end{bmatrix}=
+      \begin{bmatrix}
+     a-c & -(b-d) \\
+     b-d & a-c
+     \end{bmatrix}
+     \equiv
+     (a-c)+(b-d)i
+     \end{equation*}
+
+      \begin{equation*}
+     (a+bi)(c+di)
+     \equiv
+     \begin{bmatrix}
+     a & -b \\
+     b & a
+     \end{bmatrix}
+     \begin{bmatrix}
+     c & -d \\
+     d & c
+     \end{bmatrix}=
+      \begin{bmatrix}
+     ac-bd & -(ad+bc) \\
+     (ad+bc) & ac-bd
+     \end{bmatrix}
+     \equiv
+     (ac-bd)+(ad+bc)i
+     \end{equation*}
+     
+     再来看看 $i^{2}$ 用矩阵表示的情况:
+     \begin{equation*}
+      i^{2}
+     \equiv
+     \begin{bmatrix}
+     i & 0 \\
+     0 & i
+     \end{bmatrix}^{2}
+     =
+     \begin{bmatrix}
+     0 & -1 \\
+     1 & 0
+     \end{bmatrix}
+     \begin{bmatrix}
+     0 & -1 \\
+     1 & 0
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     -1 & 0 \\
+     0 & -1
+     \end{bmatrix}
+     \equiv
+     -1
+     \end{equation*}
+     在这里我们将 $[-1,0]$ 和$[1,0]$ 看成是坐标空间中的基向量,则我们会发现,与 $i$ 相乘的结果就是--作 $90^{\circ}$的
+旋转.
+     在这里我们还可以从线性代数的角度来考虑:将左边的矩阵看作要源坐标空间要变换的坐标,右边的矩阵为目
+标坐标空间的基向量.当目标空间的基向量为单位向量时,即:
+    \begin{equation*}
+    i = 
+    \begin{bmatrix}
+    1 & 0 \\
+    0 & 1\\
+    \end{bmatrix}.
+    \end{equation*}
+    矩阵与其相乘,坐标显然不会变化(因为它是单位矩阵).
+    这里再看看虚数 $i$,其矩阵形式为:
+    \begin{equation*}
+    i = 
+    \begin{bmatrix}
+    0 & -1 \\
+    1 & 0\\
+    \end{bmatrix}.
+    \end{equation*}
+    你会发现,它实际上就是单位向量旋转 $90^{\circ}$ 的结果.在这里,我们可以将左边的矩阵看作是输入的参数,右边的
+矩阵看作是某个函数,最后的结果就是函数接收了参数后的输出.
+    你可能会发现,线性代数的本质就是 _对基向量作线性变换_.
+    在这里,不是将 $i$ 看作是 $-1$ 的平方根,而是将复数 $a+bi$ 分别看作是 *实数*[real number] $a$ 控制范围和
+*虚数*[imaginary number] b控制范围的结合,而恰好两者的控制范围是互相垂直的.
+    更进一步,我们可以以此来表示任意范围内的角度的旋转:
+    \begin{equation*}
+    cos\theta + i \, sin\theta
+    \equiv
+    \begin{bmatrix}
+    cos\theta & -sin\theta \\
+    sin\theta & cos\theta
+    \end{bmatrix}.
+    \end{equation*}
+    观察复数的 *共轭*[conjugation]与矩阵转置相关的地方.注意四元数的 *共轭* 所表达的是 *角位移* 的 *逆*.
+还有一点在于,由于两者互相垂直,所以旋转矩阵的 *逆* 等同于它的 *转置*.
+    现在来考虑2D情况下向量的旋转.我们先将向量 $[x,y]$ 替换为 $x+iy$ ,再考虑复数的乘法实现旋转:
+    $(cos\theta + isin\theta)(x+iy) = xcos\theta +iycos\theta + ixsin\theta - ysin\theta$
+                                              $= (xcos\theta - ysin\theta) + i(xsin\theta+ycos\theta)$
+    同样,再看看矩阵乘法实现旋转:
+    \begin{equation*}
+    \begin{bmatrix}
+    cos\theta & -sin\theta \\
+    sin\theta & cos\theta
+    \end{bmatrix}
+    \begin{bmatrix}
+    x \\
+    y \\
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    xcos\theta - ysin\theta \\
+    xsin\theta + ycos\theta \\
+    \end{bmatrix}.
+    \end{equation*}
+    在我们进入3D之前,先对2D下的复数做一个总结:
+    复数符合实数相关的运算规则,由两部分组成:实数和虚数,两者各控制一个范围.通常被表示为 $a+bi$,同样
+可以被写作 $2 \times 2$ 的矩阵.当我们将复数看作矩阵时,乘以 $i$ 被看作是进行在几何上进行 $90^{\circ}$ 的旋转.而
+ $i^{2} = -1$ 则被看成是进行了 $180^{\circ}$ 的旋转.
+    更普遍的是,任意单位长度的复数都可以被写做 $cos\theta + isin\theta$ 且被解释为旋转 $\theta$ 度.
+
+    现在来考虑3D情况下向量的旋转,首先我们想到的就是在原有基础上再加入一个参数来从2D拓展到3D.假设
+3D下复数由三个部分组成,$a+bi+cj$,其中,$i^{2} = j^{2} = -1$.首先,我们不知道$ij$ 或者 $ji$ 的结果是什么,因
+为未曾定义不同虚数的乘法.
+    在这种情况下,我们必须要考虑将 $1,i,j$ 放入一个 $3 \times 3$ 的矩阵中.其中数字 $1$ 必然是3D单位矩阵 $\boldsymbol{I_{3}}$ 的映
+射,而数字 $-1$ 则代表,$\boldsymbol{-I_{3}}$.现在我们要考虑的问题是怎么找到一个存在 $i,j$ 的矩阵M使 $M^{2} = \boldsymbol{-I_{3}}$.
+    很明显我们知道$Det(\boldsymbol{-I_{3}}) = -1$,作为矩阵的根, $i,j$ 必须有一个值为 $-1$ 的行列式值(因为矩阵行列式
+的乘积等同于矩阵乘积的行列式),唯一可能的情况就是$i,j$ 包含复数.可惜并不存在这个满足条件的复数.所以,
+四元数应运而生.
+    四元数通过引入三个 *虚数*[imaginary numbers]来解决这个问题.等式如下:
+    $i^{2} = j^{2} = k^{2} = -1$
+
+    $ij = k, \ ji = -k$
+    $jk = i, \ kj = -i$
+    $ki = j, \ ik = -j$
+    这些四元数被记作 $[w,(x,y,z)]$,复数形式为 $w+xi+yj+zk$.
+    现在继续回到矩阵上.我们能否创造一个含有复数并符合以上规则的 $4 \times 4$ 矩阵?实数和虚数分别如何表示?
+    实数表示为:
+    \begin{equation*}
+    a \equiv
+    \begin{bmatrix}
+    a & 0 & 0 & 0 \\
+    0 & a & 0 & 0 \\
+    0 & 0 & a & 0 \\
+    0 & 0 & 0 & a \\
+    \end{bmatrix},
+    \end{equation*}
+    虚数表示为:
+    \begin{equation*}
+    i \equiv
+    \begin{bmatrix}
+    0 & 0 & 0 & 1 \\
+    0 & 0 & -1 & 0 \\
+    0 & 1 & 0 & 0 \\
+    -1 & 0 & 0 & 0 \\
+    \end{bmatrix},
+    j \equiv
+    \begin{bmatrix}
+    0 & 0 & 1 & 0 \\
+    0 & 0 & 0 & 1 \\
+    -1 & 0 & 0 & 0 \\
+    0 & -1 & 0 & 0 \\
+    \end{bmatrix},
+    k \equiv
+    \begin{bmatrix}
+    0 & -1 & 0 & 0 \\
+    1 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 1 \\
+    0 & 0 & -1 & 0 \\
+    \end{bmatrix}.
+    \end{equation*}
+    先暂时说服自己接受这个等式:),等下再解释.
+    组合上面的等式,我们可以将任何一个四元数以如下方式映射成 $4 \times 4$ 矩阵:
+    \begin{equation*}
+    w+xi+yj+zk \equiv
+    \begin{bmatrix}
+    w & -z & y & x \\
+    z & w & -x & y \\
+    -y & x & w & z \\
+    x & -y & -z & w \\
+    \end{bmatrix}.
+    \end{equation*}
+    观察这个矩阵,想想 *共轭* (令 $x,y,z$ 取负)和 *转置矩阵* 的相关性.
+    从前面关于 $i,j,k$ 的矩阵我们知道其中交换并让某些轴取了负,其实它做的这些与之前的旋转矩阵有一定
+的相似性.注意其中 $k$ 左上的 $2 \times 2$ 矩阵与2D时 $i$ 矩阵的相似性.换句话说,$k$ 的某部分具有绕z轴旋转$90^{\circ}$ 的
+性质.
+    类比于2D的情况,我们可以猜想 $cos\theta+ksin\theta$ 能表示为:绕z轴旋转$\theta$ .
+    在2D时,我们将向量$[x,y]$ 映射为 $x+yi$.
+    在3D中,让它与向量 $[1,0,0]$相乘.而考虑到 $[x,y,z]$ 被映射为复数 $0+xi+yj+zk$,那这里的向量
+$[1,0,0]$ 也就成了 $i$,则有:
+    $(cos\theta+ksin\theta)i = i cos\theta + ki sin\theta$
+                                  $= i cos\theta + j sin\theta$
+    实际上得到的结果是 $[cos\theta,sin\theta,0]$,正符合我们让x轴绕z轴旋转的目的.
+    现在我们来进行更复杂一点的尝试,取向量 $[1,0,1]$,在复数上则表示为 $i+k$:
+    $(cos\theta + ksin\theta)(i+k) = icos\theta + kcos\theta + kisin\theta + k^{2}sin\theta$
+                                             $= icos\theta+jsin\theta+kcos\theta-sin\theta$
+    得到的结果和向量无关,因为它含有一个非零的 $w$ 值.这个旋转在 *xy-plane* 工作的很好,但是 $z$ 部分并
+不正确.在 *zw-hyperplane* 进行了额外的旋转.看看 $(cos\theta+ksin\theta)$ 实际上在 $4 \times 4$ 矩阵中的样子:
+    \begin{equation*}
+    cos\theta + ksin\theta \equiv
+    \begin{bmatrix}
+    cos\theta & -sin\theta & 0 & 0 \\
+    sin\theta & cos\theta & 0 & 0 \\
+    0 & 0 & cos\theta & sin\theta  \\
+    0 & 0 & -sin\theta & cos\theta  \\
+    \end{bmatrix}.
+    \end{equation*}
+    很明显,我们想要的只是左上角的旋转矩阵,而右下角的最好消失.现在考虑互换位置:
+    互换前:
+     $(cos\theta + ksin\theta)(i+k) = icos\theta + kcos\theta + kisin\theta + k^{2}sin\theta$
+                                              $= icos\theta+jsin\theta+kcos\theta-sin\theta$
+     互换后:
+     $(i+k)(cos\theta + ksin\theta) = icos\theta + iksin\theta + kcos\theta + k^{2}sin\theta$
+                                              $= icos\theta-jsin\theta+kcos\theta-sin\theta$                   (1)
+     可以发现,唯一的区别就在于 *y-coordinate* 从正变成了负.好像还让事情更糟糕了...我们期望的关于绕
+*xz-plane* 的旋转却进行了逆运算,现在我们得到了一个 $-\theta$,同时我们不期望进行的旋转仍然存在.
+     再考虑作以下变换:
+      $(i+k)(cos\theta - ksin\theta) = icos\theta + jsin\theta + kcos\theta + sin\theta$.                  (2)
+      发现什么了没有?等式(1)给我们想要的结果,但是会附加一些额外的旋转,等式(2)的共轭让我们得到同样
+的旋转,只是方向相反,如果我们将两者组合起来就会发现,额外的旋转被消掉了,只剩下我们期望的旋转,区别
+在于进行了两次旋转,这个问题倒是容易解决,只要我们取 $\theta/2$ 就解决了.
+     总结如下:
+     首先,我们将向量$[x,y,z]$ 表示为四元数 $\vec{v} = [0,(x,y,z)]$,绕任意轴 $\hat{n}$ 旋转 $\theta$ 角的四元数被表示为:
+$\vec{q} = [cos\theta,sin\theta\hat{n}]$.
+     但是当进行乘法 $\boldsymbol{qv}$ 时,我们发现会导致 $w$ 的额外的旋转,而 $\boldsymbol{vq^{*}}$ 的额外部分分正好和 $\boldsymbol{qv}$的额外部分可
+以互相抵消掉.但是进行了两次旋转.
+     答案显然已经呼之欲出,只要我们令 $\vec{q} = [cos(\theta/2),sin(\theta/2)\hat{n}]$,再使用 $\boldsymbol{qvq^{*}}$ 来旋转,就解决了四元数
+的旋转问题.
+**** Summary of Quaternions[总结]
+     虽然这一节介绍了很多数学知识,但是其中大多数都没有必要死记硬背.真正关键的东西都总结在这里了:
+
+     - 本质上,一个四元数表示的是 _绕某个轴进行多少度旋转的角位移_.
+     - 一个四元数包含 _一个标量w_ 和 _一个向量v_.$w$ 代表的是旋转角$\theta$,而$\vec{v}$ 代表的则是旋转轴.
+       $w = cos(\theta/2), \ \ \vec{v} = \hat{n}sin(\theta/2)$.
+     - 每个3d中的 *角位移* 在四元数中都有两种表示方式,区别只是两个四元数互为负数.
+     - 单位四元数表示 _没有进行角位移_,记为 $[1,\vec{0}]$.
+     - 所有表示角位移的四元数都是 *单位四元数*[unit quaternions],模为1.
+     - 四元数的 *共轭*[conjugate]表示相反的 *角位移*,通过让四元数的向量部分取负得到.其逆则由公式:
+       $\boldsymbol{q^{-1} = \frac{q^{*}}{||q||}}$,
+       由于我们角位移时只考虑单位四元数,所以有: $\boldsymbol{q^{-1} = q^{*}}$.
+     - 四元数乘法可以让多个旋转合并成一个单独的角位移.
+     - 四元数的幂可以用来计算 *倍数角位移*[a multiple of an angular displacement].但是问题在于四元数
+       的结果总是取最短的弧,就算进行了多次角位移也无法表现出来.
+     - 四元数可以被解释成4d的复数.在数学和几何中我们都能感受到它的优美.
+*** 8.6 Comparison of Methods[几项对比]
+    现在我们来看看这几种不同 *定向* 的方式的对比:
+    - *欧拉角* 最符合人的直觉.在实际场景中采用欧拉角能给人带来极大的方便.这点是最不应该被低估的.
+    - 当涉及到向量的坐标空间转换时,最终一定会使用 *矩阵* 形式,虽然你也可以用其他形式来存储 *定向*.
+    - 对涉及到大量 *定向* 数据的存储时(e.g 动画数据), *欧拉角*, *指数映射*, *四元数* 都可以纳入考虑.
+      在这种情况下考虑的主要是节省内存.
+    - 如果想要一个稳定靠谱的 *插值* 函数,使用 *四元数* 几乎是唯一的选择.就算是使用其他格式,也应该
+      将其转换为四元数形式进行 *插值* 后再转换回去.使用 *指数映射* 来进行插值也是一个可选方案.
+    - 对于需要 *角速度*[angular velocity]的状况(或者要保存多次旋转),使用 *指数映射* 或者 *轴-角*.
+*** 8.7 Converting between Representations[各种形态的转换]
+    本章讨论的是如何让 *角位移* 在各种形态之间转换.
+**** 8.7.1 Converting Euler Angles to a Matrix[从欧拉角转换到矩阵]
+    欧拉角定义了三个旋转序列.这三个旋转都是关于 *主轴*[cardinal axis] 的简单旋转.我们可以计算这个通
+过连接多个旋转矩阵得到总角位移大小的矩阵.这项练习在很多书和网站里都有介绍.如果你用过这些参考资料,
+可能会好奇:如果我用这个矩阵乘以一个向量会发生什么?
+    之所以你会疑惑,是因为这里其实有两个不同的矩阵(当然其实两个矩阵互为转置),而通常这些资料里都不会
+告诉你的是,这个矩阵是从 *object space* 旋转到 *upright space* 还是反之.
+    考虑一个典型的情况,就是一个物体在实时移动.假设每个物体的 *定向* 都作为一个状态变量表示为欧拉角
+的形式.其中一个物体是摄像机,而现在由于某种原因我们要将物体的坐标系传给 *图形接口*[graphics API].问
+题就这样产生了:我们用来 _描述物体 *定向* 的矩阵_ 和用来 _描述摄像机 *定向* 的矩阵_ 不是同一个矩阵.
+    *模型变换*[model transform]矩阵是将向量 _从 *object space* 转换到 *world space* 的矩阵_.
+    *视角变换*[view transform]矩阵是将向量 _从 *world space* 转换到 camera's object space的矩阵_.
+    一个是 *object-to-upright* 的矩阵,一个是 *upright-to-object* 的矩阵.
+    让我们先来实现 *object-to-upright*,它的效果是将 *点*[points] 从 *object space* 旋转到 *upright space*.
+我们使用 5.1.2节的旋转矩阵来实现(它参考的是3.3.1节的 *动态变换*[active transformation]的视角).想象一
+个存在于物体上的任意一点,物体始于 *标准定向* ,在这个时候 *body coordinates* 和 *upright coordinates*
+重合在一起.我们在这个物体上应用欧拉旋转,直到有外界的旋转之前,这个点都在这个空间内移动,这就说明了
+这个物体位于能被 *欧拉角* 描述的 *定向* 里.至始至终,这些点都落在了 *upright coordinates* 内的任意 
+*定向* 上.
+     基础的旋转矩阵都是围绕 *主轴*[cardinal axis]旋转的.在欧拉角旋转中,旋转轴是 *body axes*,(在第一次
+旋转后)可以是任意方向.所以说实际上我们不是绕 *body axes* 旋转,而是做 *fixed-axis* 旋转,其中的旋转是
+围绕 *upright axes* 的.这意味着我们的旋转顺序是反的: _bank(roll) -> pitch -> heading(yaw)_.
+     简而言之,一个 *object-to-upright* 旋转矩阵就是由三个旋转矩阵复合成的:
+
+     $\boldsymbol{M}_{object \rightarrow upright} = \boldsymbol{BPH}$,
+     
+     其中的 $\boldsymbol{(B,P,H)}$ 就是旋转矩阵 $bank,pitch,heading$,三个矩阵分别绕z轴,x轴,y轴旋转.我们知道
+怎么用矩阵来分别描述这三个旋转:
+     \begin{equation*}
+     \begin{align*}
+     &\boldsymbol{B=R_{z}}(b)=
+     \begin{bmatrix}
+     cosb & sinb & 0 \\
+     -sinb & cosb & 0 \\
+     0 & 0 & 1
+     \end{bmatrix},
+     \\&
+     \boldsymbol{P=R_{x}}(p)=
+     \begin{bmatrix}
+     1 & 0 & 0 \\
+     0 & cosp & sinp \\
+     0 & -sinb & cosp \\
+     \end{bmatrix},
+     \\&
+     \boldsymbol{P=R_{y}}(h)=
+     \begin{bmatrix}
+     cosh & 0 & -sinh \\
+     0 & 1 & 0\\
+     sinh & 0 & cosh\\
+     \end{bmatrix}.
+     \end{align*}
+     \end{equation*}
+     将它们复合到一起,我们可以得到 *object-to-upright* 的欧拉角旋转矩阵:
+     \begin{equation*}
+     \boldsymbol{M}_{object \rightarrow upright} = \boldsymbol{BPH}=
+     \begin{bmatrix}
+     ch\,cb + sh \,sp\,sb & sb\,cp & -sh\,cb+ch\,sp\,sb \\
+     -ch\,sb + sh\,sp\,sb & cb\,cp & sb\,sh + ch\,sp\,cb \\
+     sh\,cp & -sp & ch\,cp\\
+     \end{bmatrix}.
+     \end{equation*}
+     其中,
+     $ch = cosh, \quad cp =cosp, \quad cb=cosb$
+     $sh = sinh, \quad sp=sinp, \quad sb=sinb$
+     对于那些从 *upright space* 到 *object space* 的向量,我们使用 *object-to-upright* 矩阵的 *逆*.(记住,
+由于旋转矩阵是 *正交* 的,旋转矩阵的 *逆* 就等于它的 *转置*).
+     
+     而对于 *upright-to-object* ,我们要做的就是 *撤销*[undoing] *固定轴旋转*[the fixed-axis rotation].具
+体顺序为: _undo(heading) -> undo(pitch) -> undo(bank)_.
+     同之前一样,当物体(和它包含的点)进入空间内,我们就开始采用 *upright coordinates* 来描述它们了.唯一
+的区别就在于我们一开始使用 *upright coordinates* ,在完成了最后的旋转后,物体的 *body axes* 和 *upright*-
+*axis* 重合在一起了,而结果是一个 *object-space coordinates*.
+     *upright-to-object* 的欧拉角旋转矩阵:
+     \begin{equation*}
+     \begin{align*}
+     \boldsymbol{M}_{upright \rightarrow object} 
+     &= \boldsymbol{H^{-1}P^{-1}B^{-1}}
+     =\boldsymbol{R}_{y}(-h)\boldsymbol{R}_{x}(-p)\boldsymbol{R}_{z}(-b)
+     \\&=
+     \begin{bmatrix}
+     ch\,cb + sh \,sp\,sb & -ch\,sb+sh\,sp\,cb & sh\,cp\\
+     sb\,cp & cb\,cp & -sp\\
+     -sh\,cb + ch\,sp\,sb & sb\,sh + ch\,sp\,cb & ch\,cp \\
+     \end{bmatrix}.
+     \end{align*}
+     \end{equation*}
+     *object-to-upright* 的欧拉角旋转矩阵:
+     \begin{equation*}
+     \boldsymbol{M}_{object \rightarrow upright} = \boldsymbol{BPH}=
+     \begin{bmatrix}
+     ch\,cb + sh \,sp\,sb & sb\,cp & -sh\,cb+ch\,sp\,sb \\
+     -ch\,sb + sh\,sp\,sb & cb\,cp & sb\,sh + ch\,sp\,cb \\
+     sh\,cp & -sp & ch\,cp\\
+     \end{bmatrix}.
+     \end{equation*}
+     仔细看看就会发现两者互为转置矩阵.
+**** 8.7.2 Converting Matrix to Euler Angles[从矩阵转换到欧拉角]
+     将一个 *角位移* 从矩阵转换到欧拉角需要考虑一些情况:
+     - 必须要先弄清楚具体的矩阵,是 *object-to-upright* 还是 *upright-to-object*.
+     - 要考虑欧拉角存在 *别名*[aliasing].在转换的时候需要返回 *标准欧拉角*[canonical Euler angles].
+     - 存在 *病态*[ill-formed]矩阵,我们必须要允许浮点数精度问题.
+     考虑上述问题后,我们先来回顾下上一节得出的转换矩阵:
+     \begin{equation*}
+     \boldsymbol{M}_{object \rightarrow upright} = \boldsymbol{BPH}=
+     \begin{bmatrix}
+     ch\,cb + sh \,sp\,sb & sb\,cp & -sh\,cb+ch\,sp\,sb \\
+     -ch\,sb + sh\,sp\,sb & cb\,cp & sb\,sh + ch\,sp\,cb \\
+     sh\,cp & -sp & ch\,cp\\
+     \end{bmatrix}.
+     \end{equation*}
+     观察矩阵,首先我们就可以得到 $p$,由矩阵元素 $m_{32}$:
+     $m_{32} = -sinp, \quad -m_{32}=sinp, \quad arcsin(-m_{32}) = p$.
+     由于现在我们已经知道 $p$ 的度数了,再次观察矩阵,通过$cosp$ 可以得到:
+     $m_{31} = sinh \, cosp, \quad m_{33} = cosh \, cosp$,
+     $m_{31}/cosp = sinh, \quad m_{33}/cosp = cosh$.
+     $h = atan2(sinh,cosh) = atan2(m_{31},m_{33})$.
+     同理可得 $b$,由矩阵元素 $m_{12},m_{22}$:
+     $m_{12} = sinb \, cosp, \quad m_{12}/cosp = sinb$;
+     $m_{22} = cosb \, cosp, \quad m_{22}/cosp = cosb;$
+     $b=atan2(sinb,cosb) = atan2(m12,m22)$.
+     这里要考虑的一种情况是 $cosp = 0$,由于除数不能为0,注意当 $cosp = 0$时,$p=\pm90^{\circ}$,这意味着我们只
+能直直向上看或者向下看,这就是欧拉角的 *万向锁* 问题,其中 *heading*[偏航角] 和 *bank*[倾斜角]同时绕
+垂直轴旋转.在这种情况下,我们将所有绕垂直轴的旋转都指定为 *heading*,而将 *bank* 设为0.如下:
+     $cosp=0, \qquad b=0, \qquad sinb=0, \qquad cosb=1$,
+     然后将其代入矩阵:
+     \begin{equation*}
+     \begin{bmatrix}
+     ch\,cb + sh \,sp\,sb & sb\,cp & -sh\,cb+ch\,sp\,sb \\
+     -ch\,sb + sh\,sp\,sb & cb\,cp & sb\,sh + ch\,sp\,cb \\
+     sh\,cp & -sp & ch\,cp\\
+     \end{bmatrix}=
+     \begin{bmatrix}
+     cosh & 0 & -sinh \\
+     sinh\,sinp & 0 & cosh\,sinp \\
+     0 & -sinp & 0 
+     \end{bmatrix}.
+     \end{equation*}
+     观察矩阵,我们可以通过 $m_{13}$ 和 $m_{11}$ 来求得 $h$.
+**** 8.7.3 Converting a Quaternion to a Matrix[从四元数转换到矩阵]
 * Footnotes
 
 [fn:singularity] 在数学中,表示 _数学物件中无法处理的点_.
