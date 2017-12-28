@@ -1,4 +1,16 @@
 * UE4 Daily                                                        :UE4:
-** DONE 使用C++创建character并搞清楚controller与character的关系
-  CLOSED: [2017-10-02 周一 15:18] SCHEDULED: <2017-09-28 周四 23:59>
-  
+** 文章:Collision Filtering
+   *collide*[碰撞]
+{  *block*[阻挡]
+   *overlap*[穿过]
+   *ignoring*[忽略]  }
+
+   *channel* 每种类型都有所属的 *object channel*,而它们同样也要对其他的 *trace channel* 或者 
+*object channel*  做出response(block,overlap,ignore).
+{  *trace channels*
+   *object channels*  }
+   
+{   *query*
+    *response* }
+   [[file:UImage/UFigure1.png]]
+    

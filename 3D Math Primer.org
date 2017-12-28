@@ -2342,16 +2342,17 @@ $r,h$ 还是同之前定义一样,而 *pitch* 则添加了两个限制条件.
     - *角位移*[angular displacement]
     - *旋转*[rotation]
     直观上讲,一个物体的 *定向* 就是告诉我们物体所面对的 *方向*.然而, *定向* 和 *方向* 并不能划等号.
-    举例来说,一个向量有 *定向*,却没有 *定向*.区别在于当向量指向一个方向时,你 *扭转*[twist]它,它不会
+    举例来说,一个向量有 *方向*,却没有 *定向*.区别在于当向量指向一个方向时,你 *扭转*[twist]它,它不会
 发生任何改变.因为它没有 *厚度*[thickness] 或者是 *宽度*[dimension].
     相反的是, 假设一个实际物体,比如 *喷气式飞机*[jet],面对一个方向.如果你 *扭转*[twist] 一个喷气式飞机,
 它的 *定向* 就会发生改变.
     最基本的区别在于确定一个 *方向* 可以只用 _两个参数_ (想想上一章的 *球型坐标*),而 *定向* 却需要 
 _至少三个参数_,其中一个参数就是 *欧拉角*[Euler angle].
     在前面我们就知道了用绝对坐标来描述物体位置是不可能的,只有在有参考系时才能确定物体位置.
-    如同我们描述某个
+    如同我们描述某个 
     *位置*[position],
     实质上是在描述从某个给定参考点(比如原点)到已知点的 *位移*[translation].
+
     *定向*[orientation],
     其实就是已知定向(通常被叫做 *单位定向*[identity orientation] 或者 *源定向*[home orientation])的
 *旋转* 来描述的.
@@ -3489,6 +3490,164 @@ $\vec{q} = [cos\theta,sin\theta\hat{n}]$.
      \end{equation*}
      观察矩阵,我们可以通过 $m_{13}$ 和 $m_{11}$ 来求得 $h$.
 **** 8.7.3 Converting a Quaternion to a Matrix[从四元数转换到矩阵]
+     1.) 四元数的格式为: $\vec{q} = (w,\vec{v})$ ,类似于 *轴角对*,也即是说四元数中进行旋转的 *轴* 和 *角度* 已经
+确定了.
+     2.) 在之前章节中我们学习了 _如何绕 *任意轴* 旋转 *任意角* 的方法_,矩阵如下:
+     \begin{bmatrix}
+     n_{x}^{2}(1-cos\theta)+cos\theta & n_{x}n_{y}(1-cos\theta)+n_{z}sin\theta & n_{x}n_{z}(1-cos\theta)-n_{y}sin\theta \\
+     n_{x}n_{y}(1-cos\theta)-n_{z}sin\theta & n_{y}^{2}(1-cos\theta)+cos\theta & n_{y}n_{z}(1-cos\theta)+n_{x}sin\theta \\
+     n_{x}n_{z}(1-cos\theta)+n_{y}sin\theta & n_{y}n_{z}(1-cos\theta)-n_{x}sin\theta & n_{z}^{2}(1-cos\theta)+cos\theta \\
+     \end{bmatrix}
+     3.) 四元数中的部分量:
+     $w = cos(\theta/2), \, x = n_{x}sin(\theta/2), \, y = n_{y}sin(\theta/2), \, z = n_{z}sin(\theta/2)$.
+     通过分解计算 $m_{11},m_{12}$ ...,我们可以得到一个 _由四元数构成的旋转矩阵_:
+     \begin{bmatrix}
+     1-2y^{2}-2z^{2} & 2xy+2wz & 2xz-2wy \\
+     2xxy - 2wz & 1-2x^{2}-2z^{2} & 2yz+2wx \\
+     2xz+2wy & 2yz-2wx & 1-2x^{2}-2y^{2}
+     \end{bmatrix}
+**** 8.7.4 Converting a Matrix to a Quaternion[从矩阵转换到四元数]
+     由8.7.3节得到的四元数转换矩阵 $M$,我们可以反过来求四元数.
+      \begin{bmatrix}
+     1-2y^{2}-2z^{2} & 2xy+2wz & 2xz-2wy \\
+     2xxy - 2wz & 1-2x^{2}-2z^{2} & 2yz+2wx \\
+     2xz+2wy & 2yz-2wx & 1-2x^{2}-2y^{2}
+     \end{bmatrix}
+     检查其中的对角元素,可得:
+     $tr(M) = m_{11} + m_{22} + m_{33}$
+                  $= (1-2y^{2} - 2z^{2}) + (1-2x^{2} - 2z^{2}) + (1-2x^{2} - 2y^{2})$
+                  $= 3-4(x^{2}+y^{2}+z^{2})$
+                  $= 3-4(1-w^{2})$
+                  $= 4w^{2} -1$,
+     由此可得:
+     $w = \frac{\sqrt{m_{11}+m_{22}+m_{33}+1}}{2}$.
+     通过改变$m_{11},m_{22},m_{33}$ 的正负号来消元,我们可以分别得到另外三个数 $x,y,z$.
+     $x = \frac{\sqrt{m_{11}-m_{22}-m_{33}+1}}{2}$.
+     $y = \frac{\sqrt{-m_{11}+m_{22}-m_{33}+1}}{2}$.
+     $z = \frac{\sqrt{-m_{11}-m_{22}+m_{33}+1}}{2}$.
+     1.)由于$x,y,z$ 总不为负, 2.)由于 $\vec{q},\vec{-q}$ 代表相同 *定向*.所以我们选取非负根作为4个分量中的一个,仍
+能得到正确的四元数.
+**** 8.7.5 Converting Euler Angles to a Quaternion[从欧拉角转换到四元数]
+     四元数形式为 $\vec{q} = (w,(x,y,z))$,欧拉角为 $(h,p,b)$.
+     联想欧拉角与矩阵的转换,我们可以先分别将欧拉角的三个旋转表示出来:
+     \begin{equation*}
+     h =
+     \begin{bmatrix}
+     cos(h/2) \\
+     \begin{pmatrix}
+     0 \\
+     sin(h/2) \\
+     0
+     \end{pmatrix}
+     \end{bmatrix},
+     p =
+     \begin{bmatrix}
+     cos(p/2) \\
+     \begin{pmatrix}
+     sin(p/2) \\
+     0 \\
+     0
+     \end{pmatrix}
+     \end{bmatrix},
+     b =
+     \begin{bmatrix}
+     cos(b/2) \\
+     \begin{pmatrix}
+     0 \\
+     0 \\
+     sin(b/2) \\
+     \end{pmatrix}
+     \end{bmatrix}.
+     \end{equation*}
+     考虑到 1.)虽然同时存在 *object-to-upright* 和 *upright-to-object* 两个四元数, 2.)但是两者 *共轭*.
+     所以只需要推导 *object-to-upright* 的四元数就行.
+     $\boldsymbol{q}_{object \rightarrow upright}(h,p,b) = \boldsymbol{hpb} =$
+     \begin{equation*}
+     \begin{align*}
+     &=
+     \begin{bmatrix}
+     cos(h/2) \\
+     \begin{pmatrix}
+     0 \\
+     sin(h/2) \\
+     0
+     \end{pmatrix}
+     \end{bmatrix}
+     \begin{bmatrix}
+     cos(p/2) \\
+     \begin{pmatrix}
+     sin(p/2) \\
+     0 \\
+     0
+     \end{pmatrix}
+     \end{bmatrix}
+     \begin{bmatrix}
+     cos(b/2) \\
+     \begin{pmatrix}
+     0 \\
+     0 \\
+     sin(b/2) \\
+     \end{pmatrix}
+     \end{bmatrix}
+     \\&=
+     \begin{bmatrix}
+     cos(h/2)cos(p/2) \\
+     \begin{pmatrix}
+     cos(h/2)sin(p/2) \\
+     sin(h/2)cos(p/2) \\
+     -sin(h/2)sin(p/2) \\
+     \end{pmatrix}
+     \end{bmatrix}
+     \begin{bmatrix}
+     cos(b/2) \\
+     \begin{pmatrix}
+     0 \\
+     0 \\
+     sin(b/2) \\
+     \end{pmatrix}
+     \end{bmatrix}
+     \\&=
+     \begin{bmatrix}
+     cos(h/2)cos(p/2)cos(b/2) + sin(h/2)sin(p/2)sin(b/2) \\
+     \begin{pmatrix}
+     cos(h/2)sin(p/2)cos(b/2) + sin(h/2)cos(p/2)sin(b/2) \\
+     sin(h/2)cos(p/2)cos(b/2) - cos(h/2)sin(p/2)sin(b/2) \\
+     cos(h/2)cos(p/2)sin(b/2) - sin(h/2)sin(p/2)cos(b/2) \\
+     \end{pmatrix}
+     \end{bmatrix}
+     \end{align*}
+     \end{equation*}
+     而 *upright-to-object* 的四元数由共轭可得:
+     $\boldsymbol{q}_{upright \rightarrow object}(h,p,b) = \boldsymbol{q}_{object \rightarrow upright}(h,p,b)^{*}$
+     \begin{equation*}
+     \begin{align*}
+     \begin{bmatrix}
+     cos(h/2)cos(p/2)cos(b/2) + sin(h/2)sin(p/2)sin(b/2) \\
+     \begin{pmatrix}
+     cos(h/2)sin(p/2)cos(b/2) + sin(h/2)cos(p/2)sin(b/2) \\
+     sin(h/2)cos(p/2)cos(b/2) - cos(h/2)sin(p/2)sin(b/2) \\
+     cos(h/2)cos(p/2)sin(b/2) - sin(h/2)sin(p/2)cos(b/2) \\
+     \end{pmatrix}
+     \end{bmatrix}
+     \end{align*}
+     \end{equation*}
+**** 8.7.6 Converting a Quaternion to Euler Angles[从四元数转换到欧拉角]
+     参考8.7.2节中的 $p,h,b$ 的表示:
+     \begin{equation*}
+     \begin{align*}
+     &p = arcsin(-m_{32}) \\
+     &h =
+     \begin{cases}
+     atan2(m_{31},m_{33})  & \mbox{if} cosp \neq 0,\\
+     atan2(_m_{13},m_{11}) & \mbox{otherwise}
+     \end{cases}
+     &b =
+     \begin{cases}
+     atan2(m_{12},m_{22})  & \mbox{if} cosp \neq 0,\\
+     0 & \mbox{otherwise}
+     \end{cases}
+     \end{align*} 
+     \end{equation*}
 * Footnotes
 
 [fn:singularity] 在数学中,表示 _数学物件中无法处理的点_.
