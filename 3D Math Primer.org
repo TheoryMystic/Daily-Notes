@@ -1,4 +1,4 @@
-* TODO [#A] 3D Math Primer :GameMath:
+* TODO [#A] 3D Math Primer
 ** Chapter 1 Cartesian Coordinate Systems[笛卡尔坐标系]
    3D math is all about measuring *locations*, *distances* and *angles* precisely and
    mathematically in 3D space.
@@ -3675,7 +3675,7 @@ $\vec{q} = [cos\theta,sin\theta\hat{n}]$.
      \end{cases}
      \end{align*} 
      \end{equation*}
-** Chapter 9 Geometric Primitives
+** Chapter 9 Geometric Primitives[几何图元]
 *** 9.1 Representation Techiniques[表现技巧]
     A. *implicit form*[隐式]
 
@@ -3930,8 +3930,144 @@ $\vec{q} = [cos\theta,sin\theta\hat{n}]$.
 **** Calculating Barycentric Coordinates[计算重心坐标]
      [[file:image/Figure 9.17.png]]
      *重心坐标* --> *笛卡尔坐标*
-     上图的参数分别为:
-     顶点 $\boldsymbol{v_{1},v_{2},v_{3}}$,任意点 $\boldsymbol{p}$,被$\boldsymbol{p}$ 切分出来的三角形 $T_{1},T_{2},T_{3}$.
+    上图的参数分别为:
+     顶点 $\boldsymbol{v_{1},v_{2},v_{3}}$,任意点 $\boldsymbol{p}$,被$\boldsymbol{p}$ 切分出来的三角形 $T_{1},T_{2},T_{3}$.有:
+
+     $b_{1}x_{1} + b_{2}x_{2} + b_{3}x_{3}  = p_{x}$,
+     $b_{1}y_{1} + b_{2}y_{2} + b_{3}y_{3}  = p_{x}$,
+     $b_{1} + b_{2} + b_{3} = 1$.
+
+    再根据上式求出重心坐标中的 $b_{1},b_{2},b_{3}$.
+
+     $b_{1} = \frac{(p_{y} - y_{3}) (x_{2} - x_{3}) + (y_{2} - y_{3}) (x_{3} - p_{x})}{(y_{1} - y_{3}) (x_{2} - x_{3}) + (y_{2} - y_{3}) (x_{3} - x_{1})}$,
+
+     $b_{2} = \frac{(p_{y} - y_{1}) (x_{3} - x_{1}) + (y_{3} - y_{1}) (x_{1} - p_{x})}{(y_{1} - y_{3}) (x_{2} - x_{3}) + (y_{2} - y_{3}) (x_{3} - x_{1})}$,
+
+     $b_{3} = \frac{(p_{y} - y_{2}) (x_{1} - x_{2}) + (y_{1} - y_{2}) (x_{2} - p_{x})}{(y_{1} - y_{3}) (x_{2} - x_{3}) + (y_{2} - y_{3}) (x_{3} - x_{1})}$.
+     
+     _interpreting barycentric coordinates as ratio of areas_
+       $\boldsymbol{A} = \frac{y_{1}(x_{2}-x_{3}) + y_{2}(x_{3}-x_{1}) + y_{3}(x_{1}-x_{2})}{2}$
+            $= \frac{(y_{1}-y_{3})(x_{2}-x_{3}) + (y_{2}-y_{3})(x_{3}-x_{1}) + (y_{3}-y_{3})(x_{1}-x_{2})}{2}$
+            $= \frac{(y_{1}-y_{3})(x_{2}-x_{3}) + (y_{2}-y_{3})(x_{3}-x_{1})}{2}$.
+     观察上面两个式子可以发现,$b_{i}$ 的分母等于2A,换句话说,有:
+
+     $b_{1} = A(T_{1})/A(T), \quad b_{2} = A(T_{2})/A(T), \quad b_{3} = A(T_{3})/A(T)$.
+
+     其中两种情况值得关注.
+     一是 p 在三角形外面,其实不影响,因为最终得到的面积是有符号数.
+     一是三个点是共线的,这样会造成分母为0,无法进行计算.
+     
+     前面讨论的是在2D情况下的重心坐标,现在要考虑3D情况下的坐标.
+     一种方法是使用向量的 *叉积*[cross product].但是问题在于向量的叉积的 *大小*[magnitude]不能为负,
+这样就导致点在三角形外的情况不正常.解决方法如下:
+     假设存在一个向量 $\boldsymbol{c}$,它是一个三角形的两个 *edge vectors* 的叉积结果.而 $\hat{n}$ 为垂直于平面的单位向量.
+     $\boldsymbol{c \cdot \hat{n} = ||c|| ||\hat{n}|| cos \theta}$
+                $= \boldsymbol{||c||} ||1|| (\pm 1)$
+                $= \pm \boldsymbol{||c||}$
+     [[file:image/Figure 9.18.png]]
+     从上图可知,每个顶点都有一个从 $\boldsymbol{v_{i}}$ 到 $\boldsymbol{p}$ 的向量,被叫做 $\boldsymbol{d_{i}}$.
+     $\boldsymbol{e_{1} = v_{3} - v_{2}, \quad e_{2} = v_{1} - v_{3}, \quad e_{3} = v_{2} - v_{1}}$,
+     $\boldsymbol{d_{1} = p - v_{1}, \quad d_{2} = p - v_{2}, \quad d_{3} = p - v_{3}}$.
+     
+     _surface normal[平面法向量]_
+     $\boldsymbol{ \hat{n} = \frac {e_{1} \times e_{2}} {||e_{1} \times e_{2}||} }$.
+
+     由此,可得各个三角形面积为:
+     $A(T) = \boldsymbol{((e_{1} \times e_{2}) \cdot \hat{n})/2}$,
+     $A(T_{1}) = \boldsymbol{((e_{1} \times d_{3}) \cdot \hat{n})/2}$,
+     $A(T_{2}) = \boldsymbol{((e_{2} \times d_{1}) \cdot \hat{n})/2}$,
+     $A(T_{3}) = \boldsymbol{((e_{3} \times d_{2}) \cdot \hat{n})/2}$,
+     
+     既然各个三角形面积已经得到,则3D下的 *重心坐标* 可表示为:
+     $b_{1} = A(T_{1})/A(T) = \boldsymbol{ \frac {((e_{1} \times d_{3}) \cdot \hat{n})} {((e_{1} \times e_{2}) \cdot \hat{n})}}$,
+     $b_{2} = A(T_{2})/A(T) = \boldsymbol{ \frac {((e_{2} \times d_{1}) \cdot \hat{n})} {((e_{1} \times e_{2}) \cdot \hat{n})}}$,
+     $b_{3} = A(T_{3})/A(T) = \boldsymbol{ \frac {((e_{3} \times d_{2}) \cdot \hat{n})} {((e_{1} \times e_{2}) \cdot \hat{n})}}$.
+**** Special Points[特殊点]
+     *center of gravity*[重心] --> *centroid*[几何中心] --> 中线的交点.
+     [[file:image/Figure 9.19.png]]
+     _The center of gravity_
+     $\boldsymbol{c}_{Grav} = \frac{\boldsymbol{v_{1}+ v_{2}+ v_{3}}}{3}$.
+     _The Barycentric coordinates_
+     $(\frac{1}{3},\frac{1}{3},\frac{1}{3})$.
+     
+     *incenter*[内切圆心] --> 角平分线的交点.  --> 用于寻找三角形三边的切线.
+     [[file:image/Figure 9.20.png]]
+     _the incenter_
+     $\boldsymbol{c}_{In} = \frac{ l_{1}\vec{v}_{1} + l_{2}\vec{v}_{2} + l_{3}\vec{v}_{3} }{p}, \quad p=l_{1}+l_{2}+l_{3}$.
+     _radius of the inscribed circle_
+     $r_{In} = \frac{A}{p}$. A-->Area[面积]
+
+     *circumcenter*[外接圆心] --> 与三个顶点等距离的点,垂直等分三条边. -->用于寻找同时通过三个点的圆.
+     [[file:image/Figure 9.21.png]]
+     _define the intermediate values_
+     $d_{1} = \boldsymbol{-e_{2} \cdot e_{3}}$,
+     $d_{2} = \boldsymbol{-e_{3} \cdot e_{1}}$,
+     $d_{3} = \boldsymbol{-e_{1} \cdot e_{2}}$,
+     $c_{1} = d_{2}d_{3}$,
+     $c_{2} = d_{3}d_{1}$,
+     $c_{3} = d_{1}d_{2}$,
+     $c = c_{1}+ c_{2}+ c_{3}$.
+
+     _the barycentric coordinates for the circumcenter_
+     $(\frac{c_{2}+c_{3}}{2c},\frac{c_{3}+c_{1}}{2c},\frac{c_{1}+c_{2}}{2c})$;
+
+     _the circumcenter_
+     $\boldsymbol{c}_{Circ} = \frac{(c_{2}+c_{3})\vec{v}_{1} + (c_{3}+c_{1})\vec{v}_{2} + (c_{1}+c_{2})\vec{v}_{3}}{2c}$.
+     _the circumradius_
+     $r_{Circ} = \frac{\sqrt{(d_{1}+d_{2})(d_{2}+d_{3})(d_{3}+d_{1}) /c }}{2}$.
+*** 9.7 Polygons[多边形]
+    Define : A polygon is _a flat object made up of vertices and edges_.
+**** Simple versus Complex Polygons[简单多边形 vs 复杂多边形]
+     Simple polygon --> 没有 *洞*[hole] 的多边形.
+     Complex polygon --> 中间有 *洞*[hole] 的多边形.
+     [[file:image/Figure 9.22.png]]
+     
+     Complex polygon --> Simple polygon
+     添加 *seam edges*[缝合线?],如图:
+     [[file:image/Figure 9.23.png]]
+     
+     Self-intersecting polygons[自交叉多边形]:
+     [[file:image/Figure 9.24.png]]
+**** Convex versus Concave Polygons[凸多边形 vs 凹多边形]
+     *Non-self-intersecting*[非交叉]的简单多边形又能分为:
+     1.) *Converx*[凸]多边形.
+     2.) *Concave*[凹]多边形.
+     *concavity*[凹面]
+     
+     [[file:image/Figure 9.25.png]]
+     两者有如下区别:
+     - *point of concavity*[凹点],一个凸多边形不会有任何 *凹点*[dents],一个凹多边形至少有一个凹点.
+     - 对凸多边形而言,任意两个顶点间的线段都在多边形内部或边界上.而对凹多边形而言,至少有一对点所对
+应的线段(至少有部分)在多边形外.
+     - 当沿着一个凸多边形的顶点行走时,它要么顺时针要么逆时针运动,而沿凹多边形则不会.
+     _Any concave polygon may be divided into convex pieces_
+     
+     如何确定一个多边形是凹还是凸? 
+     _方法一.使用点积_
+     设一个凸多边形有 $n$ 个角,则其内角和为 $(n-2)180^\circ$.
+     首先,假设 $\theta_{i}$ 为顶点 $i$ 的内角,已知多边形为凸多边形,则有 $\theta_{i} \le 180^\circ$.对应角为 $180^\circ - \theta_{i}$,则有:
+     $\sum_{i=1}^{n}(180^{\circ} -\theta_{i}) = 360^{\circ}$,
+     $n180^{\circ} - \sum_{i=1}^{n}\theta_{i} = 360^{\circ}$,
+                 $-\sum_{i=1}^{n}\theta{i} = 360^{\circ} - n180^{\circ}$,
+                     $\sum_{i=1}^{n}\theta_{i} = n180^{\circ} - 360^{\circ}$,
+                     $\sum_{i=1}^{n}\theta_{i} = (n-2)180^{\circ}$.
+     其实将凸多边形分为 $(n-2)$ 个三角形也能计算...
+     然而问题在于凹多边形的内角和也满足这个条件.
+
+     [[file:image/Figure 9.26.png]]
+     如图,
+     1.) 点积总是计算最小角.
+     2.) 多边形任意顶点的内外角的和相加为 $360^{\circ}$.
+     3.) 凸多边形每个角都小于$180^{\circ}$.凹多边形却不确定.
+     由上述条件得出 _结论_,
+     点积后的角之和若 _等于_  $(n-2)180^{\circ}$,则必然为 *凸多边形*. 
+     _小于_ 则必然为 *凹多边形*.
+     
+     _方法二,查找 *凹点*[points of  concavity]_.
+**** Triangulation and Fanning[三角化和?]
+     _Any polygon can be divided into triangles_.
+     _Triangulating a convex polygon by fanning_
+     [[file:image/Figure 9.27.png]]
      
 * Footnotes
 
@@ -3963,3 +4099,4 @@ $\vec{q} = [cos\theta,sin\theta\hat{n}]$.
 1范数,为绝对值之和
 2范数,就是通常意义上的模
 无穷范数,就是取向量的最大值
+
