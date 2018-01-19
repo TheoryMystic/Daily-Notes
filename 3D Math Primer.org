@@ -4068,6 +4068,147 @@ $\vec{q} = [cos\theta,sin\theta\hat{n}]$.
      _Any polygon can be divided into triangles_.
      _Triangulating a convex polygon by fanning_
      [[file:image/Figure 9.27.png]]
+** Chapter 10 Mathematical Topics from 3D graphics[3D图形学中的数学]
+*** 10.1 How Graphics Work[图形如何运作]
+    Concepts to learn:
+    *diffuse maps*[漫反射贴图]
+    *Blinn-Phong shading*[Blinn-Phong 着色]
+    *ambient occlusion*[环境光遮蔽] --> *AO*
+    _How rendering really works?_
+**** The Two Major Approaches to Rendering[渲染的两个主要目的]
+
+     _The end goal of rendering_
+     --> is a *bitmap*[位图] / a sequence of *bitmaps* if we are producing an animation.
+     *bitmap*[位图] --> a rectangular array of colors,and each grid entry is known as *pixel*.
+     *pixel*[像素] --> picture element.
+     *frame buffer*[帧缓冲] <----> *bitmap*
+     
+     _fundamental question of rendering_
+     --> is how do we determine the color of each pixel?
+
+     _the rendering algorithm_:
+      - _visible surface determination_[可见面检测]
+        找到眼睛能看到的最近的 *表面*[surface],其方向与当前像素对应.
+      - _Lighting_[光照]
+        确定从眼睛的方向上看到的光 *发射*[emitted] 和/或 *反射*[reflected off]的表面.
+     1. _visible surface determination_
+        a. *raytracing*[光线追踪] 不是要从发射出的表面的方向开始追踪光线,而是只关注我们眼睛能接受
+到的方向上的光.我们从眼睛发出一道射线,方向通过每个像素点的中心以观察场景中第一个被射线击中的
+物体.
+        伪代码如下:
+        [[file:image/Listing 9.4.png]]
+        b. *depth buffering*[深度缓冲]
+        每一个像素点不仅存储颜色,还要存储一个 *depth value*[深度值].
+        *depth value* : 从眼睛到物体表面的距离.
+        伪代码如下:
+        [[file:image/Listing 9.5.png]]
+     用什么方法来描述 *表面*[surface]在这里并不重要,更重要的是,我们可以将 *表面* 投影到 *屏幕空间*
+[screen space],并且通过 *光栅化*[rasterization]来将 *表面* 的像素映射到 *屏幕空间* 的像素.
+     *source fragment* --> *destination fragment* ---> *forward rendering*
+     在表面上的像素点,被叫做 *source fragment*,它有一个 *depth value*,而 *depth buffer* 上的像素点
+被叫做 *destination fragment*,同样有一个 *depth value*.
+     通过将两个 *depth value* 对比, *depth buffer* 中永远只保存最小的 *depth value* 值,最终只需要将
+最小的 *depth value* 的像素的颜色 *渲染*[rendering]出来, _这个过程就叫 forward rendering_.
+     
+     c. *deferred rendering*[延迟渲染]
+    考虑到性能瓶颈问题, *deferred rendering* 再次流行起来.
+     *G-buffer*[G-缓冲],G for Geometric -> 包含一系列额外信息的缓冲区(3D表面坐标/表面法线/材质属
+性).
+    具体步骤如下:
+    1.) 将场景渲染到G-buffer,只做 *visibility determination*,不做 *lighting calculations*.
+    2.) 执行 *lighting calculations*.
+    [[file:image/Listing 10.3.png]]
+**** Describling Surface Properties: The BRDF[表面的属性:BRDF]
+     渲染的第二步: *Lighting*[光照].
+     首先,要确定光是 1.) _直接从表面发出的_,还是 2.) _由其他物体发出的光反射到表面再进入人的眼睛_.
+     第 1.)种,如 _灯,太阳_. 第 2.)种,才是我们主要关注的情况.
+
+     *BRDF*[双向反射分布函数](Bidirectional Reflectance Distribution Function). 
+     --> 我们应该问的不是 _这个物体是什么颜色?_,而是 _反射的光是如何分布的?_.
+     --> 因为我们看到的物体的光其实是其他颜色的光打在物体上反射/折射到我们眼睛里看到的效果.
+     --> 
+     *BRDF* 函数: $f\boldsymbol{(x,\hat{\omega}_{in},\hat{\omega}_{out}},\lambda)$.
+     1.) $x$ 表示光的 _起始点_;
+     2.) $\boldsymbol{\hat{\omega}_{in}}}$ 为一个 *单位向量*,表示光的 _入射方向_;
+     3.) $\boldsymbol{\hat{\omega}_{out}}}$ 表示 _出射方向_;
+     4.) $\lambda$ 则是光的 _颜色_.
+     总结
+     1.) *BRDF* 通过 $\lambda$ 来解释两个物体间 *颜色*[color]的差异: _任何给定波长的光都有自己的反射率分布_.
+     2.) *BRDF* 通过 $\boldsymbol{\hat{\omega}_{in}}},\boldsymbol{\hat{\omega}_{out}}}$ 来解释两个物体间 *亮度*[shininess] 的差异.
+
+     *shiny* 反射光 <--> *diffuse* 漫射光
+     1.) A _shiny surface_ reflects *incident light*[入射光] more strongly in one particular direction compared
+to others.
+     2.) A _diffuse surface_ scatters[散射] light more evevnly across all *outgoing directions*[出射方向].
+     
+     *BSSDF*[双向表面散射分布函数](Bidirectional Surface Scattering Distribution Function)
+     --> *半透明*[translucence] 和 *光线折射*[light refraction]可以通过允许方向向量指回表面来合并.
+
+     *subsurface scattering*[次表面散射] --> 光穿过透明物体表面后,与 *材料*[material]之间发生交互作用
+而导致光被散射开来.(光一般会穿透物体的表面,在物体内部不同角度被反射若干次,最终穿出物体).
+     通常可以用于渲染 *皮肤*[skin], *牛奶*[milk], *大理石*, *树叶*, *蜡* 等.
+
+     *BSDF* (Bidirectional Scattering Distribution Function) --> 没有 _Surface_,表示不止在表面上,而是空间里.
+     --> 用来做雾气效果,次表面散射等.
+     
+     _Helmholtz reciprocity_
+     $f\boldsymbol{(x,\hat{\omega}_{1},\hat{\omega}_{2}},\lambda) = f\boldsymbol{(x,\hat{\omega}_{2},\hat{\omega}_{1}},\lambda)$.
+     由于光沿直线传播,且入射角等于反射角,考虑到对称性,从哪儿进到哪儿出并不重要.
+**** A Very Brief Introduction to Colorimetry and Radiometry[简介:色度学&辐射度学]
+     图形学的所有都是关于如何测量光.
+     1.) 如何测量光的 *颜色*[color].
+     2.) 如何测量它的 *亮度*[brightness].
+     
+     _Key Points about Color_
+     - 光的光谱分布是一个连续函数,而不只是RGB.只是就人类对光的感知程度而言,用RGB表示已经足够了.
+     - RGB不是唯一的 *颜色空间*[color space],同样也不一定适合于所有情况,只是对于人而言能满足需求.
+     
+     _Common radiometric terms_
+     | *Quantity*[名称]                                           | *Units*[单位]                                                        | *SI unit*[符号]           | *Translation*[简介]                     |
+     | Radiant energy[辐射能]                                 | Energy[能量]                                                         | J[焦耳]                       | 某段间隔时间内的总照明量                |
+     | Radiant flux[辐射通量]                                  | Power[功率]                                                          | W[瓦特]                     | 从四处汇聚于某个面积内的光的亮度        |
+     | Radiant flux density[辐射通量密度]               | Power per unit area[单位面积功率]                        | W/m^{2}                   | 从四处汇聚于某个点的光的亮度            |
+     | Irradiance[辐照度]                                        | Power per unit area[单位面积功率]                        | W/m^{2}                   | *入射光*[incident light] 的辐射通量密度 |
+     | Radiant exitance[辐出度]                              | Power per unit area[单位面积功率]                         | W/m^{2}                  | *发射光*[emitted light] 的辐射通量密度  |
+     | Radiosity[辐射度]                                          | Power per unit[单位面积功率]                                | W/m^{2}                   | 发射光/反射光的辐射通量密度             |
+     | Radiance[辐射率]                                          | Power per unit projected area,per unit solid angle  | W/(m^{2} \cdot sr)    | *射线*[ray] 的亮度                      |
+     
+     *solid angle*[立体角]  < --- > *regular angle*[平面角]
+     立体角描述 _站在某一点的观察者测量到的物体大小的尺度_
+     以观测点为球心,构造一个 *单位球面*;任意物体投影到该球面上的 *投影面积*,就是该物体对于该观测点
+的立体角.
+     立体角是 _单位球面上的一块面积_.
+     立体角的单位是 *steradian*[球面度],简写为 "sr".
+     
+     _Key Points about Radiometry_
+     - 在可以使用辐射度量的专业术语时,最好避免使用模糊的定义如 *亮度*[intensity] 和 *明度*[brightness].
+     - 使用 *辐射通量*[radiant flux]来测量有限区域内的亮度.
+     - 使用 *辐射通量密度*[radiant flux density]来测量某个点的亮度.
+        a. *辐照度*[Irradiance] --> *入射光*[incident] 的辐射通量密度.
+        b. *辐出度*[radiant exitance] --> *发射光*[emitted]的辐射通量密度.
+        c. *辐射度*[radiosity] --> 离开表面的光的辐射通量密度(无论是反射光还是发射光).
+     - 根据 *Lambert's law*,相对于倾斜角度的平面,给定光在垂直的平面会有更大的辐照度差.
+     - 使用 *辐射率*[radiance]来测量一个射线的明度.
+**** The Rendering Equation[渲染方程]
+     在计算机图形学中, *渲染方程*[rendering equation]描述了光能在场景中的流动.其基础是能量守恒定律.
+     
+     _The Rendering Equation_
+     $\boldsymbol{L_{out}(X,\hat{\omega}_{out},\lambda) = L_{emis}(X,\hat{\omega}_{out},\lambda) +}$
+                                            $\boldsymbol{\int_{\omega} L_{in}(X,\hat{\omega}_{in},\lambda)f(X,\hat{\omega}_{in},\hat{\omega}_{out},\lambda)(-\hat{\omega}_{in} \cdot \hat{n})d\hat{\omega}_{in}}$.
+     现在来解释下这个公式到底什么意思:)
+     $\boldsymbol{ L_{out} (X,\hat{\omega}_{out},\lambda)}$
+        ->在 _1.)特定位置$\boldsymbol{X}$_ 及 _2.)方向 $\boldsymbol{\hat{w}}_{out}$_ 的出射光.
+     $\boldsymbol{ L_{emis} (X,\hat{\omega}_{out},\lambda)}$ 
+        -> 从位置 $\boldsymbol{X}$ 和方向 $\boldsymbol{\hat{w}}_{out}$ 发出的光.
+     $\boldsymbol{\int_{\omega} L_{in}(X,\hat{\omega}_{in},\lambda)f(X,\hat{\omega}_{in},\hat{\omega}_{out},\lambda)(-\hat{\omega}_{in} \cdot \hat{n})d\hat{\omega}_{in}}$ 
+        -> 从位置 $\boldsymbol{X}$ 和方向 $\boldsymbol{\hat{w}}_{out}$ 反射出的光.
+     
+     总结一下就是:
+     出射光 $\boldsymbol{\hat{w}}_{out}$ = 发射光$\boldsymbol{\hat{w}}_{emis}$ + 反射光 .
+     
+     现在来具体解释反射光的方程(如果你现在还不懂 *微积分*[calculus],只需要把 *积分*[integral]替换成
+     *求和*[sum],完全不影响你的理解).
+     反射光的方程可分解如下:
      
 * Footnotes
 
