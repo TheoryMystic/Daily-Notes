@@ -4203,13 +4203,377 @@ to others.
      $\boldsymbol{\int_{\omega} L_{in}(X,\hat{\omega}_{in},\lambda)f(X,\hat{\omega}_{in},\hat{\omega}_{out},\lambda)(-\hat{\omega}_{in} \cdot \hat{n})d\hat{\omega}_{in}}$ 
         -> 从位置 $\boldsymbol{X}$ 和方向 $\boldsymbol{\hat{w}}_{out}$ 反射出的光.
      
-     总结一下就是:
+     _总结如下_
      出射光 $\boldsymbol{\hat{w}}_{out}$ = 发射光$\boldsymbol{\hat{w}}_{emis}$ + 反射光 .
      
      现在来具体解释反射光的方程(如果你现在还不懂 *微积分*[calculus],只需要把 *积分*[integral]替换成
      *求和*[sum],完全不影响你的理解).
-     反射光的方程可分解如下:
+
+     _反射光的方程可分解如下_
+     反射光 $\boldsymbol{\hat{w}}_{out}$ = $\int_{\Omega}$(从 $\boldsymbol{\hat{w}}_{in}$ 进 $\boldsymbol{\hat{w}}_{out}$ 出的光) $d \boldsymbol{\hat{w}}_{in}$.
+     这里的 $\Omega$ 表示对半球所有可能的方向求和.
      
+     然而由于当前计算机的局限性,我们用 $\sum$ 来代替 $\int$.则有:
+     (从 $\boldsymbol{\hat{w}}_{in}$ 进 $\boldsymbol{\hat{w}}_{out}$ 出的光) = $\boldsymbol{ L_{in}(X,\hat{w}_{in},\lambda) f(X,\hat{w}_{in},\hat{w}_{out},\lambda)(-\hat{w}_{in} \cdot \hat{n})  }$.
+     式子右边的:
+     _第一个元素_ 表示光入射于 $\boldsymbol{\hat{w}}_{in}$.
+     _第二个元素_ 是 *BRDF*,告诉我们从$X$ 来的入射光到出射时能反射多少出去.
+     _第三个元素_ 是 *Lambert factor*.说明了当 $\boldsymbol{\hat{w}}_{in}$ 垂直于表面时(而不是与表面倾斜),单位表面范围内有更
+多的入射光可以被反射出来.
+*** 10.2 Viewing in 3D[一瞥3D]
+     在渲染一个场景前,必须要先选择一个:
+     1.) *camera*[摄像机].
+     2.) *window*[窗口]
+     我们要考虑的是:
+     1.) *从*[from]哪儿开始渲染(the view position,orientation,zoom).
+     2.) 渲染 *到*[to]哪儿(the rectangle on the screen).
+**** Specifying the Output Window[指定输出窗口]
+     _不必渲染整个屏幕_
+     [[file:image/Figure 10.2.png]]
+
+     *render target*[渲染目标] --> current destination of rendering output.
+**** Pixel Aspect Ratio[像素纵横比]
+     *aspect ratio of the pixel*[像素纵横比] ---> the ratio of a pixel's height to its width.
+     注意:对一个像素而言,通常纵横比是1:1, _不意味着纵横比总是1:1_.
+
+     _计算像素纵横比_
+     $\frac{pixPhys_{x}}{pixPhys_{y}} = \frac {devPhys_{x}} {devPhys_{y}} \cdot \frac {devRes_{y}} {devRes_{x}}$.
+     *pixPhys* --> physical size of a pixel.
+     *devPhys* --> the physical height and width of the device on which the image is displayed.
+     *devRes* --> number of pixels in the x and y dimensions.
+**** The View Frustum[视锥体]
+     视锥体的形状如下图:
+     [[file:image/Figure 10.3.png]]
+     1.) 视锥体由六个 *表面*[surface]组成,而每个表面又被称作 *裁剪面*[clip planes].
+     2.) 金字塔形状的四个裁剪面分别被称作 *top* *bottom* *left* *right* 裁剪面.
+     3.) 另外的两个面根据距离远近被称作 *near clip plane*[近裁剪面]和 *far clip plane*[远裁剪面].
+     
+     至于远裁剪面有什么用,具体功能如下:
+     1.) 超出视锥体范围内的物体都不会渲染(所以需要远裁剪面来确定最远距离).
+     2.) 由于 *depth buffer* 存储 *depth value*,而其值必然有大小限制,而到远裁剪面的距离的z则可对此做
+出限制.
+**** Field of View and Zoom[视场和缩放]
+     *Field of View*[FOV] --> 视场(视锥体截到而成的角度) --> 水平FOV, 垂直FOV.
+     *Zoom* --> Zoom in (放大) , Zoom out (缩小).
+     [[file:image/Figure 10.4.png]]Horizontal FOV
+
+     *Zoom* 计算在 $90^{\circ}$ FOV的情况下物体的大小比例,几何解释如下:
+     [[file:image/Figure 10.5.png]]
+     _Converting between zoom and FOV_
+     $zoom = \frac{1}{tan(fov/2)}, \quad fov = 2 arctan(1/zoom)$.
+     
+     _the usual relationship between vertical and horizontal zoom_
+
+     $\frac{zoom_{y}} {zoom_{x}} = \frac {winPhys_{x}} {winPhys_{y}} = window \, aspect \, ratio$.
+     *winPhys* --> physical size of output window.
+
+     进一步可以改写为:
+     $\frac{zoom_{y}} {zoom_{x}} = \frac {winPhys_{x}} {winPhys_{y}} = \frac {winRes_{x}} {winRes_{y}} \cdot \frac {pixPhys_{x}} {pixPhys_{y}}$
+                                        $= \frac {winRes_{x}} {winRes_{y}} \cdot \frac {devPhys_{x}} {devPhys_{y}} \cdot \frac {devRes_{y}} {devRes_{x}}$.
+     - zoom 指代摄像机的zoom值.
+     - winPhys 指代物理窗口大小.
+     - winRes 指代窗口的分辨率.
+     - pixPhys 指代像素的物理尺寸.
+     - devPhys 指代输出设备的物理尺寸.
+     - devRes 指代输出设备的分辨率.
+**** Orthographic Projection[正交投影]
+     *透视投影*[perspective projection] <--> *正交投影*[orthographic projection]
+     _正交投影的应用场景_
+     各种视图,地图渲染,HUD...
+     [[file:image/Figure 10.6.png]]
+     在正交投影中,FOV的角度没有什么讨论的价值,因为视锥体已经是一个长方体.
+
+     _converting between zoom and frustum size in orthographic projection_
+     $zoom = 2/size, \quad size = 2/zoom$.
+*** 10.3 Coordinate Spaces[坐标空间]
+    在这节我们以几何流经渲染管线的顺序来介绍坐标空间.
+**** Model,World,and Camera Space[模型空间/世界空间/摄像机空间]
+     _object to world_
+     *object space* == *local space* == *model space*.
+     *model transform* : model space -> world space.
+
+     _world to camera_
+     *camera space* == *eye space* == *view space*.
+     *view transform* : world space -> camera space.
+     
+     [[file:image/Figure 10.7.png]]typical camera-space conventions for left-handed coordinate systems
+**** Clip Space and the Clip Matrix[裁剪空间和裁剪矩阵]
+     _camera space to clip space_
+     *clip matrix* == *projection matrix*.
+     *clip matrix* : camera space -> clip space.
+     Coordinates: $(x,y,z,w)$.
+
+     _functions of clip matrix_
+     - Prepare for projection.
+     - Apply zoom and prepare for clipping.
+**** The Clip Matrix: Preparing for Projection[裁剪矩阵:投影]
+     裁剪矩阵的第一个目的是 _通过除法得到正确的 $w$ 值来达成投影(正交/透视)_.
+     
+     _Converting 4D homogeneous coordinates to 3D_
+     \begin{equation*}
+     \begin{bmatrix}
+     x \\ y \\ z \\ w\\
+     \end{bmatrix} 
+     \Rightarrow
+     \begin{bmatrix}
+     x/w \\ y/w \\ z/w
+     \end{bmatrix}.
+     \end{equation*}
+     这里需要考虑 $w$ 的取值.
+
+     _A trivial matrix for setting w = z, for perspective projection_
+     \begin{equation*}
+     \begin{bmatrix}
+     1 & 0 & 0 & 0 \\
+     0 & 1 & 0 & 0 \\
+     0 & 0 & 1 & 1 \\
+     0 & 0 & 0 & 0 \\
+     \end{bmatrix}.
+     \end{equation*}
+
+     让其与向量 $[x,y,z,1]$ 相乘,再除以 $w$.
+     \begin{equation*}
+     \begin{bmatrix}
+     x & y & z & 1
+     \end{bmatrix}
+     \begin{bmatrix}
+     1 & 0 & 0 & 0 \\
+     0 & 1 & 0 & 0 \\
+     0 & 0 & 1 & 1 \\
+     0 & 0 & 0 & 0 \\
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     x & y & z & z
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     x/z & y/z & 1
+     \end{bmatrix}
+     \end{equation*}
+     总而言之,采用 $4 \times 4$ 矩阵的原因是:
+     _更紧凑,泛用性更好,更简洁_
+     d -> *focal distance*[焦距] : 从原点到投影平面的距离.
+     通常让 $d=1$.
+     [[file:image/Figure 10.8.png]]
+     关于距离 $d$ 的讨论总结如下:
+     1.) *zoom*[缩放]只能通过改变视锥体形状来实现(调整FOV),无论是现实里的摄像机还是计算机里的.
+     2.) 现实里的摄像机,由于胶片尺寸不变,我们通过调整焦距来调整视锥体形状.
+     3.) 在计算机里,调整 $d$ 对渲染图片没有任何影响,因为"胶片"(视锥体与投影平面相交而成的矩形部分)与
+投影的图片成比例.
+
+    在正交矩阵中呢?
+      \begin{equation*}
+     \begin{bmatrix}
+     x & y & z & 1
+     \end{bmatrix}
+     \begin{bmatrix}
+     1 & 0 & 0 & 0 \\
+     0 & 1 & 0 & 0 \\
+     0 & 0 & 1 & 0 \\
+     0 & 0 & 0 & 1 \\
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     x & y & z & 1
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+     x & y & z
+     \end{bmatrix}
+     \end{equation*}
+**** The Clip Matrix: Applying Zoom and Preparing for Clipping[裁剪矩阵:应用缩放和裁剪]
+     裁剪矩阵的第二个目的是 _改变x,y,z分量的大小_.
+     
+     _The six planes of the view frustum in clip space_
+     Bottom $y < -w$,
+     Top $y > w$,
+     Left $x < -w$,
+     Right $x > w$,
+     Near $z < -w$,
+     Far $z > w$.
+     
+     令,$zoom_{x}$  为水平zoom值, $zoom_{y}$ 为垂直zoom值, $n$ 为 _到近裁剪面距离_, $f$ 为 _到远裁剪面距离_.
+     1.) _perspective_
+     _Clip matrix for *perspective* projection with z = -w at the near clip plane_
+     \begin{equation*}
+     \begin{bmatrix}
+     zoom_{x} & 0 & 0 & 0 \\
+     0 & zoom_{y} & 0 & 0 \\
+     0 & 0 & \frac{f+n}{f-n} & 1 \\
+     0 & 0 & \frac{-2nf}{f-n} & 0 \\
+     \end{bmatrix}.
+     \end{equation*}
+     这个矩阵假设采用的是左手坐标系,其 $z$ 值范围为 $[-w,w]$.
+
+     _Near and far clip planes in DirectX-style clip space_
+     near $z < 0$,
+     far $z > w$.
+     
+     _Clip matrix for *perspective* projection with z = 0 at the near clip plane_
+     \begin{equation*}
+     \begin{bmatrix}
+     zoom_{x} & 0 & 0 & 0 \\
+     0 & zoom_{y} & 0 & 0 \\
+     0 & 0 & \frac{f}{f-n} & 1 \\
+     0 & 0 & \frac{-nf}{f-n} & 0 \\
+     \end{bmatrix}.
+     \end{equation*}
+     
+     2.) _orthographic_
+     _Clip matrix for *orthographic* projection with z = -w at the near clip plane_
+     \begin{equation*}
+     \begin{bmatrix}
+     zoom_{x} & 0 & 0 & 0 \\
+     0 & zoom_{y} & 0 & 0 \\
+     0 & 0 & \frac{2}{f-n} & 0 \\
+     0 & 0 & -\frac {f+n}{f-n} & 1 \\
+     \end{bmatrix}.
+     \end{equation*}
+
+     _Clip matrix for *orthographic* projection with z = 0 at the near clip plane_
+     \begin{equation*}
+     \begin{bmatrix}
+     zoom_{x} & 0 & 0 & 0 \\
+     0 & zoom_{y} & 0 & 0 \\
+     0 & 0 & \frac{1}{f-n} & 0 \\
+     0 & 0 & \frac {n}{n-f} & 1 \\
+     \end{bmatrix}.
+     \end{equation*}
+
+     3.) _OpenGL conventions_
+     在OpenGL下,可以通过观察最后一行的数字来判断是 *正交投影*  还是 *透视投影*.
+
+    _Clip matrix for *perspective* projection assuming *OpenGL* conventions_
+     \begin{equation*}
+     \begin{bmatrix}
+     zoom_{x} & 0 & 0 & 0 \\
+     0 & zoom_{y} & 0 & 0 \\
+     0 & 0 & -\frac{f+n}{f-n} & \frac{-2nf}{f-n} \\
+     0 & 0 & -1 & 0 \\
+     \end{bmatrix}.
+     \end{equation*}
+
+    _Clip matrix for *orthographic* projection assuming *OpenGL* conventions_
+     \begin{equation*}
+     \begin{bmatrix}
+     zoom_{x} & 0 & 0 & 0 \\
+     0 & zoom_{y} & 0 & 0 \\
+     0 & 0 & \frac{-2}{f-n} & -\frac{f+n}{f-n} \\
+     0 & 0 & 0 & 1 \\
+     \end{bmatrix}.
+     \end{equation*}
+**** Screen Space[屏幕空间]
+     显然, *屏幕空间*[screen space]是一个2D空间.所以为了生成正确的2D空间,我们必须要将点从 *clip space*
+投影到 *screen space*.
+     *normalized device coordinates*[设备坐标标准化] --> 令 $w=1$.
+
+     _Projecting and mapping screen space_
+     $screen_{x} = \frac {clip_{x} \cdot winRes_{x}} {2 \cdot clip_{w}} + winCenter_{x}$,
+     $screen_{y} = \frac {clip_{y} \cdot winRes_{y}} {2 \cdot clip_{w}} + winCenter_{y}$.
+     
+     _the output window in screen space_
+     [[file:image/Figure 10.9.png]]
+     将 *顶点坐标*[vertex coordinates]从 *clip space* 转换到 *scrren space* 的所有内容都已经告诉你了.你
+的 *vertex shader* 将坐标输出到 *clip space*.API将三角形裁剪到 *view frustum*[视锥体]然后再将坐标投
+影到 *screen space*.
+     这不意味着你就永远不会用到本节中的公式(看起来似乎硬件已经替你代劳),在软件中,我们需要用这些公式
+来做 -> *visibility testing*[可见性检测] / *level-of-detail selection*[LOD选择] 等等...
+     _conversion of vertex coordinates through the graphics pipeline_
+     [[file:image/Figure 10.10.png]]
+**** Summary of Coordinate Spaces[总结]
+     上节给出的坐标系都是最重要也是最常见的坐标系.仍然有一些不常见但是会用到的坐标系.
+     *projected light* --> gobo / shadow mapping.
+     *tangent space / surface-local space*, a local space _on the surface of an object_ --> bump mapping.
+*** 10.4 Polygon Meshes[多边形网格]
+    本章重点介绍实时渲染中最重要的一环 : *triangle mesh*[三角网格].
+    *Constructive solid geometry* (CSG)[构造几何实体] : 使用boolean类型来描述 *primitive*[元件] 的形状.
+    但是 *rendering*[渲染]的重点在于 _对物体表面的描述_.
+    *polygon mesh*[多边形网格] : 关于表面的最常见描述形式.
+    *triangle mesh*,在 *实时渲染*[real-time rendering]中,每个多边形网格都是三角形网格.
+    
+    _three basic types of info in a triangle mesh_
+    - *Vertices*[顶点].每个三角形都有三个顶点.多个三角形可能共有一个顶点.
+    - *Edges*[边].每个三角形都三条边.每条边都连接两个顶点.
+    - *Faces*[面].三角形构成的表面.三个顶点或者三个边就能构成一个面.
+**** Indexd Triangle Mesh[索引三角网格]
+     一个 *Indexd Triangle Mesh*[索引三角网格] 由两列组成: 1.) *vertices*[顶点] 2.) *三角形*[triangles].
+
+     1.) _每个顶点都包含位置信息_. 同样 *vertex level*[顶点层级] 也可能包含其他信息如: 
+        *texture-mapping coordinates* / *surface normals* / *lighting values*.
+
+     2.) _每个三角形都由一组索引好的三个整数来表示_.
+        考虑到面有 *正/反*,在左手坐标系中我们以顺时针顺序看正面.
+     
+    #<<Figure 10.11>>
+     _A simple mesh containing a cube and a pyramid_
+     [[file:image/Figure 10.11.png]]
+     假设原点在顶点6和顶点12的中间位置,则每个顶点可表示如下:
+     [[file:image/Table 10.3.png]]
+     下面的列表则表明了上图每个面的顶点索引信息:
+     记住顺序, _从外看时_,在左手坐标系中,方向为顺时针.
+     [[file:image/Table 10.4.png]]
+     重要的是顶点索引的顺序,而从哪个顶点开始并不重要.如:{1,2,3,0},{2,3,0,1},{0,1,2,3}结果都是一样的.
+**** Surface Normals[表面法线]
+     *surface normal* 定义: _a unit vector that is perpendicular to a surface_.
+     *surface normal* 的作用举例:
+     计算光照 / *backface culling*[背面剔除].
+     
+     *vertex normal* 主要用于 *lighting*[光照].事实上我们是将平面上多个离散的点看作近似的连续点,再分别
+求每个顶点的法线来模拟光照.如下图所示:
+    [[file:image/Figure 10.12.png]]
+    *per-pixel shading* --> 当我们知道给定点的法线,就能表示出每个像素的光照方程.
+    *Gouraud shading* --> 对比上面的shading,运算量更小.
+    
+    下图展示了 *per-pixel lighting* 在不同棱数的圆柱上的表现:
+    [[file:image/Figure 10.13.png]]
+    
+    我们已经知道了法线是如何通过插值来重构曲面的,现在来想想如何得到 *vertex normals*[顶点法线].
+    1.) 现成的,直接拿来用.
+    2.)
+        a. 取邻接三角形的法线平均值用于光照.
+        这是一个经过时间检验的方案,在很多情况下做的也很好.但是 _在某些情况下会失效_,比如:
+        - 网格本应该是不连续的:
+          [[file:image/Figure 10.14.png]]
+          在长方体中,由于 _每个顶点只能保存一个法线_,表面的不连续性不能正确的被表示出来.
+          解决方法是将每个面 "分离" 出来,也即是将 _6个面共8个点_ 分离成 _6个面24个点_.这样每个点的法线
+就不再连续.
+          对比如下:
+          [[file:image/Table 10.5.png]]
+          [[file:image/Table 10.6.png]]
+          
+          - 取法线平均值会偏向于数量多的三角形.
+            参考[[Figure 10.11]],图中的顶点1与四个三角形相接,分别为顶部(2个),背后(1个),右侧(1个),在这种情况下
+取的法线平均值显然会偏向于顶面.
+      在某种情况下,用于变换位置的矩阵不能用于变换表面法线.
+      之所以存在这种情况,是因为法线是 *covariant vectors*[共变向量].
+      "常规"向量, _位置/速度_ --> *contravariant vector*[逆变向量].
+      --> 如果我们缩放用来描述该向量的空间,则其坐标系会反向.
+      --> 如果我们扩大坐标系,则其逆变向量会变小.
+
+      _什么是共变向量?_
+      [[file:image/Figure 10.15.png]]
+      
+      定义:在数学里, *contravariant*[反变/逆变] 和 *covariant*[共变/斜变] 
+      _描述一个向量的坐标,在向量空间的 *基底/坐标系* 转换之下,会如何改变_.
+      注意观察上图,拉伸后的图片中的法线(蓝色的)变得更"垂直"了,
+      1.)法线的"水平"坐标的绝对值明显减小了.
+      2.)然而点的"水平"坐标却增大了.
+      显而易见的是,拉伸一个物体(物体变大而坐标空间不变) 等价于 缩小坐标空间(而不改变物体大小).
+      
+      _transform surface normals properly_
+      transform position --> matrix $\boldsymbol{M}$.
+      transform surface normal --> matrix $(\boldsymbol{M}^{-1})^{T} = (\boldsymbol{M}^{T})^{-1} = \boldsymbol{M}^{-T}$.
+      也即是 *inverse transpose*[逆矩阵的转置].
+      
+      总结如下:
+      对于表面法线的变换,取(位置变换的)逆矩阵的转置.有三种情况:
+      1.) transform without scale --> just ignore.
+      2.) matrix contains *uniform scale* --> _renormalize the normals_ after transformation.
+      3.) *nonuniform scale* 
+            -->  first _inverse transpose transform_
+            -->  second _renormalize after transforming_
+
 * Footnotes
 
 [fn:singularity] 在数学中,表示 _数学物件中无法处理的点_.
