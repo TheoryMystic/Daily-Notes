@@ -4573,7 +4573,229 @@ to others.
       3.) *nonuniform scale* 
             -->  first _inverse transpose transform_
             -->  second _renormalize after transforming_
+*** 10.5 Texture Mapping[纹理贴图]
+    *teture mapping* --> A texture map is a *bimap image* that is _pasted to the surface of an object_.
+    *texel*[纹理元素] --> A texel is _a single pixel in a texture map_.
+    pixel in the frame buffer --> pixel
+    pixel in a texture --> texel
+    
+    所以, *纹理贴图* 就是一个贴合在物体表面的普通 *位图*[bitmap].知道了是什么后,我们来考虑怎么做.
+    怎么样将 *纹理贴图*[texture map] 应用到 *网格*[mesh]上?
+    1.) *Planar mapping*[平面贴图] 将纹理垂直的投射到网格上.
+    2.) *Spherical,cylindrical,cubic mapping*[球面贴图/圆柱贴图/立方体贴图] 让纹理变形以 *wrapping*
+[裹]在对象表面.
+    
+    *texture mapping coordinates*[纹理贴图坐标] --> 每个在网格表面上的点,都有一个纹理贴图坐标,它的关
+键之处在于 _将3D的位置信息与2D的纹理贴图建立起了映射关系_.
+    一个 *texture-mapping coordinates* 可以用 $(u,v)$ 表示.其中: $u$ 表示水平坐标, $v$ 表示垂直坐标.
+    由此, *texture-mapping coordinates* 又被叫做 *UV coordinates* 或者 *UV*. 
 
+    每个坐标系必然都有原点与轴.在本书我们采用 DirectX 的标准,以左上角为原点.示例如下:
+    [[file:image/Figure 10.16.png]]
+    将不同的UV坐标分配给顶点的区别:
+    [[file:image/Figure 10.17.png]]
+    UV坐标的 $(x,y)$ 标准范围都是 $[0,1]$.但是并不意味着不能超过这个范围.参考下图:
+    q[[file:image/Figure 10.18.png]]
+    标准范围外的值用处其实很多,最常见的两种表现形式是 *Repeat/tile/wrap* 和 *Clmap*.
+    在 *repeat* 的时候,只使用坐标值的小数部分,整数部分不考虑.
+    在 *clamp* 的时候, 在标准范围外的坐标用来存取被限制了范围的位图.
+    
+    下图介绍了两种贴图方法.
+    [[file:image/Figure 10.19.png]]
+*** 10.6 The Standard Local Lighting Model[标准本地光照模型]
+    *lighting model*[光照模型] : 用于描述BRDF的公式.其中公式的值来自指定表面的材质.
+    常用的光照模型由于使用太广泛,现在已经根植于DX/OpenGL的API中.
+    本节的主题就是经典的 *standard lighting model*[标准光照模型].
+    尽管标准模型很重要,但若要继续深入,一定要掌握 *the rendering equation*.
+**** The Standard Lighting Equation: Overview [标准光照方程概览]
+     _the original goal of the standard model_
+     确定反射方向在摄像机上的光,只考虑入射于有限方向的反射光,每个方向都是一个光源.
+
+     _contribution of light_
+     基本思路是将进入人眼的光线分为四大类,每个单独分开来计算.
+     1.) the *emissive* contribution,发射光,记作 $\boldsymbol{c}_{emis}$,等价于 *the rendering equation*[渲染方程].它的作用是告诉
+从表面的给定方向上直接发射的辐射率的量.
+     2.) the *specular* contribution,镜面反射光,记作 $\boldsymbol{c}_{spec}$.
+     3.) the *diffuse* contirbution,漫反射光,记作 $\boldsymbol{c}_{diff}$.
+     4.) the *ambient* contribution,环境光,记作 $\boldsymbol{c}_{amb}$,用于表示间接光照.
+     注意这里的 $\boldsymbol{c}$ 是用的大写,意味着它不是一个标量而是一个向量.它是在用离散的分量(*channel*)来表示颜
+色.最常见的就是将三个 *channel* 定义为 红/黄/蓝 三色.
+**** The Specular Component[镜面反射模型]
+     *the specular component*[镜面反射]在标准光照模型中,在表面上模拟出完美的镜子反射的效果.如果表面
+不够光滑,则用 *scatter*[散射]来模拟.
+     下图解释了如何计算镜面反射.
+     [[file:image/Figure 10.20.png]]
+     - $\boldsymbol{n}$ 是法线.
+     - $\boldsymbol{v}$ 或者 $\boldsymbol{e}$ 代表方向指向人的眼睛.
+     - $\boldsymbol{l}$ 表示光源.
+     - $\boldsymbol{r}$ 表示完美镜面反射下的出射位置.
+     - $\theta$ 是指 $\boldsymbol{r}$ 和 $\boldsymbol{v}$ 之间的夹角.
+     (以上所有的向量都是单位向量).
+     另外,由于光是抽象物体,所以它不需要有 *位置*[position].在此使用抽象的目的是要有助于任意给定点上
+入射光的方向的计算.
+     四个向量中,只有 $\boldsymbol{r}$ 是需要推导和计算的量.如下图:
+     [[file:image/Figure 10.21.png]]
+     反射角的向量表示为:
+     $\boldsymbol{r} = 2\boldsymbol{(n \cdot l)n} - \boldsymbol{l}$.
+     由此我们已经可以计算镜面反射.
+     
+     _The Phong Model for Specular Refection_
+     $\boldsymbol{c}_{spec} = (\boldsymbol{s}_{spec} \otimes \boldsymbol{m}_{spec}) (cos\theta)^{m_{gls}} = (\boldsymbol{s}_{spec} \otimes \boldsymbol{m}_{spec}) (\boldsymbol{v \cdot r})^{m_{gls}}$.
+     其中符号 $\otimes$ 意为 _颜色的分量乘法_.
+     
+     - $m_{gls}$,描述的是 *材质*[material]的 *光泽度*[glossiness].
+         -->也被叫做 *Phong exponent* / *specular exponent* / material *shinines*.
+         -->$m_{gls}$ 控制 *聚光区*[hotspot]的范围,
+         -->表面的镜面反射越完美, $m_{gls}$ 的值就越高,当从入射角 $\boldsymbol{l}$ 进入后,反射角的偏差越小,同样散射也越少.
+
+     - $\boldsymbol{m}_{spec}$(注意这里的加粗),描述的是 *材质* 的反射光颜色.
+         -->$\boldsymbol{m}_{spec}$ 控制聚光区光的 *强度*[intensity]和颜色.
+         -->值越高,表面的镜面反射越强.
+
+     - $\boldsymbol{s}_{spec}$,意为 *the light specular color*[高光色贴图],本质上是包含了颜色和强度的光.
+         --> 需要注意的是,光的颜色会随着距离的边远而衰减.
+         --> *gobo*[遮光黑布],几种用途举例:
+               a. *colored gobo* --> 用于模拟玻璃窗下的阴影.
+               b. *animated gobo* --> 用于模拟吊扇的剪影/随风而动的树影.
+     
+     - $\boldsymbol{s}_{diff}$,意为 *the light diffuse color*,用于特定环境的光照效果(现实中没有的).
+        --> 在实际应用里,$\boldsymbol{s}_{spec} = \boldsymbol{s}_{diff}$.
+     
+     接下来来观察 $m_{gls}$ 和 $\boldsymbol{m}_{spec}$ 的变化效果.
+     [[file:image/Figure 10.22.png]]
+     其中,
+     $\boldsymbol{m}_{spec}$,是从左边到右边,镜面反射颜色由黑到白.
+     $m_{gls}$,是从上面到下面,值从大变到小,聚光区范围也由大变小.
+     
+     *Blinn Model* 相较于 *Phong Model*,优化更明显.
+     _the halfway vector h,used in the Blinn specular model_
+     $\boldsymbol{h = \frac {v+l}{|| v+l ||}}$.
+     [[file:image/Figure 10.23.png]]
+     _The Blinn Model for Specular Reflection_
+     $\boldsymbol{c}_{spec} = (\boldsymbol{s}_{spec} \otimes \boldsymbol{m}_{spec}) (cos\theta)^{m_{gls}} = (\boldsymbol{s}_{spec} \otimes \boldsymbol{m}_{spec}) (\boldsymbol{n \cdot h})^{m_{gls}}$.
+     
+     *Phong* 和 *Blinn* 的适用场景不同.
+     *Blinn Model* --> 适用于 *观察者*[viewer] 和 *光源*[light source]都离物体很远的情况,两者都可以
+被看作 *常量*[constant].在这种情况下 $\boldsymbol{h}$ 显然也是一个常量.
+     *Phong Model* 在 $\boldsymbol{v}$ 和 $\boldsymbol{l}$ 都不是常量的情况下运算更快.
+     另外,两者都是经验模型.
+**** The Diffuse Component[漫反射光照模型]
+     *diffuse light*[漫反射光] : 由于表面材质的粗糙程度,光会向随机方向漫反射.
+     *specular light*[镜面反射光] : 所有光向某个方向反射.
+     观察下图:
+     [[file:image/Figure 10.24.png]]
+
+     对漫反射而言, *观察者*[viewer]并不重要,因为它发生的反射是无序的.重要的是 *光源*[light source].
+     
+     值得注意的是, _Blinn-Phong模型中的漫反射部分是实时图形学中最重要的部分_.
+     单位面积相同的条件下,与光垂直的表面能受到更多的光照.
+     *irradiance* : numbers of photons per unit area.
+     [[file:image/Figure 10.25.png]]
+     看到这个,再想想为什么低纬度地区(如赤道)要比高纬度地区(极地)热的多?
+     
+     _calculating the diffuse component according to Lambert's law_
+     $\boldsymbol{c}_{diff} = \boldsymbol{s}_{diff} \otimes \boldsymbol{m}_{diff} (\boldsymbol{n \cdot l})$.
+     $\boldsymbol{s}_{diff}$ -> The diffuse color of the light source. 通常情况下,$\boldsymbol{s}_{diff} = \boldsymbol{s}_{spec}$.
+     $\boldsymbol{m}_{diff}$ -> The diffuse color of the material.
+     $\boldsymbol{n}$ -> surface normal.
+     $\boldsymbol{l}$ -> a unit vector points towards the light source. 
+
+     _Notes_
+     Diffuse reflection models light that is scattered completely randomly,and any given outgoing direction
+is equally likely,no matter what the incoming light direction.Thus,the BRDF for a perfectly diffuse surface
+is a *constant*.
+**** The Ambient and Emissive Components[环境光模型和发射光模型]
+     *ambient light*[环境光],主要用于模拟那些通过多次反射最后到达眼睛里的光.
+     环境光照模型的方程只考虑 _材质属性_ 和 _环境光大小_.而 *光源*[light source]则根本不必要.
+
+     _Ambient contribution to the lighting equation_
+     $\boldsymbol{c}_{amb} = \boldsymbol{g}_{amb} \otimes \boldsymbol{m}_{amb}$.
+     $\boldsymbol{m}_{amb}$ -> material's "ambient color" ~= diffuse color(defined using texture map)
+     $\boldsymbol{g}_{amb}$ -> ambient light value. g for "global".
+
+     *emissive color*[发射光颜色] : a ray of light travels _directly from the light source to the eye_.
+     
+     _The emissive contribution depends only on the material_
+     $\boldsymbol{c}_{emis} = \boldsymbol{m}_{emis}$.
+
+     *self-illuminated*[自-发光] : surfaces that have a _nonzero emissive component_.
+     在实时图形学里,一个自发光的物体是不会照亮其他表面的.(意味着需要给其它表面一个光源).
+     这意味着, 我们不是在渲染光源,而是在 _渲染场景里受到光源影响的表面_.
+**** The Lighting Equation:Putting It All Together[最终的光照方程]
+     
+     _The standard lighting equation for one light source_
+     $\boldsymbol{c}_{spec} = (\boldsymbol{s}_{spec} \otimes \boldsymbol{m}_{spec}) max(\boldsymbol{n \cdot h},0)^{m_{gls}}$.
+     $\boldsymbol{c}_{diff} = \boldsymbol{s}_{diff} \otimes \boldsymbol{m}_{diff} max(\boldsymbol{n \cdot l},0)$.
+     $\boldsymbol{c}_{amb} = \boldsymbol{g}_{amb} \otimes \boldsymbol{m}_{amb}$.
+     $\boldsymbol{c}_{emis} = \boldsymbol{m}_{emis}$.
+     
+     $\boldsymbol{c}_{lit} = \boldsymbol{c}_{spec} + \boldsymbol{c}_{diff} + \boldsymbol{c}_{amb} +\boldsymbol{c}_{emis}$.
+     下图分别展示了反射光,散射光,环境光及最终效果(由于该物体不能发光,所以略去发射光).
+     [[file:image/Figure 10.26.png]]
+     
+     _The standard lighting euqation for multible lights_
+     $\boldsymbol{c}_{lit} = \sum_{j=1}^{n} [ (\boldsymbol{s}_{j} \otimes \boldsymbol{m}_{spec}) max(\boldsymbol{n \cdot h_{j}},0)^{m_{gls}} + (\boldsymbol{s}_{j} \otimes \boldsymbol{m}_{diff}) max(\boldsymbol{n \cdot l_{j}},0)]$
+                 $+ \boldsymbol{g}_{amb} \otimes \boldsymbol{m}_{amb} + \boldsymbol{m}_{emis}$.
+     需要注意的是,环境光和发射光都只可能有一个.
+**** Limitations of the Standard Model[标准光照模型的局限]
+     标准光照模型是一项古老的技术,之所以能活跃至今,是因为它在现实,可用性和运算速度之间做到了平衡.
+     另一个很重要的原因,是标准光照模型能为艺术创作者理解和使用,艺术家对环境光和漫反射的使用已经有
+数个世纪的时间.
+     最后一个原因是,其他更先进的模型都是以标准光照模型为基础,在进阶之前掌握基础的模型非常必要.
+     
+     *真实光照*[realistic lighting]的一大主题是, *真实阴影*[realistic shadows].虽然这个很重要,但是我们在
+这里还是不会涉及到它.在渲染方程中,当我们确定了入射角的方向时,阴影也就确定了.
+
+     最后要讲的一个问题是,有些特殊的物理现象是不会被 *Blinn-Phong Model* 反映出来的.比如:
+     1.) *Fresnel reflectance*,某些非金属物体其入射角是倾斜角的时候反而反射率是最强的.
+     2.) 某些材质,如天鹅绒,进行 *retroreflectoin*[逆反射],这意味着它反射光的主要方向不同于 *Blinn-Phong*
+预测的方向,而是反射回光源处.
+     3.) *Blinn-Phong* 是 *isotropic*[各项同性]的.这意味着旋转表面的同时让观察者和光源位置保持固定,
+反射系数不会发生改变.而某些表面是 *anisotropic*[各向异性]的,(比如凹槽),这意味着反射光的强度取决于入
+射角与物体方向的相对关系.这种方向被称作 *scratch direction*[划痕方向].典型的物体有拉丝金属,头发等.
+**** Flat and Gouraud Shading[Flat 和 Gouraud 着色]
+     就 *Phong shading* 而言,我们知道对每一个像素,我们都要确定一个表面法线,然后再用这些表面法线代入
+光照方程来计算.这被叫做 *per-pixel* lighting.
+     而还有另一种方式,则是不再那么频繁的使用光照方程(对于每个面或者每个顶点而言),这两种着色方式分别
+被叫做 *Flat Shading* 和 *Gouraud Shading*.
+
+     先说 *Flat Shading*.在使用 *Flat Shading* 的时候,我们使用一个光照值来表示一整片三角形的光照值,而
+它的表面法线则是三角形的表面法线.可以看下图的效果:
+     [[file:image/Figure 10.27.png]]
+     
+     而 *Gouraud Shading*,通常又被称作 *vertex shading* / *vertex lighting* / *interpolated shading*.这
+是一个在顶点层面对值进行计算的技巧,最终得到的值会线性插值到多边形的表面上.参考下图:
+     [[file:image/Figure 10.28.png]]
+
+     作为对比我们来看看 *Phong Shading* 下的渲染效果.
+     [[file:image/Figure 10.29.png]]
+     
+     使用 *vertex shading* 的一大问题是,我们无法从 vertex-level 得到 $\boldsymbol{m}_{diff}$ 的信息,因为它是一个 *texture-map* 值.
+由此,我们先考虑将 $\boldsymbol{m}_{diff}$ 分离出来.
+      $\boldsymbol{c}_{lit} = \sum_{j=1}^{n} [ (\boldsymbol{s}_{j} \otimes \boldsymbol{m}_{spec}) max(\boldsymbol{n \cdot h_{j}},0)^{m_{gls}} + (\boldsymbol{s}_{j} \otimes \boldsymbol{m}_{diff}) max(\boldsymbol{n \cdot l_{j}},0)]$
+                 $+ \boldsymbol{g}_{amb} \otimes \boldsymbol{m}_{amb} + \boldsymbol{m}_{emis}$.
+             $= \sum_{j=1}^{n} [ (\boldsymbol{s}_{j} \otimes \boldsymbol{m}_{spec}) max(\boldsymbol{n \cdot h_{j}},0)^{m_{gls}}] + \sum_{j=1}^{n} [(\boldsymbol{s}_{j} \otimes \boldsymbol{m}_{diff}) max(\boldsymbol{n \cdot l_{j}},0)]$
+                 $+ \boldsymbol{g}_{amb} \otimes \boldsymbol{m}_{amb} + \boldsymbol{m}_{emis}$.
+             $= \sum_{j=1}^{n} [ (\boldsymbol{s}_{j}) max(\boldsymbol{n \cdot h_{j}},0)^{m_{gls}}]  \otimes \boldsymbol{m}_{spec} + \sum_{j=1}^{n} [(\boldsymbol{s}_{j} max(\boldsymbol{n \cdot l_{j}},0)] \otimes \boldsymbol{m}_{diff}$
+                 $+ \boldsymbol{g}_{amb} \otimes \boldsymbol{m}_{amb} + \boldsymbol{m}_{emis}$.
+
+      _A version of the standard lighting equation more suitable for vertex-level lighting computations_
+      最后,显然我们可以假设 $\boldsymbol{m}_{amb} = \boldsymbol{m}_{diff}$ :
+      $\boldsymbol{c}_{lit} = \sum_{j=1}^{n} [ (\boldsymbol{s}_{j}) max(\boldsymbol{n \cdot h_{j}},0)^{m_{gls}}]  \otimes \boldsymbol{m}_{spec}$
+                 $+\sum_{j=1}^{n} [\boldsymbol{g}_{amb} + (\boldsymbol{s}_{j} max(\boldsymbol{n \cdot l_{j}},0)] \otimes \boldsymbol{m}_{diff}$
+                 $+\boldsymbol{m}_{emis}$.
+      
+      _Vertex-level diffuse and specular lighting values_
+      由上式,可知如何在 *vertex-level* 上对光照值进行插值运算.在每个顶点,我们都要计算两个值:
+      1.) $\boldsymbol{v}_{spec}$ ,包含了上式中的 *镜面反射*[specular] 部分.
+      2.) $\boldsymbol{v}_{diff}$ ,包含环境光和漫反射.
+      $\boldsymbol{v}_{spec} = \sum_{j=1}^{n}s_{j} max(\boldsymbol{n \times h_{j}},0)^{m_{gls}}$,
+      $\boldsymbol{v}_{diff} = \boldsymbol{g}_{amb} + \sum_{j=1}^{n}s_{j} max(\boldsymbol{n \times l_{j}},0)$.
+      
+      _Shading pixels using interpolated lighting values_
+      $\boldsymbol{c}_{lit} = \boldsymbol{v}_{spec} \otimes \boldsymbol{m}_{spec} + \boldsymbol{v}_{diff} \otimes \boldsymbol{m}_{diff} + \boldsymbol{m}_{emis}$.
+*** 10.7 Light Sources[光源]
+    
 * Footnotes
 
 [fn:singularity] 在数学中,表示 _数学物件中无法处理的点_.
