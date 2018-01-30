@@ -4795,7 +4795,234 @@ is a *constant*.
       _Shading pixels using interpolated lighting values_
       $\boldsymbol{c}_{lit} = \boldsymbol{v}_{spec} \otimes \boldsymbol{m}_{spec} + \boldsymbol{v}_{diff} \otimes \boldsymbol{m}_{diff} + \boldsymbol{m}_{emis}$.
 *** 10.7 Light Sources[光源]
+**** Standard Abstract Light Types[标准抽象光类型]
+     这一节介绍最常见的被大多数平台使用的基础光照类型.
+     1.) *point light source*[点光源]将光从一个点向四处发散.也叫做 *omni lights*[全方位光源](omnidirectional).
+或者 *spherical lights*[球状光源].
+     *point light* 包含 _位置,颜色,光强度,衰减距离(可选)_.
+     [[file:image/Figure 10.30.png]]
+     点光源的常见应用有 _灯泡/灯具/火焰_ 等.
+
+     2.) *spot light*[聚光灯]表示特定方向上特定范围的光照.
+     包含 _位置,定向,衰减距离(可选)_.
+     常见应用有 _电筒/车灯_ 等.
+
+          2-a *conical spot light*[锥形聚光灯],样子如同一个圆锥,具体如下:
+          [[file:image/Figure 10.31.png]]
+          2-b *rectangular spot light*[矩形聚光灯],样子如同一个棱锥.之所以要介绍矩形聚光灯,是因为它主要
+用于 _project an image_.
+
+     3.) *directional light*[有向光]表示从极远处的点发射的光,它所有的光线都用于照亮整个场景.
+也叫 *parallel lights*[平行光].
+          平行光没有位置,通常情况下也不会衰减.
+          最常见的平行光就是 _太阳光/月光_.
+
+      _in the real world,lights are emissive surfaces with finite surface areas_.
+      在现实世界,光是具有有限面积的发光表面.
+      而抽象的光则不会有任何面积.
+**** Light Attenuation[光的衰减]
+     光随距离衰减.
+
+     _Real-world light attenuation_
+     $\frac{i_{1}}{i_{2}} = (\frac {d_{2}}{d_{1}})^{2}$.
+     $i$ -> *radiant flux*[辐射通量],(单位时间内通过某一面积的所有电磁辐射总功率的度量).
+     $d$ -> distance[距离].
+     
+     *radiance*[辐射率] 每单位 *立体角*[solid angle]每单位 *投影表面* 的 *辐射通量*.
+     *irradiance*[辐照度] 入射表面的 *辐射通量*.
+     
+     总结一下实时渲染的基本原则.
+     1.) 有固定面积的发射表面,它的光不会随着距离而衰减,但是会被大气和雾影响.
+     2.) 为了在特定点着色时计算有效光的颜色,标准抽象光类型是要衰减的.
+
+
+     $\frac{i_{1}}{i_{2}} = (\frac {d_{2}}{d_{1}})^{2}$.
+     而上述的公式在实践中不被使用,主要有两个原因:
+     1.) 在 $d=0$ 时,光的强度理论上将变得无限大.
+     2.) 光的强度永远不会降为0.
+     
+     由此,我们使用了一个相对简单的模型,它与 *falloff distance* 相关.
+     _typical linear attenuation model_
+     \begin{equation*}
+     i(d) =
+     \begin{cases}
+     1 & if  \, d \le d_{min},\\
+     \frac{d_{max} - d}{d_{max} - d_{min}} & if \, d_{min} < d < d_{max}, \\
+     0 & if  \, d \ge d_{max}.
+     \end{cases}
+     \end{equation*}
+     显然这是个分段函数.而 *distance attenuation*[距离衰减]通常应用于 _点光源和聚光灯_.
+     下图体现真实衰减和近似衰减的区别:
+     [[file:image/Figure 10.32.png]]
+**** Doom-style Volumetric Lights[Doom风格的体积光] 
+     本节介绍由 Doom 3 Engine (id Tech 4)普及开来的 *体积光*[volumetric light].之所以要介绍它,不仅是因
+为它从实用角度来说很容易理解,更重要的是在理论上给出了一个优雅而高效的逼近.
+     Doom-style 的体积光最具创意的一点在于 _如何确定给定点的光的强度_.
+     它通过两个 *texture map*[纹理贴图]来控制光的强度.
+     一个贴图是 *gobo*[遮光黑布].
+     另一个是一个一维贴图,被叫做 *falloff map*[衰减贴图],用于控制衰减.
+
+     确定点 $x$ 处光强的过程如下(查看下图):
+     1. $x$ 与一个 $4 \times 4$ 的矩阵相乘,得到的坐标作为这两个贴图的索引.
+     2. 2D gobo 索引为 $(x/w,y/w)$,1D falloff map 索引为 $z$.
+     3. 这两个 *texel* 的乘积定义了点 $x$ 处的光强.
+     [[file:image/Figure 10.33.png]]
     
+     *omni light*[泛光灯] : 位于中央,投影呈环状gobo.
+     _Texture coordinate generation matrix for a Doom-style omni light_
+     \begin{bmatrix}
+     \frac{1}{s_{x}} & 0 & 0 & 0 \\
+     0 & \frac{-1}{s_{y}} & 0 & 0 \\
+     0 & 0 & \frac{1}{s_{z}} & 0 \\
+     \frac{1}{2} & \frac{1}{2} & \frac{1}{2} & 1 \\
+     \end{bmatrix}
+     其中,$s_{x},s_{y},s_{z}$ 都是每个轴上的盒子的尺寸.
+     $1/2$ 是为了让范围从 $[-1/2,1/2]$ 变成 $[0,1]$.
+     
+     
+     _Texture coordinate generation matrix for a Doom-style spot light_
+     *spot light* 使用的是透视投影.投影中心在盒子的末端.
+     \begin{bmatrix}
+     \frac{s_{z}}{s_{x}} & 0 & 0 & 0 \\
+     0 & \frac{-s_{z}}{s_{y}} & 0 & 0 \\
+     \frac{1}{2} & \frac{1}{2} & \frac{1}{s_{z}} & 1 \\
+     0 & 0 & 0 & 0 \\
+     \end{bmatrix}
+     需要注意的是,为了防止在光背后的物体被点亮,每个聚光灯的 *falloff map* 的第一个像素都是黑色的.事实
+上,所有的 *gobos* 和 *falloff maps* 的边缘像素都是黑色的.
+
+     Doom-style volumetric lights 的优势:
+     1.) 简单而高效,只需要纹理坐标生成的基本功能和查找两个纹理.
+     2.) 许多不同的光照类型和效果都能整合到一个框架里.
+     3.) 任意衰减曲线都能被编进gobo和falloff map里.
+     4.) 容纳光照的 *bounding box*[边界框]可以做的尽可能小,参考上图的 *spot lights* 和 *fake spot light*.
+这可能是 _采用该方法的最重要的原因_.
+**** Precaculated Lighting[预处理光]
+     实时渲染中最大的误差源于 *indirect lighting*[间接光照] : _光在照亮应该被渲染的像素前至少弹射了一次_.
+这是一个极其恼火的问题.
+     让它"温顺"下来的首要步骤是将场景中的表面分解为离散的块或者点.但是它的问题在于,物体的任何改变都
+将改变整个场景里的光照.
+     然而,一个场景里的大多数物体是不会移动的,在这种情况下,我们可以给静止的物体更丰满的光照细节.
+     其中的一项技术是 *lightmapping*[光照贴图].在这种情况下,会有一个额外的 *UV Channel* 来将场景里
+的多边形排列成一个特殊的 *纹理贴图*[texture map]以预处理光照信息.这也被叫做 *Atlasing*[图谱].
+     
+     在 *lightmap*[光照贴图]或者顶点里包含的预处理信息有什么?这里有许多可选项.
+     1.) _number of samples per patch_ 
+         每片样本数.
+     2.) _wether the precalculated illumination includes direct lighting, indirect light,or both_
+         预处理光是否包含直接光照/间接光照,或者两者皆有.
+         
+     *lightmapping*[光照贴图]对静物而言效果很好,但是大量的移动物体又该怎么处理?其中的一项技术叫做
+*light probes*[光照探测],有兴趣可以了解一下.
+*** 10.8 Skeletal Animation[骨骼动画]
+    电子游戏中使用最为广泛的动画技术被叫做 *skeletal animation*[骨骼动画].
+    以前的做法是将人物分成多个部分,每个部分分别控制移动.但是无论怎么微调,多多少少仍然很僵硬.
+    骨骼动画背后的理念是将各个部分转换成想象中的 *骨骼*[bones].在这种情况下,模型的 
+    1. _每个顶点都与至少与一个骨骼相连_.
+    2. _每个骨骼都能对顶点施加影响,但是却不能完全确定每个顶点的位置_.
+    *rigid vertex* : 如果一个顶点只与一个骨骼相关,(为了过渡平滑)它有一个与之相关的偏移量.
+    *skinning*[蒙皮] : 指定哪些 *骨骼*[bones]影响哪些 *顶点*[vertexs]的过程.
+    _蒙皮的过程是一个非常消耗人力的过程_,尽管现在有一些工具能快速蒙皮,但真正做到完美需要技巧和时间.
+    
+    下图展示了采用蒙皮效果的顶点变化:
+    [[file:image/Figure 10.34.png]]
+    其中蓝色和绿色的球表示与骨骼对应的固定点.而蓝绿色的球则是蒙皮顶点.
+    
+    *binding pose/home pose*[绑定姿势] : 描述了默认位置下骨骼的定向.
+    现在我们来简单总结下 *mesh skinning*[网格蒙皮].
+    1.) 基本思路是只将每个顶点的位置储存在 *binding pose*.
+    2.) 当渲染网格时,将坐标 _从源绑定空间转换到先绑定空间所在的模型空间_.
+         简而言之就是,该矩阵描述了 _骨骼在绑定姿势下的定向与当前姿势下的定向的不同_.
+*** 10.9 Bump Mapping[凹凸贴图]
+    纹理贴图的首次使用是用来定义物体的颜色.但是纹理贴图在我们需要更甚于 *vertex level* 的表面的
+细腻程度时才展现了它真正的作用.
+    *Bump mapping* 是这么一个术语,它至少存在两种方法,能控制每个纹理元素的表面法线.
+    *bump map*  == *normal mapping*.
+    *height map*[高度图],是一个灰度图,不同的灰度表示表面上不同位置的高度.其中,
+     - 浅色表示那部分表面是 *凸出*[bump out]的.
+     - 深色表示那部分表面是 *凹陷*[bump in]的.
+**** Tangent Space[切线空间]
+     表现表面凹凸感的最常见方法是使用 *切线空间*[tangent space].
+     1.) 在切线空间中, $+z$ 表示从表面指向外部,其基向量为表面法线 $\boldsymbol{\hat{n}}$.
+     2.) 而基向量 $x$ 则被叫做 *tangent vector*[切线向量],记作 $\boldsymbol{\hat{u}}$,它对应 $UV$ 坐标空间里的 $U$.
+          简单解释就是,当我们在3D中的 *tangent vector* 上正向移动时,对应的就是在2D的法线贴图上向右移
+动.
+     3.) 基向量 $y$ 则被叫做 *binormal*[次法线],记作 $\boldsymbol{\hat{v}}$,它对应 $UV$ 坐标空间里的 $V$.
+
+    总结一下就是, *tangent*[切线], *binormal*[次法线], *normal*[法线]构成了 *tangent space*[切线空间]
+的三个轴.
+    *tangent-space surface normal* 记作 $\boldsymbol{s}^{t} = [s_{x}^{t},s_{y}^{t},s_{z}^{t}]$.
+    *model-space surface normal* 记作 $\boldsymbol{s}^{m} = [s_{x}^{m},s_{y}^{m},s_{z}^{m}]$.
+    有:
+    $\boldsymbol{s}^{m} = s_{x}^{t} \boldsymbol{\hat{u}} + s_{y}^{t} \boldsymbol{\hat{v}} + s_{z}^{t} \boldsymbol{\hat{n}}$.
+    同样可用矩阵表示为:
+    \begin{equation*}
+    \boldsymbol{s}^{m} = \boldsymbol{s}^{m}
+    \begin{bmatrix}
+    -\boldsymbol{\hat{u}}- \\
+    -\boldsymbol{\hat{v}}- \\
+    -\boldsymbol{\hat{n}}- \\
+    \end{bmatrix}.
+    \end{equation*}
+**** Calculating Tangent Space Basis Vectors[计算切线空间的基向量]
+     给定三角形,顶点为:
+     $\boldsymbol{p}_{0} = (x_{0},y_{0},z_{0})$,
+     $\boldsymbol{p}_{1} = (x_{1},y_{1},z_{1})$,
+     $\boldsymbol{p}_{2} = (x_{2},y_{2},z_{2})$.
+     其对应的 UV坐标为:
+     $(u_{0},v_{0})$,
+     $(u_{1},v_{1})$,
+     $(u_{2},v_{2})$.
+     
+     $\boldsymbol{q_{1} = p_{1} - p_{0}}, \quad s_{1} = u_{1} - u_{0}, \quad t_{1} = v_{1} - v_{0}$,
+     $\boldsymbol{q_{2} = p_{2} - p_{0}}, \quad s_{2} = u_{2} - u_{0}, \quad t_{2} = v_{2} - v_{0}$.
+     我们求出三角形平面上的基向量,然后就可以将三角形的边 $\boldsymbol{q_{1},q_{2}}$ 表示为基向量的线性组合.其中我们知道
+ $u,v$ 在这些边上的位移.则有:
+     $\boldsymbol{u}s_{1} + \boldsymbol{v}t_{1} = \boldsymbol{q}_{1}$,
+     $\boldsymbol{u}s_{2} + \boldsymbol{v}t_{2} = \boldsymbol{q}_{2}$.
+     将 $\boldsymbol{u,v}$ 标准化可得单位向量.于是有:
+     \begin{equation*}
+     \begin{bmatrix}
+     s_{1} & t_{1} \\
+     s_{2} & t_{2} \\
+     \end{bmatrix}
+     \begin{bmatrix}
+     -\boldsymbol{u}- \\
+     -\boldsymbol{v}- \\
+     \end{bmatrix}=
+     \begin{bmatrix}
+      -\boldsymbol{q}_{1}- \\
+      -\boldsymbol{q}_{2}- \\
+     \end{bmatrix}
+     \end{equation*}
+     然后再分别将两边乘以 $s,t$ 的逆,则可得:
+      \begin{equation*}
+     \begin{bmatrix}
+     -\boldsymbol{u}- \\
+     -\boldsymbol{v}- \\
+     \end{bmatrix}=
+     \begin{bmatrix}
+     s_{1} & t_{1} \\
+     s_{2} & t_{2} \\
+     \end{bmatrix}^{-1}
+     \begin{bmatrix}
+      -\boldsymbol{q}_{1}- \\
+      -\boldsymbol{q}_{2}- \\
+     \end{bmatrix}
+     = \frac{1}{s_{1}t_{2} - s_{2}t_{1}}
+     \begin{bmatrix}
+     t_{2} & -t_{1} \\
+     -s_{2} & s_{1} \\
+     \end{bmatrix}
+     \begin{bmatrix}
+     -\boldsymbol{q}_{1}- \\
+     -\boldsymbol{q}_{2}- \\
+     \end{bmatrix}.
+     \end{equation*}
+    考虑到我们要标准化基向量,我们可以拿掉分数,则剩下:
+    $\boldsymbol{u} = t_{2}\boldsymbol{q}_{1} - t_{1}\boldsymbol{q}_{2}$,
+    $\boldsymbol{v} = -s_{2}\boldsymbol{q}_{1} + s_{1}\boldsymbol{q}_{2}$.
+    虽然不能保证基向量是正交的,但是我们的目的已经达到: 确定vertex level上的基向量.
 * Footnotes
 
 [fn:singularity] 在数学中,表示 _数学物件中无法处理的点_.
