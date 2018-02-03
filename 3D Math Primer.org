@@ -5023,6 +5023,283 @@ is a *constant*.
     $\boldsymbol{u} = t_{2}\boldsymbol{q}_{1} - t_{1}\boldsymbol{q}_{2}$,
     $\boldsymbol{v} = -s_{2}\boldsymbol{q}_{1} + s_{1}\boldsymbol{q}_{2}$.
     虽然不能保证基向量是正交的,但是我们的目的已经达到: 确定vertex level上的基向量.
+*** 10.10 The Real-Time Graphics Pipeline[实时图形管线]
+    渲染方程是正确呈现图片的方式,前提是你有无限的计算资源:).如果你想要在计算机上显示真实世界的图片,
+你需要做出一些权衡.本章剩下的内容都是在阐述这项技术,以一个简单而典型的实时图形管线作为例子.
+    在整体上了解图形管线的概念后,我们再分别深入具体的细节.但是在此之前,我们需要知道一些缺陷:
+    1.) 没有所谓的"典型"的现代图形管线.现在 *着色器*[shader]的发展还在非常早期阶段,尽管发展非常快并
+且在很多地方已经广泛使用.在此我们不得不重申本章(甚至整本书)的目的是给人一种整体的概念.这不是在讨
+论前言技术(如果你想要学习前沿技术,推荐的书是 _Real-Time Rendering_).
+    2.) 我们想要介绍一个带基本光照的图像的生成过程.不包括动画.
+    3.) 我们只是在概念上介绍图形管线中的数据的流动.
+    4.) 我们感兴趣的是实时渲染系统,其主要用于渲染三角网格.
+    
+    _下面是图形管线传输数据的大致流程_:
+    1.) _Settinig up the scene_.在开始渲染前,我们必须在应用到整个场景前设置好一些选项.
+    2.) _Visibility determination_.当我们有一个摄像机的时候,必须要权衡哪些物体是可见的.这在实时渲染中
+是非常重要的,因为我们不希望把时间浪费在不可见的东西上.
+    3.) _Setting object-level rendering states_.在我们知道哪些物体可见之后,就要考虑画出它们了.每个物体可
+能都有自己的渲染选项,在渲染任何与之相关的元件之前,我们必须要将这些选项放到环境里.最基础的与物体相
+关的基础属性是 *material*[材质],它包涵了物体的表面信息.
+    4.) _Geometry generation/delivery_.将几何图形提交给渲染API.
+    5.) _Vertex-level operations_.在渲染API获取到几何图形后,在 vertex-level 上就有更多的操作了.
+         最重要的操作是 _将顶点坐标从 modeling space 变换到 camera space_.
+         其他操作可能包括 _蒙皮,顶点光照,纹理坐标生成_.这些操作被称作 *vertex shader*[顶点着色器].
+    6.) _Culling,clipping,and projection_.接下来,我们必须执行三次操作以将3D中的三角形显示在2D的屏幕上.
+        a. 首先,所有在视锥体外的图形都移除掉,这个过程被叫做 *clipping*[裁剪].
+        b. 然后,将多边形的顶点映射到输出屏幕的2D屏幕空间坐标上.
+        c. 最后,远离镜头的三角形被 *剔除*[culling].
+    7.) _Rasterization_.在得到裁剪的多边形后(在屏幕空间),将其光栅化.考虑到光栅化主要在硬件层面完成,
+我们不会太过详细的介绍.
+    8.) _Pixel shading_.计算像素的颜色,这个过程叫做 *shading*.在现在这个过程被整合到 *pixel shader*,
+你可以从vertex-shader获取值作为变量写入代码.然后将颜色的值输出到最后一步: *blending*[调色].
+    9.) _Blending and output_.渲染管线的最后一步,产生颜色,不透明度和深度值.
+    
+    图形程序员掌握以上所有步骤的时代并不遥远,现在其中的大多数步骤都交给图形API来处理了.现代的显卡
+允许程序员通过 *vertex shader* 和 *pixel shader* ,只用写一小段代码就能用于底层.现在更多的是考虑如何
+高效使用GPU.
+    总结一下就是,现代图形管线将我们的代码和渲染API紧密联系起来.下图展示了两者分工:
+    [[file:image/Figure 10.36.png]]
+    另一个稍显不同的关于实施图形管线的总结如下:
+    [[file:image/Figure 10.37.png]]
+**** 10.10.1 Buffers[缓冲]
+     _Rendering involves many buffers_.渲染包含多个缓冲.
+     在这里,一个 *buffer* 是指一块储存了每个像素数据的矩形内存区域.最重要的 *buffer* 有两个:
+     1.) *frame buffer*[帧缓冲]
+          *frame buffer* 储存每个像素的一种颜色,它保留渲染的图像.
+          通常有两个 *frame buffer*,一个是 *front buffer*,一个是 *back buffre*,两者互相交替呈现于屏幕.
+          具体如下图:
+          [[file:image/Figure 10.38.png]]
+     2.) *depth buffer*[深度缓冲]
+           *depth buffer* 也叫 *z-buffer*,它存储每个像素的 *depth-value*[深度值],深度值与物体与摄像机的
+距离相关.通常, _*clip space*[裁剪空间]的z坐标被作为*depth value*_.
+**** 10.10.2 Delivering the Geometry[递送几何]
+     在决定好什么东西要渲染后,剩下的就是如何渲染它们.我们将其分为两个步骤:
+     1.) _set up the *render context*[渲染环境]_.其中包括以下方面:
+          a. 告诉 *renderer*[渲染器] 使用什么 *vertex shader* 和 *pixel shader*.
+          b. 使用什么 *texture*[纹理].
+          c. 设置 *shader* 会用到的相关常量.
+     2.) _vertex streams_,这里只有两个 *vertex shader* 和 *pixel shader* 必须要输出的东西.
+          a. *vertex shader* 必须输出每个顶点的位置信息,只有这样硬件才能完成光栅化.
+          b. *pixel shader* 只需要输出颜色(通常包含一个 *alpha channel*).
+     
+     _一些包含在 *vertex-level* 的典型信息有:_
+     1. *Position*[位置],描述顶点的位置信息,可以是3D向量或者2D屏幕空间坐标等.
+     2. *Texture-mapping coordinates*[纹理贴图的坐标],如果我们使用了纹理贴图的三角形,则每个顶点都
+必须分配一组 *映射坐标*[mapping coordinates].通常都将坐标以 $(u,v)$ 表示.
+     3. *Surface normal*[表面法线],大多数关于光照的计算都要用到surface normal.
+     4. *Color*[颜色],有时为每个顶点分配一个颜色输入是必要的.典型的如渲染粒子效果.
+     5. *Basis vectors*[基向量],为了定义 *local tangent space*,必须要有基向量.基向量和表面法线在每个顶点
+都要建立 *tangent space*.
+     
+     现在给出一些用来 *递送*[deliver]顶点数据的C 风格的例子.
+
+     最简单的vertex格式只包含 _3D position / surface normal / mapping coordinates_ :
+     #+BEGIN_SRC C++
+     struct RenderVertex 
+     {
+     Vector3 p; //position
+     float u,v;  //texture mapping coordinates
+     Vector3 n; //normal
+     };
+     #+END_SRC
+
+     进一步,如果我们需要使用 *tangent-space* 的法线贴图,则代码如下:
+     #+BEGIN_SRC C++
+     // Untransformed, unlit vertex with basis vectors
+     struct RenderVertexBasis
+     {
+     Vector3 p; //position
+     Vector3 n; //normal
+     Vector3 tangent; //1st basis vector
+     float de; //Determinant of tangent space transform (mirror flag)
+     float u,v; //texture mapping coordinates
+     };
+     #+END_SRC
+     
+     另一种格式,用于 *HUD* 或者 *text rendering*,和其他2D物件,该顶点包括了 *pre-lit vertices* 和
+*screen space coordinates*.
+      #+BEGIN_SRC C++
+      //2D screen-space pre-lit
+      struct RenderVertex2D
+      {
+      float x,y; //2D screen-space position
+      unsigned argb; //prelit color
+      float u,v; //texture mapping coordinates
+      };
+      #+END_SRC
+      
+     下面的顶点格式用3D表示,但是不需要依赖图形API的光照引擎.这个格式通常用于
+     a. *particle effects*[粒子效果],如 _爆炸,火焰,自己发光的物体_.
+     b. *rendering debugging* 物体,如 _边界盒[bounding boxes],waypoints[路径点],markers[标记]_ 等.
+     #+BEGIN_SRC C++
+     // Untransformed, lit vertex
+     struct RenderVertexL
+     {
+     Vector3 p; //3D position
+     unsigned argb; //prelit color
+     float u,v; //texture mapping coordinates
+     };
+     #+END_SRC
+     
+     下一个例子的顶点用于 *lightmapped/bump-mapped geometry*[光照贴图/凹凸贴图几何].
+     #+BEGIN_SRC C++
+     //Lightmapped, bump mapped vertex
+     struct RenderVertexLtMapBump
+     {
+     Vector3 p; //position
+     Vector3 n; //normal
+     Vector3 tangent; //1st basis vector
+     float det; //Det of tangent space transform(mirror flag)
+
+     float u,v; //regular coordinates for diffuse and bump map
+     float lmu,lmv; //texture coordinates into lightmap
+     };
+     #+END_SRC
+     
+     最后的这个顶点或许会用于 *skeletal rendering*[骨骼渲染].
+     #+BEGIN_SRC C++
+      struct RenderVertexLtMapBump
+     {
+     Vector3 p; //position
+     Vector3 n; //normal
+     Vector3 tangent; //1st basis vector
+     float det; //Det of tangent space transform(mirror flag)
+
+     float u,v; //regular coordinates for diffuse and bump map
+     unsigned boneIndices; //bone indices for up to 4 bones (8-bit values)
+
+     Vector4 boneWeights; //weights for up to 4 bones
+     };
+     #+END_SRC
+**** 10.10.3 Vertex-Level Operations[顶点层级的操作]
+     在网格数据被提交到API后,就开始进行 *vertex-level* 的操作了.操作发生在 *vertex-shader*.尽管一个
+*vertex-shader* 可以输出多种类型,但是这里有两个条件必须要满足:
+     第一个必须输出的是, 裁剪空间的坐标信息.
+     第二个是为 *pixel shader*[像素着色器]提供它进行计算所需要的任何输入.
+     
+     _在 *vertex shader* 中完成的常见操作_.
+     - transforming model-space positions into clip space.
+     - Performing skinning for skeletal models.
+     - Transforming normals and basis vectors into the appropriate space for lighting.
+     - Calculating vectors needed for lighting( $\boldsymbol{l,h}$ ) and transforming them into the appropriate coordinate
+space.
+     - Computing fog density values from the vertex position.
+     - Generating texture mapping coordinates procedurally.
+     - Passing through raw vertex inputs without modification, if they are already in the correct format and
+coordinate space.
+
+     _Transforming model-space positions into clip space_ 是其中最常见的操作.理论上来说,顶点做了如下一
+系列变换:
+     - The _model transform_ transforms from _modeling space to world space_.
+     - The _view transform_ transforms from _world space to camera space_.
+     - The _clip matrix_ is used to transform from _camera space to clip space_.
+     矩阵如下:
+     $\boldsymbol{v}_{clip} = (\boldsymbol{v}_{model}) (\boldsymbol{M}_{model \rightarrow world}) (\boldsymbol{M}_{world \rightarrow camera}) (\boldsymbol{M}_{camera \rightarrow clip})$.
+**** 10.10.4 Clipping[裁剪]
+     在顶点变换到 *clip space* 后,要对三角形做两个测试:
+     1.) Clipping[裁剪]
+     2.) Culling[剔除]
+     两个操作都由API实现,大部分硬件 *culling* 都发生在 *clip space*.
+     在将顶点投影到 *screen space* 前,必须要保证顶点完全在 *view frustum*[视锥体]内.这个过程被叫做
+*Clipping*[裁剪],通常由硬件实现.
+     *Sutherland-Hodgman* 算法: 裁剪多边形的标准算法.裁剪时会多边形的边有四种可能:
+     _Clipping a single edge - the four cases_
+     [[file:image/Figure 10.39.png]]
+     需要记住,裁剪操作输出的是 *顶点* 而不是 *边*.
+     
+     _Clip a polygon against the right clip plane_
+     [[file:image/Figure 10.40.png]]
+     在每个阶段,只要顶点数少于三个,就将多边形设为不可见.
+**** 10.10.5 Backface Culling[背面剔除]
+     第二个测试是 *backface culling*,目的在于排除掉那些没有面向摄像机的三角形.原因很简单,我们不可能看
+见一个物体的背面,除非我们转到它的背面去,当然如果这个物体是透明的就另当别论了.
+     *Backfacing triangles* 既可以在3D中被检测到(投影前),也可以在2D中检测到(投影后).
+     
+     _Backface culling of triangles with vertices enumerated counterclockise in screen space_
+     [[file:image/Figure 10.41.png]]
+
+     考虑到一些特殊情况,API允许你控制 *backface culling*.
+     [[file:image/Figure 10.42.png]]
+     软件渲染和硬件渲染的瓶颈不同.使用硬件的情况下, *backface culling* 在2D中完成,软件则是在3D中完成.
+(在3D中,考虑的是三角形在摄像机前面还是后面).具体方法如下:
+     1.) 得到平面中三角形的法线以及从眼睛到三角形形成的向量.
+     2.) 如果两个向量方向一致(点积大于0),则该三角形是 *backfacing* 的.
+**** 10.10.6 Rasterization,Shading,and Output[光栅化,着色,再输出]
+     在 *裁剪*[clipping]后,顶点已经投影映射到了 *输出窗口*[output window]的屏幕坐标上.
+     在光栅化的时候,渲染系统可能会进行 *scissoring*[剪取],意为排除掉在渲染窗口外的像素.
+
+     现在来看看对单一一个像素的渲染步骤:
+     1.) *Interpolate*[插值].
+     2.) *Depth test*[深度测试].
+     3.) *Shade*[着色].由 *pixel shading* 处理.
+     4.) *Alpha test*[透明测试].
+     5.) *Write*[写入].如果像素通过了 *depth test* 和 *alpha test*,则更新 *frame buffer* 和 *depth buffer*
+的值.
+*** 10.11 Some HLSL Examples[一些HLSL示例]
+    本节给出一些 HLSL的 *vertex shader* 和 *pixel shader* 的代码片段.
+**** Decal Shading and HLSL Basics[贴花纸材质和一些HLSL基础]
+     最简单的着色就是只输出纹理贴图的颜色而不包含任何光照,这被叫做 *Decal shading*.
+
+     _Vertex shader for decal shading_
+     #+BEGIN_SRC C++
+     //pixel shader inputs
+     struct Input
+     {
+     float4 pos : POSITION; //position in modeling space
+     float2 uv : TEXCOORD0; //texture coordinates
+     };
+     
+     //output from vertex shader
+     struct Output
+     {
+     float4 pos : POSITION; //position in CLIP space
+     float2 uv : TEXCOORD0; //texture coordinate
+     };
+     
+     //global variable,which is a shader constant that holds model -> clip transform matrix.
+     uniform float4 modelToClip;
+     
+     //the body of our vertex shader
+     Output main (Input input)
+     {
+     Output output;
+
+     //transform vertex position to clip space. The mul() performs matrix multiplication.
+     output.pos = mul(input.pos, modelToClip);
+     output.uv = input.uv;
+     
+     return output;
+     };
+     #+END_SRC
+
+     _Pixel shader for decal rendering_
+     #+BEGIN_SRC C++
+     //this struct declares the interpolated inputs we receive from the rasterizer.
+     struct Input
+     {
+     float2 uv : TEXCOORD0; //texture coordinates
+     };
+     
+     //global constant color
+     uniform float4 constantColor;
+     
+     //going to do a texture lookup so that our rendering code can select the appropriate texture into the
+     //rendering context before drawing primitives.
+     sampler2D diffuseMap;
+     
+     //the body of our pixel shader.
+     float4 main (Input input) : COLOR
+     {
+     //fetch the texel
+     float4 texel = tex2D(diffuseMap, input.uv);
+     
+     //component-wise multiplication
+     return texel*constantColor;
+     }
+     #+END_SRC
+**** Basic Per-Pixel Blinn-Phong Lighting[基础的 Blinn-Phong 光照]
+     
 * Footnotes
 
 [fn:singularity] 在数学中,表示 _数学物件中无法处理的点_.
@@ -5053,4 +5330,3 @@ is a *constant*.
 1范数,为绝对值之和
 2范数,就是通常意义上的模
 无穷范数,就是取向量的最大值
-
