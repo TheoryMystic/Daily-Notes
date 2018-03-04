@@ -5299,7 +5299,125 @@ coordinate space.
      }
      #+END_SRC
 **** Basic Per-Pixel Blinn-Phong Lighting[基础的 Blinn-Phong 光照]
+     现在我们加入一些简单的光照.下面的例子由 _一个线性衰减的 *泛光灯*[omni light] 和一个环境光组成_.
+
+     _vertex shader for per-pixel lighting of a single omni plus ambient_
+     #+BEGIN_SRC C++
+     //Mesh inputs
+     struct Input
+     {
+     float4 pos : POSITION; //position in model space
+     float3 normal : NORMAL; //vertex normal in model space
+     float2 uv : TEXCOORD0; //texture coordinates for diffuse, spec maps
+     };
      
+     //Vertex shader output.
+     struct Output
+     {
+     float4 clipPos : POSITION; //clip-space position
+     float2 uv : TEXCOORD0; //texture coordinates for diffuse, spec maps
+     float3 normal : TEXCOORD1; //vertex normal in model space
+     float3 modelPos : TEXCOORD2; //position in model space
+     };
+     
+     //Modle->Clip transform matrix.
+     uniform float4x4 modelToClip;
+     
+     //the body of our vertex shader
+     Output main (Input input)
+     {
+     Output output;
+
+     //transform vertex position to clip space.
+     output.clipPos = mul(input.pos, modelToClip);
+     
+     //pass through vertex inputs without modification
+     output.normal = input.normal;
+     output.uv = input.uv;
+     output.modelPos = input.pos;
+     
+     return output;
+     }
+     #+END_SRC
+     
+     _Pixel shader for per-pixel lighting of a single omni plus ambient_
+     注意这里我们使用了两种不同的 *texture maps*.一个是 *diffuse color*[固有色贴图/漫反射颜色],一个是
+*specular color*[高光色贴图/镜面反射颜色],在此我们假设两个贴图都用的一个坐标系.
+     #+BEGIN_SRC C++
+     //Interpolated inputs from the vertex shader.
+     struct Input
+     {
+     float2 uv : TEXCOORD0; //texture coordinates for diffuse, spec maps
+     float3 normal : TEXCOORD1; //vertex normal in model space
+     float3 modelPos : TEXCOORD2; //model space position (for lighting)
+     };
+     
+     //a global constant RGB and opacity
+     uniform float4 constantColor;
+     
+     //omni light position, in MODEL space
+     uniform float3 omniPos;
+     
+     //reciprocal of omni light radius.
+     uniform float invOmniRad;
+     
+     //Unattenuated omni light color
+     uniform float3 omniColor;
+     
+     //view position, in MODEL space
+     uniform float3 viewPos;
+     
+     //constant ambient light color
+     uniform float3 ambientLightColor;
+
+     //material glossiness
+     uniform float specExponent;
+     
+     //diffuse and specular map samplers.
+     sampler2D diffuseMap;
+     sampler2D specularMap;
+
+     //Pixel shader body
+     float4 main(Input input) : COLOR
+     {
+     //fetch the texels to get the material colors
+     float4 matDiff = tex2D(diffuseMap,input.uv);
+     float4 matSpec = tex2D(specularMap,input.uv);
+     
+     //normalize interpolated vertex normal
+     float3 N = normalize(input.normal);
+
+     //compute vector to light
+     float3 L = omniPos - input.modelPos;
+     
+     //normalize it, and save off distance to use later for attenuation
+     float dist = length(L);
+     L /= dist;
+     
+     //compute view vector and halfway vector
+     float3 V = normalize(viewPos - input.modelPos);
+     float3 H = normalize(V + L);
+     
+     //compute attenuated light color
+     float3 lightColor = omniColor * max(1 - dist*invOmniRad,0);
+     
+     //compute diffuse and specular factors
+     float diffFactor = max(dot(N,L),0);
+     float specFactor = pow(max(dot(N,H,0),specExponent);
+     
+     //compute effective light colors
+     float3 diffColor = lightColor * diffFactor + ambientLightColor;
+     float3 specColor = lightColor * specFactor;
+     
+     //sum up colors
+     float4 result = matDiff; //RGB and opacity from diffuse map
+     result.rgb *= diffColor; //modulate by diffuse + ambient lighting
+     result.rgb += matSpec.rgb * specColor; // add spec, ignoring map alpha
+     
+     //modulate it by the constant and output
+     return result*constantColor;
+     };
+     #+END_SRC
 * Footnotes
 
 [fn:singularity] 在数学中,表示 _数学物件中无法处理的点_.

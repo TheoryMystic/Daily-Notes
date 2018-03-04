@@ -22,11 +22,17 @@
      当你定义了多个状态之后,就需要确定在某种条件下完成从一个状态到另一个状态的转换.
 
 * TODO [#A]Daily Exercise                                          :Exercise:
-  SCHEDULED: <2017-12-22 周五 23:30 +2d>
+  SCHEDULED: <2018-01-03 周三 23:30 +2d>
    :PROPERTIES:
-   :LAST_REPEAT: [2018-01-23 周二 21:58]
+   :LAST_REPEAT: [2018-03-03 周六 22:29]
    :END:
 
+   - State "DONE"       from "TODO"       [2018-03-03 周六 22:29] Slim in 6 35'
+   - State "DONE"       from "TODO"       [2018-03-02 周五 22:31]  Yoga - 53'
+   - State "DONE"       from "TODO"       [2018-03-01 周四 22:51]   Slim in 6 - 57'
+   - State "DONE"       from "TODO"       [2018-02-28 周三 23:00]  Slim in 6 - 35'
+   - State "DONE"       from "TODO"       [2018-02-27 周二 23:02]  Yoga - 53'
+   - State "DONE"       from "TODO"       [2018-02-19 周一 18:04]   Yoga - 53'
    - State "DONE"       from "TODO"       [2018-01-23 周二 21:58]
    - State "DONE"       from "TODO"       [2018-01-04 周四 21:50]
    - State "DONE"       from "TODO"       [2017-12-21 周四 23:07]
