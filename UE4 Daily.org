@@ -15,13 +15,119 @@
    [[file:UImage/UFigure1.png]]
 * UE4 Structure
 ** 1. Editor[编辑器]
+   *F* 
+   让摄像机聚焦于选中的对象.
+   *ALT*
+   1. 按住Alt和鼠标左键的情况下以摄像机为中心环视四周
+   2. 按住Alt和鼠标右键的情况下拉近/拉远摄像机
+   *Physics Simulation*
+   Object ->Details Panel -> Physics -> Simulate Physics
+   *Physics Constrain to Plane*
+   Object ->Details Panel -> Physics -> Constrains
+   *Trigger Volume*
+   Emits an Event when collide with Actors
 ** 2. Directory Structure[目录结构]
+   *.uproject*
+   虚幻4项目文件,可在编辑器中打开.
+   *.uasset*
+   存储在 Content 文件里的资源文件,包含 _Material[材质], Static Meshes[静态网格], Skeletal Mesh_
+_[骨骼网格], Blueprints[蓝图], Sound Cues[音效], Textures[纹理] 等_.
+   *.umap*
+   将 maps 储存在 Content 文件里.编辑器里只能同时打开一个 map.
+   
 ** 3. Terminology[术语]
+   *UObject* ->
+   1. 实现了 *garbage collection*[垃圾回收] 的基础对象类.
+   2. 支持通过 *UPROPERTY* 宏命令来将对象数据暴露于编辑器并序列化.
+   
+   *Actor* ->
+   1. 可以放置在 Level[关卡] 内的任意对象.
+   2. 支持 *3D Transformation*[3D 变换] 并且能被 *spawn*[生成] 和 *destroyed*[摧毁].
+   3. Actor示例 : *StaticMeshActor*, *CameraActor*, *PlayerStateActor*.
+
+   *Component* -> 
+   依附于 *Actor* 存在的功能性部件.
+   
+   *Pawn* ->
+   1. *Pawn* 是一个能被 *Player* 或者 *AI* 操纵的 *Actor*.
+   2. e.g *DefaultPawn* 包含了 _CollisionComponent, StaticMeshComponent 和_
+_DefaultPawnMovementComponent_.
+   
+   *Character* ->
+   1. *Character* 是一个只能由 *Player*  操纵的 *Pawn*.
+   2. 包含了 _Collision[CapsuleComponent],input bindings, movement behavior[CharacterMovement]_.
+   
+   *Controller* ->
+   1. *Controller* 是一个操纵 *Pawn* 的 *Actor*.
+   2. *Controller* 接收来自被控制的 *Pawn* 引发的事件的通知,并允许 *Controller* 对 *Pawn* 的行为加以
+控制,如拦截/延迟行为等.
+
+   *PlayerController*
+   1. 用于将玩家输出映射到玩家所操纵的 *Pawn* 或 *Character*.
+   2. 一个 *PlayerController* 包含 _HUD, CameraComponent, Camera Actor 以及 PlayerCameraManager_.
+   
+   *AIController*
+   1. 用于控制NPC行为.
+   2. *注意*, *Pawn* 和 *Character* _默认由AI Controller_ 控制.
+
+   *Camera Actor*
+   1. 源于 *Camera Component* 作为一个组件不能直接放置于Level,所以封装成一个 Actor.
+   2. 包含两个组件, 
+       _StaticMeshComponent_,用于展示摄像机放置的位置,
+       _FrustumComponent_,用于展示摄像机的 *FOV*[Field Of View].
+
+   *CameraComponent*
+   1. 用于提供 *View Target*[目标视图]信息.
+
+   *Brush*
+   1.是一个 *Actor*,并用来描述关卡地形.
+   2. _BSP Brush_,用于在关卡里构造封闭环境. _Volume Brush_.
+
+   *Level* 
+   就是Map,用户定义的游玩区域.文件名以 *.umap* 结尾.
+   
+   *World*
+   由一系列 *Level* 组成,串联 *Level* 和生成 *Dynamic Actor*.
+   
+   *GameMode*
+   设定游戏玩法,如: 最大人数,出生地,关卡切换,胜利/失败条件等.
 ** 4. User Interface[用户界面]
+   *HUD*[Heads-up displays]
+   适用于非交互的游戏状态.
+   而 *User Interface* 则适用于显示需要在屏幕上显示的互动元素.
+
+   *Canvas*
+   用于在 *HUD* 的 *render loop* 中绘制元素(如 text,texture,triangles)于屏幕上.
+
+   *Slate*
+   用于构建用户界面框架的工具.
+   
+   *UMG*[Unreal Motion Graphics UI Designer]
+   用于构建 HUD,Menu或者其他界面的可视化UI工具.
 ** 5. Code Style[代码规范]
+   前缀词汇释义:
+   _T_ -> Tmplate Class
+   _U_ -> Inherits from *UObject*
+   _A_ -> Inherits from *AActor*
+   _S_ -> Inherits from *SWidget*
+   _I_ -> Abstract interface
+   _E_ -> Enum
+   _b_ -> Boolean variable
+   _F_ -> most other classes
 ** 6. Unreal Build System[Unreal编译系统]
+   *UHT*[UnrealHeaderTool] 主要用于帮助完成 *UObject* 系统的解析和代码生成.
+   
+   *UBT*[UnrealBuildTool] 支持以下目标:
+   1. Game : standalone game, requires cooked data
+   2. Client : "Game" target without server code; for network clients
+   3. Server : "Game" target without client code; for dedicated servers
+   4. Editor : for extending the Unreal Editor
+   5. Program : for standalone utility programs built on UE
 ** 7. Engine Architecture[引擎架构]
 *** 7.1 Object System[对象系统]
+    将 *classes*, *properties*, *functions* 通过对应的宏 *UClass*, *UProperty* 以及 *UFunction* 来将其
+细节暴露于引擎.
+
 **** Garbage Collection[垃圾回收]
 **** Run-Time Type Information[运行时类型信息]
 **** Serialization[序列化]
