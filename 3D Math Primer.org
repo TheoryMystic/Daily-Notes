@@ -99,14 +99,24 @@
     vector有几个维度就包括了几个量.
     而scalar可以看成是1维的vector.也就是只包含了单个量的vector.
     至此,我们将引入两个新的概念:
-    - *row vector*[行向量]  ---> [1,2,3]
-    - *column vector*[列向量] --->  [1]
-     [2]
-     [3]
+    - *row vector*[行向量]
+\begin{equation}
+  row = 
+    \begin{bmatrix}  
+    1 & 2 & 3
+    \end{bmatrix}  
+\end{equation}
+    - *column vector*[列向量]
+\begin{equation}
+col = 
+\begin{bmatrix}
+1 \\ 2 \\ 3
+\end{bmatrix}
+\end{equation}
 *** 2.2 Geometric Definition of Vector [vector的几何定义]
     vector表示 _同时具有大小[magnitude]和方向[direction]的线段[line segment]_.
     vector有 *头*[head] 和 *尾*[tail],头表示 *结束*[ends]的位置,尾表示 *开始*[starts]的位置.
-*** 2.3 Vector as a Sequence of Displacements [vector-作为一系列的位移]
+*** 2.3 Vector as a Sequence of Displacements [vector作为一系列的位移]
     *Displacements*[位移],表示物体的位置变化,定义为 _由初位置到末位置的有向线段_.
     由定义可知,位移是一个vector.
     而在3D向量中,我们通常把向量的位置分解成x,y,z三个位移量.分别表示该向量到三个
@@ -124,7 +134,7 @@
 *** 2.6 Unit Vectors [单位向量]
     Unit vector  <-->  normalized vector <--> normals[法线]
     因为有些时候我们只想要知道 _向量的方向_,而不管它的 _大小_,由此就产生了 *Unit Vector*.
-    *Unit vector*,就是模为1的矢量.
+    *Unit vector*,就是模为1的向量.
 
     而单词 *normal* 通常还有另一层含义: *perpendicular*[正交],表示垂直.
     当我们说 *normal vector* 的时候,其实是在说这个 *vector* 与另外的什么东西垂直.
@@ -136,8 +146,6 @@
     一个 1) *垂直*[perpendicular] 于什么东西且 2)通常有 *单位长度*[unit length] 的vector.
 
     $\hat{v} = \frac{v}{|v|}$
-    e.g
-    [15 -3] / |[15 -3]| = [15 -3] / sqrt(15^2,-3^2) = [15 -3] / sqrt(225+9) = [15 -3] / sqrt(234)
 
 *** 2.7 Vector Dot Product [向量点积]
     在向量的乘法中,除了 *向量*[vector] 与 *标量*[scalar] 相乘,还有向量与向量的乘法.
@@ -146,14 +154,14 @@
     AI,都随处可见.
     
     dot product formula
-    $a \cdot b = \sum_{i=1}^n ai$
+    $\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_{i}b_{i}$
     
 **** Geometric Interpretation[几何解释]
     关于点积有两种几何解释,
     - The dot product a · b is equal to the signed length of the projection of b onto any line 
       parallel to a, multiplied by the length of a.
       点积结果是向量a到另一个向量b的 *投影*[projection]再乘以a的模.
-      a . b = projb(a) 乘 |a|
+      $\vec{a} \cdot \vec{b} = proj_{b}(a) \cdot |a|$
       *投影*,就是指 1)在光线垂直射下来的某个平面的 2)某个物体的 *影子*[shadow].
       也可以说, *投影* 是 _二维到一维的_ *线性变换*[linear transformation].
 
@@ -167,17 +175,17 @@
       $cos\theta = \frac {\hat{a} \cdot \hat{b}} {1} = \hat{a} \cdot \hat{b}$
       $a \cdot b = |a| |b| cos\theta$
 **** Summarize[总结]
-    - The dot product a . b measures the length of the projection of b onto a,
+    - The dot product $a \cdot b$ measures the length of the projection of b onto a,
       multiplied by the length of a.
     - The dot product can be used to measure displacement in a particular
       dirction.
     - The projection operation is closely related to the cosine function.The dot
-      product a . b also is equal to |a| |b| cosθ, where theta is the angle between
+      product $a \cdot b$ also is equal to $|a| |b| cos \theta$, where theta is the angle between
       the vectors.
     
 *** 2.8 Vector Cross Product [向量叉积]
     向量叉积不同于点积,点积生成一个 *标量*[scalar],而叉积生成一个3D向量同时 _不满足交换律_.
-    叉积最重要的作用在于生成一个垂直于平面的向量,生成三角形或者多边形.
+    叉积最重要的作用在于 _生成一个垂直于平面的向量,生成三角形或者多边形_.
 **** Geometric Interpretation [几何解释]
     向量的叉积生成一个同时与两个原向量正交[perpendicular]的新向量.
     向量叉积的模:
@@ -325,8 +333,7 @@
     2 basis vectors --> the span is an infinite 2D plane.
     3 basis vectors --> the span is an infinite 3D plane.
     *linear span* --> 线性生成空间
-    *rank* -->
-    _秩,由基向量张成的空间的维度数量被叫做秩._
+    *rank*[秩] --> _由基向量张成的空间的维度数量被叫做秩._
     the number of dimensions in the space _spanned by the basis_ is the *rank* of the basis.
     *linear dependent* --> 线性相关
     *linear independent* --> 线性无关 --> *满秩*[full rank]
@@ -413,7 +420,7 @@
     2 \\
     3
     \end{bmatrix}
-**** Matrix Transposition[转置矩阵]
+**** Matrix TranSposition[转置矩阵]
     假设有一个矩阵$\boldsymbol{M} (r \times c)$,则它的 *转置*[transpose] 矩阵为
     $\boldsymbol{M^T} (c \times r)$,有$\boldsymbol{M^T_{ij}} = \boldsymbol{M_{ji}}$.
     e.g
@@ -608,7 +615,7 @@
     \end{flushleft}
     \end{equation*}
 
-    \begin{equation*}
+        \begin{equation*}
     \begin{flushleft}
     \begin{bmatrix}
     m_{11} & m_{12} & m_{13} \\
@@ -646,7 +653,7 @@
     - *rotation*[旋转]
     - *scale*[缩放]
     - *orthographic projection*[正交投影]
-    - *shearing*[裁剪]
+    - *shearing*[错切]
     - *reflection*[反射]
 
     已知 *基向量*[basis vectors] $\vec{i} = [1,0,0],\vec{j} = [0,1,0], \vec{k} = [0,0,1]$,与任意矩阵$\boldsymbol{M}$
@@ -668,7 +675,7 @@
     \end{equation*}
 
     \begin{equation*}
-   \boldsymbol{\vec{i}M} =
+   \boldsymbol{\vec{j}M} =
    \begin{bmatrix}
    0 & 1 & 0
    \end{bmatrix}
@@ -684,7 +691,7 @@
    \end{equation*}
 
     \begin{equation*}
-   \boldsymbol{\vec{i}M} =
+   \boldsymbol{\vec{k}M} =
    \begin{bmatrix}
    0 & 0 & 1
    \end{bmatrix}
@@ -1116,7 +1123,7 @@
     方向上将缩放的k值取0,就完成了投影的操作(在2D中被转换为平行的直线,在3D中被转换为一个平面).这种
     投影方式被称作 *正交投影*[orthographic projection],在后面还会学习另一种投影, *透视投影*[perspective
     projection].
-***** Projecting onto a Cardinal Axis or Plane[投影到主轴或者平面上]
+**** Projecting onto a Cardinal Axis or Plane[投影到主轴或者平面上]
      最简单的投影就是投影在 *主轴*[cardinal axis](2D) 和 *平面*[plane](3D).
      投影到坐标轴:
      \begin{equation*}
@@ -1183,7 +1190,7 @@
      0 & 0 & 1\\
      \end{bmatrix}
      \end{equation*}
-***** Projecting onto an Arbitrary Line or Plane[投影到任意直线或平面]
+**** Projecting onto an Arbitrary Line or Plane[投影到任意直线或平面]
      参考上一节的内容,只需要将$\hat{n},和k$ 代入即可.
      2D时,
      \begin{equation*}
@@ -1243,11 +1250,11 @@
     -2n_{x}n_{z} & -2n_{y}n_{z} & 1-2n_{z^2}\\
     \end{bmatrix}
     \end{equation*}
-*** 5.5 Shearing[裁剪]
-    *裁剪*[shearing]看起来像是在歪斜坐标空间.与缩放不同的是,裁剪 _不会改变_ 物体的 *面积*[area]和
+*** 5.5 Shearing[错切]
+    *错切*[shearing]看起来像是在歪斜坐标空间.与缩放不同的是,错切 _不会改变_ 物体的 *面积*[area]和
     *体积*[volume],相同的在于两者都会改变物体的角度大小.
-    裁剪变换并不经常被使用,它也被称作 *斜变换*[skew transformation].要注意的是,在同时混合了 *裁剪* 
-    和 *缩放* 的变换中,由于两者变换的时候一个不成比例(裁剪),一个成比例(缩放),往往不太能分辨出来.
+    错切变换并不经常被使用,它也被称作 *斜变换*[skew transformation].要注意的是,在同时混合了 *错切* 
+    和 *缩放* 的变换中,由于两者变换的时候一个不成比例(错切),一个成比例(缩放),往往不太能分辨出来.
     在2D空间中,有矩阵如下:
     \begin{equation*}
     \boldsymbol{H}_{x}(s) = 
@@ -1264,7 +1271,7 @@
     \end{bmatrix}
     \end{equation*}
 
-    其中,x,y各自表示被固定的那个轴,s表示裁剪的大小.
+    其中,x,y各自表示被固定的那个轴,s表示错切的大小.
     同理,在3D空间中,有:
     \begin{equation*}
     \boldsymbol{H}_{xy}(s,t) = 
@@ -1293,11 +1300,11 @@
     \end{bmatrix}
     \end{equation*}
 *** 5.6 Combining Transformations[组合变换]
-    本章节主要讲述的是如何将各种不同的变换(旋转/缩放/投影/反射/裁剪...)组合为一个单一的矩阵.
+    本章节主要讲述的是如何将各种不同的变换(旋转/缩放/投影/反射/错切...)组合为一个单一的矩阵.
     组合变换的一个例子是 *渲染*[rendering].想象一下在世界坐标系中有一个任意位置和方向的物体,我们的
     目的是让它在一个给定的 *摄像机*[camera] 下渲染.
     首先,我们要知道它的所有顶点坐标,并且将它们从 *本地空间*[local space] 转移到 *世界空间*[world 
-    space],这个过程被叫作 *模型变换*[model transform],用 $\boldsymbol{M}_{wld\to cam}$ 表示.
+    space],这个过程被叫作 *模型变换*[model transform],用 $\boldsymbol{M}_{obj\to wld}$ 表示.
     然后,我们将变换到世界坐标系的物体的顶点转换到 *摄像机空间*[camera space],这个过程被叫作 *视角变换*[view
     transform],用 $\boldsymbol{M}_{wld \to cam}$ 表示.
     总结如下:
@@ -1362,7 +1369,7 @@
     transformation] 是否是可逆的?
     我们知道 *仿射变换* = *线性变换* + *位移*,很明显,位移的撤销操作就是取负,那么现在问题就被简化为:
     _线性变换是否可逆_?
-    从直觉上来说, *旋转* / *缩放* / *反射* / *裁剪* ,我们都可以进行撤销操作,唯独 *投影*,我们不知道怎么
+    从直觉上来说, *旋转* / *缩放* / *反射* / *错切* ,我们都可以进行撤销操作,唯独 *投影*,我们不知道怎么
     怎么搞.
     从前面章节可以知道,所有的线性变换都可以被表达成与矩阵相乘的结果,那么找线性变换的 *逆*[inverse]
     实际上就是找到矩阵的 *逆*.
@@ -1893,8 +1900,8 @@ x+\Delta x & y+\Delta y & z+\Delta z & 1
 \end{bmatrix}
 \end{equation*}
     这个矩阵加法依然是 *线性变换*[linear transformation].在4D中,矩阵加法并不能代替 *位移*[translation],
-并且4D的零向量总会变换回零向量.而之所能成功的原因是我们实际上在 *裁剪*[shearing] 4D空间,想想之前
-我们看过的裁剪矩阵,在4D中做 *裁剪*,展现在3D空间的效果就是 *位移*.(想想3D空间中裁剪,2D空间的表现)
+并且4D的零向量总会变换回零向量.而之所能成功的原因是我们实际上在 *错切*[shearing] 4D空间,想想之前
+我们看过的错切矩阵,在4D中做 *错切*,展现在3D空间的效果就是 *位移*.(想想3D空间中错切,2D空间的表现)
     现在考虑如何完成旋转和平移.令矩阵 $\boldsymbol{R}$ 为 *旋转矩阵*,矩阵 $\boldsymbol{T}$ 为 *位移矩阵*,则有等式如下:
 \begin{equation*}
 \boldsymbol{R} =
@@ -4244,13 +4251,13 @@ to others.
 **** The View Frustum[视锥体]
      视锥体的形状如下图:
      [[file:image/Figure 10.3.png]]
-     1.) 视锥体由六个 *表面*[surface]组成,而每个表面又被称作 *裁剪面*[clip planes].
-     2.) 金字塔形状的四个裁剪面分别被称作 *top* *bottom* *left* *right* 裁剪面.
-     3.) 另外的两个面根据距离远近被称作 *near clip plane*[近裁剪面]和 *far clip plane*[远裁剪面].
+     1.) 视锥体由六个 *表面*[surface]组成,而每个表面又被称作 *错切面*[clip planes].
+     2.) 金字塔形状的四个错切面分别被称作 *top* *bottom* *left* *right* 错切面.
+     3.) 另外的两个面根据距离远近被称作 *near clip plane*[近错切面]和 *far clip plane*[远错切面].
      
-     至于远裁剪面有什么用,具体功能如下:
-     1.) 超出视锥体范围内的物体都不会渲染(所以需要远裁剪面来确定最远距离).
-     2.) 由于 *depth buffer* 存储 *depth value*,而其值必然有大小限制,而到远裁剪面的距离的z则可对此做
+     至于远错切面有什么用,具体功能如下:
+     1.) 超出视锥体范围内的物体都不会渲染(所以需要远错切面来确定最远距离).
+     2.) 由于 *depth buffer* 存储 *depth value*,而其值必然有大小限制,而到远错切面的距离的z则可对此做
 出限制.
 **** Field of View and Zoom[视场和缩放]
      *Field of View*[FOV] --> 视场(视锥体截到而成的角度) --> 水平FOV, 垂直FOV.
@@ -4297,7 +4304,7 @@ to others.
      *view transform* : world space -> camera space.
      
      [[file:image/Figure 10.7.png]]typical camera-space conventions for left-handed coordinate systems
-**** Clip Space and the Clip Matrix[裁剪空间和裁剪矩阵]
+**** Clip Space and the Clip Matrix[错切空间和错切矩阵]
      _camera space to clip space_
      *clip matrix* == *projection matrix*.
      *clip matrix* : camera space -> clip space.
@@ -4306,8 +4313,8 @@ to others.
      _functions of clip matrix_
      - Prepare for projection.
      - Apply zoom and prepare for clipping.
-**** The Clip Matrix: Preparing for Projection[裁剪矩阵:投影]
-     裁剪矩阵的第一个目的是 _通过除法得到正确的 $w$ 值来达成投影(正交/透视)_.
+**** The Clip Matrix: Preparing for Projection[错切矩阵:投影]
+     错切矩阵的第一个目的是 _通过除法得到正确的 $w$ 值来达成投影(正交/透视)_.
      
      _Converting 4D homogeneous coordinates to 3D_
      \begin{equation*}
@@ -4382,8 +4389,8 @@ to others.
      x & y & z
      \end{bmatrix}
      \end{equation*}
-**** The Clip Matrix: Applying Zoom and Preparing for Clipping[裁剪矩阵:应用缩放和裁剪]
-     裁剪矩阵的第二个目的是 _改变x,y,z分量的大小_.
+**** The Clip Matrix: Applying Zoom and Preparing for Clipping[错切矩阵:应用缩放和错切]
+     错切矩阵的第二个目的是 _改变x,y,z分量的大小_.
      
      _The six planes of the view frustum in clip space_
      Bottom $y < -w$,
@@ -4393,7 +4400,7 @@ to others.
      Near $z < -w$,
      Far $z > w$.
      
-     令,$zoom_{x}$  为水平zoom值, $zoom_{y}$ 为垂直zoom值, $n$ 为 _到近裁剪面距离_, $f$ 为 _到远裁剪面距离_.
+     令,$zoom_{x}$  为水平zoom值, $zoom_{y}$ 为垂直zoom值, $n$ 为 _到近错切面距离_, $f$ 为 _到远错切面距离_.
      1.) _perspective_
      _Clip matrix for *perspective* projection with z = -w at the near clip plane_
      \begin{equation*}
@@ -4475,7 +4482,7 @@ to others.
      _the output window in screen space_
      [[file:image/Figure 10.9.png]]
      将 *顶点坐标*[vertex coordinates]从 *clip space* 转换到 *scrren space* 的所有内容都已经告诉你了.你
-的 *vertex shader* 将坐标输出到 *clip space*.API将三角形裁剪到 *view frustum*[视锥体]然后再将坐标投
+的 *vertex shader* 将坐标输出到 *clip space*.API将三角形错切到 *view frustum*[视锥体]然后再将坐标投
 影到 *screen space*.
      这不意味着你就永远不会用到本节中的公式(看起来似乎硬件已经替你代劳),在软件中,我们需要用这些公式
 来做 -> *visibility testing*[可见性检测] / *level-of-detail selection*[LOD选择] 等等...
@@ -5046,10 +5053,10 @@ is a *constant*.
          最重要的操作是 _将顶点坐标从 modeling space 变换到 camera space_.
          其他操作可能包括 _蒙皮,顶点光照,纹理坐标生成_.这些操作被称作 *vertex shader*[顶点着色器].
     6.) _Culling,clipping,and projection_.接下来,我们必须执行三次操作以将3D中的三角形显示在2D的屏幕上.
-        a. 首先,所有在视锥体外的图形都移除掉,这个过程被叫做 *clipping*[裁剪].
+        a. 首先,所有在视锥体外的图形都移除掉,这个过程被叫做 *clipping*[错切].
         b. 然后,将多边形的顶点映射到输出屏幕的2D屏幕空间坐标上.
         c. 最后,远离镜头的三角形被 *剔除*[culling].
-    7.) _Rasterization_.在得到裁剪的多边形后(在屏幕空间),将其光栅化.考虑到光栅化主要在硬件层面完成,
+    7.) _Rasterization_.在得到错切的多边形后(在屏幕空间),将其光栅化.考虑到光栅化主要在硬件层面完成,
 我们不会太过详细的介绍.
     8.) _Pixel shading_.计算像素的颜色,这个过程叫做 *shading*.在现在这个过程被整合到 *pixel shader*,
 你可以从vertex-shader获取值作为变量写入代码.然后将颜色的值输出到最后一步: *blending*[调色].
@@ -5072,7 +5079,7 @@ is a *constant*.
           [[file:image/Figure 10.38.png]]
      2.) *depth buffer*[深度缓冲]
            *depth buffer* 也叫 *z-buffer*,它存储每个像素的 *depth-value*[深度值],深度值与物体与摄像机的
-距离相关.通常, _*clip space*[裁剪空间]的z坐标被作为*depth value*_.
+距离相关.通常, _*clip space*[错切空间]的z坐标被作为*depth value*_.
 **** 10.10.2 Delivering the Geometry[递送几何]
      在决定好什么东西要渲染后,剩下的就是如何渲染它们.我们将其分为两个步骤:
      1.) _set up the *render context*[渲染环境]_.其中包括以下方面:
@@ -5175,7 +5182,7 @@ is a *constant*.
 **** 10.10.3 Vertex-Level Operations[顶点层级的操作]
      在网格数据被提交到API后,就开始进行 *vertex-level* 的操作了.操作发生在 *vertex-shader*.尽管一个
 *vertex-shader* 可以输出多种类型,但是这里有两个条件必须要满足:
-     第一个必须输出的是, 裁剪空间的坐标信息.
+     第一个必须输出的是, 错切空间的坐标信息.
      第二个是为 *pixel shader*[像素着色器]提供它进行计算所需要的任何输入.
      
      _在 *vertex shader* 中完成的常见操作_.
@@ -5196,17 +5203,17 @@ coordinate space.
      - The _clip matrix_ is used to transform from _camera space to clip space_.
      矩阵如下:
      $\boldsymbol{v}_{clip} = (\boldsymbol{v}_{model}) (\boldsymbol{M}_{model \rightarrow world}) (\boldsymbol{M}_{world \rightarrow camera}) (\boldsymbol{M}_{camera \rightarrow clip})$.
-**** 10.10.4 Clipping[裁剪]
+**** 10.10.4 Clipping[错切]
      在顶点变换到 *clip space* 后,要对三角形做两个测试:
-     1.) Clipping[裁剪]
+     1.) Clipping[错切]
      2.) Culling[剔除]
      两个操作都由API实现,大部分硬件 *culling* 都发生在 *clip space*.
      在将顶点投影到 *screen space* 前,必须要保证顶点完全在 *view frustum*[视锥体]内.这个过程被叫做
-*Clipping*[裁剪],通常由硬件实现.
-     *Sutherland-Hodgman* 算法: 裁剪多边形的标准算法.裁剪时会多边形的边有四种可能:
+*Clipping*[错切],通常由硬件实现.
+     *Sutherland-Hodgman* 算法: 错切多边形的标准算法.错切时会多边形的边有四种可能:
      _Clipping a single edge - the four cases_
      [[file:image/Figure 10.39.png]]
-     需要记住,裁剪操作输出的是 *顶点* 而不是 *边*.
+     需要记住,错切操作输出的是 *顶点* 而不是 *边*.
      
      _Clip a polygon against the right clip plane_
      [[file:image/Figure 10.40.png]]
@@ -5226,7 +5233,7 @@ coordinate space.
      1.) 得到平面中三角形的法线以及从眼睛到三角形形成的向量.
      2.) 如果两个向量方向一致(点积大于0),则该三角形是 *backfacing* 的.
 **** 10.10.6 Rasterization,Shading,and Output[光栅化,着色,再输出]
-     在 *裁剪*[clipping]后,顶点已经投影映射到了 *输出窗口*[output window]的屏幕坐标上.
+     在 *错切*[clipping]后,顶点已经投影映射到了 *输出窗口*[output window]的屏幕坐标上.
      在光栅化的时候,渲染系统可能会进行 *scissoring*[剪取],意为排除掉在渲染窗口外的像素.
 
      现在来看看对单一一个像素的渲染步骤:
